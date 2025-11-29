@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 class WorkCover extends StatelessWidget {
   final String imageUrl;
@@ -7,7 +7,6 @@ class WorkCover extends StatelessWidget {
   final String sourceId;
   final String? releaseDate;
   final String? heroTag;
-
 
   const WorkCover({
     super.key,
@@ -37,7 +36,7 @@ class WorkCover extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.7),
+              color: Colors.black.withValues(alpha: .7),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -56,7 +55,7 @@ class WorkCover extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.black.withValues(alpha: 0.7),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(

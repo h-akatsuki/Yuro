@@ -1,11 +1,11 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 
 class PlayerCover extends StatelessWidget {
   final String? coverUrl;
   final double? maxWidth;
-  
+
   const PlayerCover({
     super.key,
     this.coverUrl,
@@ -15,7 +15,7 @@ class PlayerCover extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AspectRatio(
-      aspectRatio: 4/3,
+      aspectRatio: 4 / 3,
       child: Container(
         constraints: BoxConstraints(
           maxWidth: maxWidth ?? 480,
@@ -25,7 +25,7 @@ class PlayerCover extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 20,
               offset: const Offset(0, 8),
             ),
@@ -38,7 +38,8 @@ class PlayerCover extends StatelessWidget {
                   imageUrl: coverUrl!,
                   fit: BoxFit.cover,
                   placeholder: (context, url) => Shimmer.fromColors(
-                    baseColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+                    baseColor:
+                        Theme.of(context).colorScheme.surfaceContainerHighest,
                     highlightColor: Theme.of(context).colorScheme.surface,
                     child: Container(
                       color: Colors.white,
@@ -60,4 +61,4 @@ class PlayerCover extends StatelessWidget {
       ),
     );
   }
-} 
+}

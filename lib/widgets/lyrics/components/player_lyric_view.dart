@@ -26,15 +26,16 @@ class _PlayerLyricViewState extends State<PlayerLyricView> {
   final ISubtitleService _subtitleService = GetIt.I<ISubtitleService>();
   final PlayerViewModel _viewModel = GetIt.I<PlayerViewModel>();
   final ItemScrollController _itemScrollController = ItemScrollController();
-  final ItemPositionsListener _itemPositionsListener = ItemPositionsListener.create();
-  
+  final ItemPositionsListener _itemPositionsListener =
+      ItemPositionsListener.create();
+
   bool _isFirstBuild = true;
   Subtitle? _lastScrolledSubtitle;
-  
+
   // 用于控制视图切换的计时器和状态
   // 当用户手动滚动时，暂时禁用视图切换功能，防止切换到封面
   Timer? _scrollDebounceTimer;
-  
+
   // 用于控制自动滚动的计时器和状态
   // 当用户手动滚动时，暂时禁用自动滚动功能，让用户可以自由浏览歌词
   bool _allowAutoScroll = true;
@@ -48,21 +49,21 @@ class _PlayerLyricViewState extends State<PlayerLyricView> {
   @override
   void dispose() {
     // 清理所有计时器
-    _scrollDebounceTimer?.cancel();    // 视图切换计时器
+    _scrollDebounceTimer?.cancel(); // 视图切换计时器
     _autoScrollDebounceTimer?.cancel(); // 自动滚动计时器
     super.dispose();
   }
 
   void _scrollToCurrentLyric(SubtitleWithState current) {
     if (!_itemScrollController.isAttached) return;
-    
+
     // 如果当前禁用了自动滚动（用户正在手动浏览），则不执行自动滚动
     if (!_allowAutoScroll) return;
-    
+
     // 避免重复滚动到同一句歌词
     if (_lastScrolledSubtitle == current.subtitle) return;
     _lastScrolledSubtitle = current.subtitle;
-    
+
     if (_isFirstBuild) {
       _isFirstBuild = false;
       // 首次加载时直接跳转，不使用动画
@@ -85,7 +86,7 @@ class _PlayerLyricViewState extends State<PlayerLyricView> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final baseUnit = screenHeight * 0.04;
-    
+
     return StreamBuilder<SubtitleWithState?>(
       stream: _subtitleService.currentSubtitleWithStateStream,
       initialData: _subtitleService.currentSubtitleWithState,
@@ -107,35 +108,40 @@ class _PlayerLyricViewState extends State<PlayerLyricView> {
 
         return NotificationListener<ScrollNotification>(
           onNotification: (notification) {
-            if (notification is ScrollStartNotification && 
-                notification.dragDetails != null) {  // 用户开始手动滚动
+            if (notification is ScrollStartNotification &&
+                notification.dragDetails != null) {
+              // 用户开始手动滚动
               // 立即禁用视图切换功能
               widget.onScrollStateChanged(false);
-              
+
               // 禁用自动滚动功能
               _allowAutoScroll = false;
-              
+
               // 取消所有待执行的计时器
               _scrollDebounceTimer?.cancel();
               _autoScrollDebounceTimer?.cancel();
-            } else if (notification is ScrollEndNotification) {  // 用户结束滚动
+            } else if (notification is ScrollEndNotification) {
+              // 用户结束滚动
               // 延长视图切换的禁用时间到1秒
               _scrollDebounceTimer?.cancel();
-              _scrollDebounceTimer = Timer(const Duration(milliseconds: 1000), () {
+              _scrollDebounceTimer =
+                  Timer(const Duration(milliseconds: 1000), () {
                 if (mounted) {
                   widget.onScrollStateChanged(true);
                 }
               });
-              
+
               // 自动滚动计时器保持3秒
               _autoScrollDebounceTimer?.cancel();
-              _autoScrollDebounceTimer = Timer(const Duration(milliseconds: 3000), () {
+              _autoScrollDebounceTimer =
+                  Timer(const Duration(milliseconds: 3000), () {
                 if (mounted) {
                   setState(() {
                     _allowAutoScroll = true;
                     // 恢复时立即滚动到当前播放位置
                     if (_subtitleService.currentSubtitleWithState != null) {
-                      _scrollToCurrentLyric(_subtitleService.currentSubtitleWithState!);
+                      _scrollToCurrentLyric(
+                          _subtitleService.currentSubtitleWithState!);
                     }
                   });
                 }
@@ -154,7 +160,7 @@ class _PlayerLyricViewState extends State<PlayerLyricView> {
             itemBuilder: (context, index) {
               final subtitle = subtitleList.subtitles[index];
               final isActive = currentSubtitle?.subtitle == subtitle;
-              
+
               return Padding(
                 padding: EdgeInsets.symmetric(
                   vertical: baseUnit * 0.35,
@@ -165,9 +171,9 @@ class _PlayerLyricViewState extends State<PlayerLyricView> {
                   opacity: isActive ? 1.0 : 0.5,
                   onTap: () async {
                     widget.onScrollStateChanged(false);
-                    
+
                     await _viewModel.seek(subtitle.start);
-                    
+
                     Future.delayed(const Duration(milliseconds: 500), () {
                       if (mounted) {
                         widget.onScrollStateChanged(true);
@@ -182,4 +188,4 @@ class _PlayerLyricViewState extends State<PlayerLyricView> {
       },
     );
   }
-} 
+}

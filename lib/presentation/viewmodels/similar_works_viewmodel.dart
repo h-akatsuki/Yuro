@@ -7,7 +7,8 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SimilarWorksViewModel extends ChangeNotifier {
-  static const _subtitleFilterKey = 'subtitle_filter'; // 与其他 ViewModel 使用相同的 key
+  static const _subtitleFilterKey =
+      'subtitle_filter'; // 与其他 ViewModel 使用相同的 key
   final ApiService _apiService;
   final Work work;
   List<Work> _works = [];
@@ -115,4 +116,4 @@ class SimilarWorksViewModel extends ChangeNotifier {
     _saveFilterState();
     super.dispose();
   }
-} 
+}

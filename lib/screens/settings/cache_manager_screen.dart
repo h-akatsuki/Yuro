@@ -35,47 +35,45 @@ class CacheManagerScreen extends StatelessWidget {
                   title: const Text('音频缓存'),
                   subtitle: Text(viewModel.audioCacheSizeFormatted),
                   trailing: TextButton(
-                    onPressed: viewModel.isLoading 
-                      ? null 
-                      : () => viewModel.clearAudioCache(),
+                    onPressed: viewModel.isLoading
+                        ? null
+                        : () => viewModel.clearAudioCache(),
                     child: const Text('清理'),
                   ),
                 ),
                 const Divider(),
-                
+
                 // 字幕缓存
                 ListTile(
                   title: const Text('字幕缓存'),
                   subtitle: Text(viewModel.subtitleCacheSizeFormatted),
                   trailing: TextButton(
-                    onPressed: viewModel.isLoading 
-                      ? null 
-                      : () => viewModel.clearSubtitleCache(),
+                    onPressed: viewModel.isLoading
+                        ? null
+                        : () => viewModel.clearSubtitleCache(),
                     child: const Text('清理'),
                   ),
                 ),
                 const Divider(),
-                
+
                 // 总缓存大小
                 ListTile(
                   title: const Text('总缓存大小'),
                   subtitle: Text(viewModel.totalCacheSizeFormatted),
                   trailing: TextButton(
-                    onPressed: viewModel.isLoading 
-                      ? null 
-                      : () => viewModel.clearAllCache(),
+                    onPressed: viewModel.isLoading
+                        ? null
+                        : () => viewModel.clearAllCache(),
                     child: const Text('清理全部'),
                   ),
                 ),
                 const Divider(),
-                
+
                 // 缓存说明
                 const ListTile(
                   title: Text('缓存说明'),
-                  subtitle: Text(
-                    '缓存用于存储最近播放的音频文件和字幕文件，以提高再次播放时的加载速度。'
-                    '系统会自动清理过期和超量的缓存。'
-                  ),
+                  subtitle: Text('缓存用于存储最近播放的音频文件和字幕文件，以提高再次播放时的加载速度。'
+                      '系统会自动清理过期和超量的缓存。'),
                 ),
               ],
             );
@@ -84,4 +82,4 @@ class CacheManagerScreen extends StatelessWidget {
       ),
     );
   }
-} 
+}

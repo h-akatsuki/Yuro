@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:asmrapp/data/models/mark_status.dart';
+import 'package:flutter/material.dart';
 
 class MarkSelectionDialog extends StatelessWidget {
   final MarkStatus? currentStatus;
@@ -16,7 +16,7 @@ class MarkSelectionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return AlertDialog(
       backgroundColor: isDark ? const Color(0xFF2C2C2C) : Colors.white,
       title: Text(
@@ -34,17 +34,19 @@ class MarkSelectionDialog extends StatelessWidget {
             leading: Radio<MarkStatus>(
               value: status,
               groupValue: currentStatus,
-              onChanged: loading ? null : (MarkStatus? value) {
-                if (value != null) {
-                  onMarkSelected(value);
-                  Navigator.of(context).pop();
-                }
-              },
-              fillColor: MaterialStateProperty.resolveWith((states) {
-                if (states.contains(MaterialState.disabled)) {
+              onChanged: loading
+                  ? null
+                  : (MarkStatus? value) {
+                      if (value != null) {
+                        onMarkSelected(value);
+                        Navigator.of(context).pop();
+                      }
+                    },
+              fillColor: WidgetStateProperty.resolveWith((states) {
+                if (states.contains(WidgetState.disabled)) {
                   return isDark ? Colors.white24 : Colors.black26;
                 }
-                if (states.contains(MaterialState.selected)) {
+                if (states.contains(WidgetState.selected)) {
                   return isDark ? Colors.white70 : Colors.black87;
                 }
                 return isDark ? Colors.white38 : Colors.black45;
@@ -60,12 +62,14 @@ class MarkSelectionDialog extends StatelessWidget {
                         : (isDark ? Colors.white70 : Colors.black54)),
               ),
             ),
-            onTap: loading ? null : () {
-              onMarkSelected(status);
-              Navigator.of(context).pop();
-            },
-            hoverColor: isDark 
-                ? Colors.white.withOpacity(0.05) 
+            onTap: loading
+                ? null
+                : () {
+                    onMarkSelected(status);
+                    Navigator.of(context).pop();
+                  },
+            hoverColor: isDark
+                ? Colors.white.withOpacity(0.05)
                 : Colors.black.withOpacity(0.05),
           );
         }).toList(),
@@ -75,4 +79,4 @@ class MarkSelectionDialog extends StatelessWidget {
       ),
     );
   }
-} 
+}

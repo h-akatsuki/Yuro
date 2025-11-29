@@ -8,7 +8,7 @@ class PlayerSeekControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = GetIt.I<PlayerViewModel>();
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
@@ -71,4 +71,4 @@ class PlayerSeekControls extends StatelessWidget {
       ],
     );
   }
-} 
+}

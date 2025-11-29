@@ -1,9 +1,9 @@
+import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
+import 'package:asmrapp/presentation/viewmodels/home_viewmodel.dart';
 import 'package:asmrapp/widgets/filter/filter_panel.dart';
+import 'package:asmrapp/widgets/work_grid/enhanced_work_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:asmrapp/presentation/viewmodels/home_viewmodel.dart';
-import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
-import 'package:asmrapp/widgets/work_grid/enhanced_work_grid_view.dart';
 
 class HomeContent extends StatefulWidget {
   const HomeContent({super.key});
@@ -79,7 +79,7 @@ class _HomeContentState extends State<HomeContent>
                     color: Theme.of(context).colorScheme.surface,
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         blurRadius: 8,
                         spreadRadius: 1,
                         offset: const Offset(0, 1),

@@ -25,10 +25,10 @@ class _LoginDialogState extends State<LoginDialog> {
   Future<void> _handleLogin() async {
     final name = _nameController.text.trim();
     AppLogger.info('LoginDialog: 尝试登录: name=$name');
-    
+
     final authVM = context.read<AuthViewModel>();
     await authVM.login(name, _passwordController.text);
-    
+
     if (mounted) {
       if (authVM.error == null) {
         AppLogger.info('LoginDialog: 登录成功，关闭对话框');
@@ -115,4 +115,4 @@ class _LoginDialogState extends State<LoginDialog> {
       ],
     );
   }
-} 
+}

@@ -5,15 +5,16 @@ import '../../utils/logger.dart';
 class AuthService {
   final Dio _dio;
 
-  AuthService() 
-    : _dio = Dio(BaseOptions(
-        baseUrl: 'https://api.asmr.one/api',
-      ));
+  AuthService()
+      : _dio = Dio(BaseOptions(
+          baseUrl: 'https://api.asmr.one/api',
+        ));
 
   Future<AuthResp> login(String name, String password) async {
     try {
       AppLogger.info('开始登录请求: name=$name');
-      final response = await _dio.post('/auth/me', 
+      final response = await _dio.post(
+        '/auth/me',
         data: {
           'name': name,
           'password': password,
@@ -25,7 +26,8 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final authResp = AuthResp.fromJson(response.data);
-        AppLogger.info('登录成功: username=${authResp.user?.name}, group=${authResp.user?.group}');
+        AppLogger.info(
+            '登录成功: username=${authResp.user?.name}, group=${authResp.user?.group}');
         return authResp;
       }
 
@@ -39,4 +41,4 @@ class AuthService {
       throw Exception('登录失败: $e');
     }
   }
-} 
+}

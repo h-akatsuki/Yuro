@@ -1,14 +1,14 @@
 import 'package:asmrapp/core/platform/lyric_overlay_manager.dart';
-import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
+import 'package:asmrapp/core/platform/wakelock_controller.dart';
 import 'package:asmrapp/presentation/viewmodels/player_viewmodel.dart';
-import 'package:asmrapp/widgets/player/player_controls.dart';
-import 'package:asmrapp/widgets/player/player_progress.dart';
-import 'package:asmrapp/widgets/player/player_cover.dart';
 import 'package:asmrapp/screens/detail_screen.dart';
 import 'package:asmrapp/widgets/lyrics/components/player_lyric_view.dart';
+import 'package:asmrapp/widgets/player/player_controls.dart';
+import 'package:asmrapp/widgets/player/player_cover.dart';
+import 'package:asmrapp/widgets/player/player_progress.dart';
 import 'package:asmrapp/widgets/player/player_work_info.dart';
-import 'package:asmrapp/core/platform/wakelock_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -35,7 +35,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
       switchOutCurve: Curves.easeInQuart,
       transitionBuilder: (Widget child, Animation<double> animation) {
         final isLyrics = (child as dynamic).key == const ValueKey('lyrics');
-        
+
         return FadeTransition(
           opacity: animation,
           child: SlideTransition(
@@ -103,7 +103,10 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               color: Colors.transparent,
                               child: Text(
                                 _viewModel.currentTrackInfo?.title ?? '未在播放',
-                                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(
                                       fontWeight: FontWeight.w600,
                                     ),
                                 textAlign: TextAlign.center,
@@ -114,11 +117,14 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           if (_viewModel.currentTrackInfo?.artist != null)
                             Text(
                               _viewModel.currentTrackInfo!.artist,
-                              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
-                                        .withOpacity(0.7),
+                                        .withValues(alpha: 0.7),
                                   ),
                               textAlign: TextAlign.center,
                             ),
@@ -175,9 +181,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
             builder: (context, _) {
               return IconButton(
                 icon: Icon(
-                  wakeLockController.enabled 
-                    ? Icons.lightbulb
-                    : Icons.lightbulb_outline,
+                  wakeLockController.enabled
+                      ? Icons.lightbulb
+                      : Icons.lightbulb_outline,
                 ),
                 tooltip: wakeLockController.enabled ? '关闭屏幕常亮' : '开启屏幕常亮',
                 onPressed: () => wakeLockController.toggle(),
@@ -206,8 +212,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
             ),
             Container(
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 32),
-              child: Column(
-                children: const [
+              child: const Column(
+                children: [
                   PlayerProgress(),
                   SizedBox(height: 8),
                   SizedBox(height: 8),

@@ -58,7 +58,10 @@ class FilterPanel extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.5),
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -68,23 +71,26 @@ class FilterPanel extends StatelessWidget {
                   onTap: () => onSubtitleChanged(!hasSubtitle),
                   borderRadius: BorderRadius.circular(7),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(
-                          hasSubtitle ? Icons.check_box : Icons.check_box_outline_blank,
+                          hasSubtitle
+                              ? Icons.check_box
+                              : Icons.check_box_outline_blank,
                           size: 20,
-                          color: hasSubtitle 
-                              ? Theme.of(context).colorScheme.primary 
+                          color: hasSubtitle
+                              ? Theme.of(context).colorScheme.primary
                               : Theme.of(context).colorScheme.onSurfaceVariant,
                         ),
                         const SizedBox(width: 8),
                         Text(
                           '有字幕',
                           style: TextStyle(
-                            color: hasSubtitle 
-                                ? Theme.of(context).colorScheme.primary 
+                            color: hasSubtitle
+                                ? Theme.of(context).colorScheme.primary
                                 : Theme.of(context).colorScheme.onSurface,
                           ),
                         ),
@@ -99,13 +105,17 @@ class FilterPanel extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.5),
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: PopupMenuButton<String>(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -134,7 +144,10 @@ class FilterPanel extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Theme.of(context).colorScheme.outline.withOpacity(0.5),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.5),
                 ),
                 borderRadius: BorderRadius.circular(8),
               ),
@@ -144,14 +157,17 @@ class FilterPanel extends StatelessWidget {
                   onTap: () => onSortDirectionChanged(!isDescending),
                   borderRadius: BorderRadius.circular(7),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Text(isDescending ? '降序' : '升序'),
                         const SizedBox(width: 4),
                         Icon(
-                          isDescending ? Icons.arrow_downward : Icons.arrow_upward,
+                          isDescending
+                              ? Icons.arrow_downward
+                              : Icons.arrow_upward,
                           size: 20,
                           color: Theme.of(context).colorScheme.onSurface,
                         ),
@@ -173,4 +189,4 @@ class FilterPanel extends StatelessWidget {
       child: Text(text),
     );
   }
-} 
+}

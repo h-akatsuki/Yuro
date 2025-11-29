@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:asmrapp/data/models/works/work.dart';
 import 'package:asmrapp/data/models/works/tag.dart';
+import 'package:asmrapp/data/models/works/work.dart';
+import 'package:flutter/material.dart';
 
 class WorkTagsPanel extends StatelessWidget {
   final Work work;
@@ -28,7 +28,7 @@ class WorkTagsPanel extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: Colors.orange.withOpacity(0.2),
+              color: Colors.orange.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
@@ -42,7 +42,7 @@ class WorkTagsPanel extends StatelessWidget {
         ...?work.vas?.map((va) => Container(
               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.2),
+                color: Colors.green.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Text(
@@ -57,7 +57,7 @@ class WorkTagsPanel extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.2),
+              color: Colors.blue.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(

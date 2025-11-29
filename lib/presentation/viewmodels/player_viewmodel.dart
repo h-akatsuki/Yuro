@@ -29,9 +29,9 @@ class PlayerViewModel extends ChangeNotifier {
     required IAudioPlayerService audioService,
     required PlaybackEventHub eventHub,
     required ISubtitleService subtitleService,
-  }) : _audioService = audioService,
-       _eventHub = eventHub,
-       _subtitleService = subtitleService {
+  })  : _audioService = audioService,
+        _eventHub = eventHub,
+        _subtitleService = subtitleService {
     _initStreams();
     _requestInitialState();
   }
@@ -174,10 +174,8 @@ class PlayerViewModel extends ChangeNotifier {
 
   // 修改字幕加载方法，返回 Future 以便等待加载完成
   Future<void> _loadSubtitleIfAvailable(PlaybackContext context) async {
-    final subtitleFile = _subtitleLoader.findSubtitleFile(
-      context.currentFile,
-      context.files
-    );
+    final subtitleFile =
+        _subtitleLoader.findSubtitleFile(context.currentFile, context.files);
     if (subtitleFile?.mediaDownloadUrl != null) {
       await _subtitleService.loadSubtitle(subtitleFile!.mediaDownloadUrl!);
     } else {
@@ -192,7 +190,7 @@ class PlayerViewModel extends ChangeNotifier {
   Future<void> seekToNextLyric() async {
     final currentSubtitle = _subtitleService.currentSubtitleWithState;
     final subtitleList = _subtitleService.subtitleList;
-    
+
     if (currentSubtitle != null && subtitleList != null) {
       final nextSubtitle = currentSubtitle.subtitle.getNext(subtitleList);
       if (nextSubtitle != null) {
@@ -204,9 +202,10 @@ class PlayerViewModel extends ChangeNotifier {
   Future<void> seekToPreviousLyric() async {
     final currentSubtitle = _subtitleService.currentSubtitleWithState;
     final subtitleList = _subtitleService.subtitleList;
-    
+
     if (currentSubtitle != null && subtitleList != null) {
-      final previousSubtitle = currentSubtitle.subtitle.getPrevious(subtitleList);
+      final previousSubtitle =
+          currentSubtitle.subtitle.getPrevious(subtitleList);
       if (previousSubtitle != null) {
         await seek(previousSubtitle.start);
       }

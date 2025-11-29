@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:asmrapp/common/constants/strings.dart';
+import 'package:asmrapp/core/platform/wakelock_controller.dart';
+import 'package:asmrapp/core/theme/theme_controller.dart';
 import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:asmrapp/presentation/widgets/auth/login_dialog.dart';
 import 'package:asmrapp/screens/favorites_screen.dart';
 import 'package:asmrapp/screens/settings/cache_manager_screen.dart';
-import 'package:asmrapp/core/theme/theme_controller.dart';
-import 'package:asmrapp/core/platform/wakelock_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 
 class DrawerMenu extends StatelessWidget {
   const DrawerMenu({super.key});
@@ -63,7 +63,6 @@ class DrawerMenu extends StatelessWidget {
                 );
               },
             ),
-
             ListTile(
               leading: const Icon(Icons.favorite),
               title: const Text(Strings.favorites),
@@ -106,10 +105,10 @@ class DrawerMenu extends StatelessWidget {
                 );
               },
             ),
-              Divider(
-                color: Theme.of(context).colorScheme.surfaceVariant,
-                height: 1,
-              ),
+            Divider(
+              color: Theme.of(context).colorScheme.surfaceContainerHighest,
+              height: 1,
+            ),
             Consumer<ThemeController>(
               builder: (context, themeController, _) {
                 return ListTile(

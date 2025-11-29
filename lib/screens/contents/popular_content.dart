@@ -12,7 +12,8 @@ class PopularContent extends StatefulWidget {
   State<PopularContent> createState() => _PopularContentState();
 }
 
-class _PopularContentState extends State<PopularContent> with AutomaticKeepAliveClientMixin {
+class _PopularContentState extends State<PopularContent>
+    with AutomaticKeepAliveClientMixin {
   final _layoutStrategy = const WorkLayoutStrategy();
   final _scrollController = ScrollController();
 
@@ -32,7 +33,8 @@ class _PopularContentState extends State<PopularContent> with AutomaticKeepAlive
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels != _scrollController.position.minScrollExtent) {
+    if (_scrollController.position.pixels !=
+        _scrollController.position.minScrollExtent) {
       final viewModel = context.read<PopularViewModel>();
       if (viewModel.filterPanelExpanded) {
         viewModel.closeFilterPanel();
@@ -80,4 +82,4 @@ class _PopularContentState extends State<PopularContent> with AutomaticKeepAlive
       },
     );
   }
-} 
+}

@@ -1,6 +1,6 @@
+import 'package:asmrapp/core/audio/models/playback_context.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
-import 'package:asmrapp/core/audio/models/playback_context.dart';
 
 class PlayerWorkInfo extends StatelessWidget {
   final PlaybackContext? context;
@@ -39,13 +39,19 @@ class PlayerWorkInfo extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            this.context?.work.vas
+            this
+                    .context
+                    ?.work
+                    .vas
                     ?.map((va) => va['name'] as String?)
                     .where((name) => name != null)
-                    .join('、') ?? 
+                    .join('、') ??
                 '未知演员',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
@@ -54,4 +60,4 @@ class PlayerWorkInfo extends StatelessWidget {
       ),
     );
   }
-} 
+}

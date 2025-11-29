@@ -67,4 +67,4 @@ class PlaylistsListView extends StatelessWidget {
       },
     );
   }
-} 
+}

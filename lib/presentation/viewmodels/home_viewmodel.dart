@@ -9,11 +9,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 class HomeViewModel extends PaginatedWorksViewModel {
   static const String _filterStateKey = 'home_filter_state';
   static const String _subtitleFilterKey = 'subtitle_filter';
-  
+
   bool _filterPanelExpanded = false;
   bool _hasSubtitle = false;
   FilterState _filterState = const FilterState();
-  
+
   bool get filterPanelExpanded => _filterPanelExpanded;
   bool get hasSubtitle => _hasSubtitle;
   FilterState get filterState => _filterState;

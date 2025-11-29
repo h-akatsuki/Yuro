@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:asmrapp/data/models/files/files.dart';
 import 'package:asmrapp/data/models/files/child.dart';
-import 'package:asmrapp/widgets/detail/work_folder_item.dart';
+import 'package:asmrapp/data/models/files/files.dart';
 import 'package:asmrapp/widgets/detail/work_file_item.dart';
+import 'package:asmrapp/widgets/detail/work_folder_item.dart';
+import 'package:flutter/material.dart';
 
 class WorkFilesList extends StatelessWidget {
   final Files files;
@@ -18,7 +18,7 @@ class WorkFilesList extends StatelessWidget {
   Widget build(BuildContext context) {
     // 重置文件夹展开状态
     WorkFolderItem.resetExpandState();
-    
+
     return Card(
       margin: const EdgeInsets.all(8),
       child: Column(
@@ -35,7 +35,7 @@ class WorkFilesList extends StatelessWidget {
           ),
           Divider(
             height: 1,
-            color: Theme.of(context).colorScheme.surfaceVariant,
+            color: Theme.of(context).colorScheme.surfaceContainerHighest,
           ),
           ...files.children
                   ?.map((child) => child.type == 'folder'

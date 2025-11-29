@@ -23,7 +23,7 @@ class DetailViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _error;
   bool _disposed = false;
-  
+
   bool _hasRecommendations = false;
   bool _checkingRecommendations = false;
 
@@ -63,10 +63,11 @@ class DetailViewModel extends ChangeNotifier {
   bool get loadingPlaylists => _loadingPlaylists;
   String? get playlistsError => _playlistsError;
   List<Playlist>? get playlists => _playlists;
-  int? get playlistsTotalPages => 
-      _playlistsPagination?.totalCount != null && _playlistsPagination?.pageSize != null
-          ? (_playlistsPagination!.totalCount! / _playlistsPagination!.pageSize!).ceil()
-          : null;
+  int? get playlistsTotalPages => _playlistsPagination?.totalCount != null &&
+          _playlistsPagination?.pageSize != null
+      ? (_playlistsPagination!.totalCount! / _playlistsPagination!.pageSize!)
+          .ceil()
+      : null;
 
   Future<void> _checkRecommendations() async {
     _checkingRecommendations = true;
@@ -158,7 +159,7 @@ class DetailViewModel extends ChangeNotifier {
         workId: work.id.toString(),
         page: page,
       );
-      
+
       _playlists = response.playlists;
       _playlistsPagination = response.pagination;
       AppLogger.info('收藏夹列表加载成功: ${_playlists?.length ?? 0}个收藏夹');
@@ -174,14 +175,14 @@ class DetailViewModel extends ChangeNotifier {
   Future<void> showPlaylistsDialog(BuildContext context) async {
     _loadingFavorite = true;
     notifyListeners();
-    
+
     try {
       await loadPlaylists();
       _loadingFavorite = false;
       notifyListeners();
-      
+
       if (!context.mounted) return;
-      
+
       await showDialog(
         context: context,
         builder: (context) => PlaylistSelectionDialog(
@@ -222,7 +223,7 @@ class DetailViewModel extends ChangeNotifier {
           workId: work.id.toString(),
         );
       }
-      
+
       // 更新本地收藏夹状态
       final index = _playlists?.indexWhere((p) => p.id == playlist.id);
       if (index != null && index != -1) {
@@ -230,7 +231,7 @@ class DetailViewModel extends ChangeNotifier {
           ..[index] = playlist.copyWith(exist: !(playlist.exist ?? false));
         notifyListeners();
       }
-      
+
       final action = (playlist.exist ?? false) ? '移除' : '添加';
       AppLogger.info('$action收藏成功: ${playlist.name}');
     } catch (e) {
@@ -248,7 +249,7 @@ class DetailViewModel extends ChangeNotifier {
         work.id.toString(),
         _apiService.convertMarkStatusToApi(status),
       );
-      
+
       _currentMarkStatus = status;
       AppLogger.info('更新标记状态成功: ${status.label}');
     } catch (e) {

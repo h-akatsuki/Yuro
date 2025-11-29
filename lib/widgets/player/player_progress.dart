@@ -1,6 +1,6 @@
+import 'package:asmrapp/presentation/viewmodels/player_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:asmrapp/presentation/viewmodels/player_viewmodel.dart';
 
 class PlayerProgress extends StatelessWidget {
   const PlayerProgress({super.key});
@@ -22,7 +22,7 @@ class PlayerProgress extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = GetIt.I<PlayerViewModel>();
-    
+
     return ListenableBuilder(
       listenable: viewModel,
       builder: (context, _) {
@@ -39,10 +39,9 @@ class PlayerProgress extends StatelessWidget {
                 ),
                 child: Slider(
                   value: _ensureValueInRange(
-                    viewModel.position?.inMilliseconds.toDouble() ?? 0,
-                    0,
-                    viewModel.duration?.inMilliseconds.toDouble() ?? 1
-                  ),
+                      viewModel.position?.inMilliseconds.toDouble() ?? 0,
+                      0,
+                      viewModel.duration?.inMilliseconds.toDouble() ?? 1),
                   min: 0,
                   max: viewModel.duration?.inMilliseconds.toDouble() ?? 1,
                   onChanged: (value) {
@@ -58,14 +57,20 @@ class PlayerProgress extends StatelessWidget {
                     Text(
                       _formatDuration(viewModel.position),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                      ),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.7),
+                          ),
                     ),
                     Text(
                       _formatDuration(viewModel.duration),
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                      ),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.7),
+                          ),
                     ),
                   ],
                 ),
@@ -76,4 +81,4 @@ class PlayerProgress extends StatelessWidget {
       },
     );
   }
-} 
+}

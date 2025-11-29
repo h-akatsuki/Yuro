@@ -1,17 +1,17 @@
-import 'package:asmrapp/screens/contents/playlists_content.dart';
-import 'package:flutter/material.dart';
-import 'package:asmrapp/widgets/mini_player/mini_player.dart';
-import 'package:asmrapp/widgets/drawer_menu.dart';
-import 'package:asmrapp/screens/contents/home_content.dart';
-import 'package:asmrapp/screens/contents/recommend_content.dart';
-import 'package:asmrapp/screens/contents/popular_content.dart';
-import 'package:asmrapp/screens/search_screen.dart';
-import 'package:provider/provider.dart';
+import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:asmrapp/presentation/viewmodels/home_viewmodel.dart';
+import 'package:asmrapp/presentation/viewmodels/playlists_viewmodel.dart';
 import 'package:asmrapp/presentation/viewmodels/popular_viewmodel.dart';
 import 'package:asmrapp/presentation/viewmodels/recommend_viewmodel.dart';
-import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
-import 'package:asmrapp/presentation/viewmodels/playlists_viewmodel.dart';
+import 'package:asmrapp/screens/contents/home_content.dart';
+import 'package:asmrapp/screens/contents/playlists_content.dart';
+import 'package:asmrapp/screens/contents/popular_content.dart';
+import 'package:asmrapp/screens/contents/recommend_content.dart';
+import 'package:asmrapp/screens/search_screen.dart';
+import 'package:asmrapp/widgets/drawer_menu.dart';
+import 'package:asmrapp/widgets/mini_player/mini_player.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 /// MainScreen 是应用的主界面，负责管理底部导航栏和对应的内容页面。
 /// 它采用了集中式的状态管理架构，所有子页面的 ViewModel 都在这里初始化和提供。
@@ -112,7 +112,7 @@ class _MainScreenState extends State<MainScreen> {
 
           // 构建标题文本
           final title = totalCount != null
-              ? '${_titles[_currentIndex]} (${totalCount})'
+              ? '${_titles[_currentIndex]} ($totalCount)'
               : _titles[_currentIndex];
 
           return Scaffold(
@@ -192,4 +192,4 @@ class _MainScreenState extends State<MainScreen> {
       ),
     );
   }
-} 
+}

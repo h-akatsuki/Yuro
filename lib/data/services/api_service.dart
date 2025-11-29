@@ -10,7 +10,6 @@ import 'package:asmrapp/data/services/interceptors/auth_interceptor.dart';
 import 'package:asmrapp/data/models/playlists_with_exist_statu/playlist.dart';
 import 'package:asmrapp/data/models/my_lists/my_playlists/my_playlists.dart';
 
-
 class WorksResponse {
   final List<Work> works;
   final Pagination pagination;
@@ -33,11 +32,11 @@ class ApiService {
   Future<Files> getWorkFiles(String workId, {CancelToken? cancelToken}) async {
     try {
       final response = await _dio.get(
-        '/tracks/$workId', 
+        '/tracks/$workId',
         queryParameters: {
           'v': '1',
         },
-        cancelToken: cancelToken,  // 添加 cancelToken 支持
+        cancelToken: cancelToken, // 添加 cancelToken 支持
       );
 
       if (response.statusCode == 200) {
@@ -260,7 +259,8 @@ class ApiService {
   }) async {
     try {
       // 先尝试从缓存获取
-      final cachedData = _recommendationCache.get(itemId, page, hasSubtitle ? 1 : 0);
+      final cachedData =
+          _recommendationCache.get(itemId, page, hasSubtitle ? 1 : 0);
       if (cachedData != null) {
         return cachedData;
       }
@@ -288,7 +288,8 @@ class ApiService {
         );
 
         // 存入缓存
-        _recommendationCache.set(itemId, page, hasSubtitle ? 1 : 0, worksResponse);
+        _recommendationCache.set(
+            itemId, page, hasSubtitle ? 1 : 0, worksResponse);
 
         return worksResponse;
       }
@@ -415,11 +416,13 @@ class ApiService {
   /// 获取默认标记目标收藏夹
   Future<Playlist> getDefaultMarkTargetPlaylist() async {
     try {
-      final response = await _dio.get('/playlist/get-default-mark-target-playlist');
+      final response =
+          await _dio.get('/playlist/get-default-mark-target-playlist');
 
       if (response.statusCode == 200) {
         final playlist = Playlist.fromJson(response.data);
-        AppLogger.info('获取默认标记目标收藏夹成功: id=${playlist.id}, name=${playlist.name}');
+        AppLogger.info(
+            '获取默认标记目标收藏夹成功: id=${playlist.id}, name=${playlist.name}');
         return playlist;
       }
 

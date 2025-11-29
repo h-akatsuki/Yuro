@@ -18,4 +18,4 @@ class GridConfig {
   });
 
   static const GridConfig defaultConfig = GridConfig();
-} 
+}

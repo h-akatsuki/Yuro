@@ -8,7 +8,8 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RecommendViewModel extends ChangeNotifier {
-  static const _subtitleFilterKey = 'subtitle_filter'; // 与 PopularViewModel 使用相同的 key 实现全局共享
+  static const _subtitleFilterKey =
+      'subtitle_filter'; // 与 PopularViewModel 使用相同的 key 实现全局共享
   final ApiService _apiService;
   final AuthViewModel _authViewModel;
   List<Work> _works = [];
@@ -19,7 +20,8 @@ class RecommendViewModel extends ChangeNotifier {
   bool _hasSubtitle = false;
   bool _filterPanelExpanded = false;
 
-  RecommendViewModel(this._authViewModel) : _apiService = GetIt.I<ApiService>() {
+  RecommendViewModel(this._authViewModel)
+      : _apiService = GetIt.I<ApiService>() {
     _loadFilterState();
   }
 
@@ -84,7 +86,7 @@ class RecommendViewModel extends ChangeNotifier {
   Future<void> loadPage(int page) async {
     if (_isLoading) return;
     if (page < 1 || (totalPages != null && page > totalPages!)) return;
-    
+
     // 检查是否已登录
     final uuid = _authViewModel.recommenderUuid;
     if (uuid == null) {
@@ -126,4 +128,4 @@ class RecommendViewModel extends ChangeNotifier {
     _saveFilterState(); // 在销毁时保存状态
     super.dispose();
   }
-} 
+}

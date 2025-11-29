@@ -39,7 +39,8 @@ class _SimilarWorksScreenState extends State<SimilarWorksScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels != _scrollController.position.minScrollExtent) {
+    if (_scrollController.position.pixels !=
+        _scrollController.position.minScrollExtent) {
       if (_viewModel.filterPanelExpanded) {
         _viewModel.closeFilterPanel();
       }
@@ -111,7 +112,8 @@ class _SimilarWorksScreenState extends State<SimilarWorksScreen> {
                     offset: Offset(0, viewModel.filterPanelExpanded ? 0 : -1),
                     child: FilterWithKeyword(
                       hasSubtitle: viewModel.hasSubtitle,
-                      onSubtitleChanged: (_) => viewModel.toggleSubtitleFilter(),
+                      onSubtitleChanged: (_) =>
+                          viewModel.toggleSubtitleFilter(),
                     ),
                   ),
                 ),
@@ -122,4 +124,4 @@ class _SimilarWorksScreenState extends State<SimilarWorksScreen> {
       ),
     );
   }
-} 
+}

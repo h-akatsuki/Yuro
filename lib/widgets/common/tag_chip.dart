@@ -22,13 +22,15 @@ class TagChip extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: backgroundColor ?? Theme.of(context).colorScheme.surfaceContainerHighest,
+          color: backgroundColor ??
+              Theme.of(context).colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(4),
         ),
         child: Text(
           text,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: textColor ?? Theme.of(context).colorScheme.onSurfaceVariant,
+                color:
+                    textColor ?? Theme.of(context).colorScheme.onSurfaceVariant,
                 fontSize: 13,
               ),
         ),

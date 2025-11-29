@@ -31,12 +31,12 @@ class CacheManagerViewModel extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
-      
+
       // 获取音频缓存大小
       _audioCacheSize = await AudioCacheManager.getCacheSize();
       // 获取字幕缓存大小
       _subtitleCacheSize = await SubtitleCacheManager.getSize();
-      
+
       _error = null;
     } catch (e) {
       AppLogger.error('加载缓存大小失败', e);
@@ -52,7 +52,7 @@ class CacheManagerViewModel extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
-      
+
       await AudioCacheManager.cleanCache();
       await loadCacheSize();
       _error = null;
@@ -70,7 +70,7 @@ class CacheManagerViewModel extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
-      
+
       await SubtitleCacheManager.clearCache();
       await loadCacheSize();
       _error = null;
@@ -88,12 +88,12 @@ class CacheManagerViewModel extends ChangeNotifier {
     try {
       _isLoading = true;
       notifyListeners();
-      
+
       await Future.wait([
         AudioCacheManager.cleanCache(),
         SubtitleCacheManager.clearCache(),
       ]);
-      
+
       await loadCacheSize();
       _error = null;
     } catch (e) {
@@ -104,4 +104,4 @@ class CacheManagerViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-} 
+}

@@ -24,13 +24,13 @@ class AudioPlayerService implements IAudioPlayerService {
   AudioPlayerService._internal({
     required PlaybackEventHub eventHub,
     required IPlaybackStateRepository stateRepository,
-  }) : _eventHub = eventHub,
-       _stateRepository = stateRepository {
+  })  : _eventHub = eventHub,
+        _stateRepository = stateRepository {
     _init();
   }
 
   static AudioPlayerService? _instance;
-  
+
   factory AudioPlayerService({
     required PlaybackEventHub eventHub,
     required IPlaybackStateRepository stateRepository,
@@ -130,14 +130,15 @@ class AudioPlayerService implements IAudioPlayerService {
     try {
       AppLogger.debug('开始恢复播放状态');
       final state = await _stateManager.loadState();
-      
+
       if (state == null) {
         AppLogger.debug('没有可恢复的播放状态');
         return;
       }
 
       AppLogger.debug('已加载保存的状态: workId=${state.work.id}');
-      AppLogger.debug('播放列表信息: 长度=${state.playlist.length}, 索引=${state.currentIndex}');
+      AppLogger.debug(
+          '播放列表信息: 长度=${state.playlist.length}, 索引=${state.currentIndex}');
 
       if (state.playlist.isEmpty) {
         AppLogger.debug('保存的播放列表为空，跳过恢复');

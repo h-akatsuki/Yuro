@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:asmrapp/core/audio/models/subtitle.dart';
+import 'package:flutter/material.dart';
 
 class LyricLine extends StatelessWidget {
   final Subtitle subtitle;
@@ -29,13 +29,16 @@ class LyricLine extends StatelessWidget {
             child: Text(
               subtitle.text,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                fontSize: 20,
-                height: 1.3,
-                color: isActive 
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
-              ),
+                    fontSize: 20,
+                    height: 1.3,
+                    color: isActive
+                        ? Theme.of(context).colorScheme.primary
+                        : Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.7),
+                    fontWeight: isActive ? FontWeight.w600 : FontWeight.normal,
+                  ),
               textAlign: TextAlign.center,
             ),
           ),
@@ -43,4 +46,4 @@ class LyricLine extends StatelessWidget {
       ),
     );
   }
-} 
+}

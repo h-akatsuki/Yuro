@@ -99,14 +99,16 @@ Future<void> setupServiceLocator() async {
 Future<void> setupSubtitleServices() async {
   getIt.registerLazySingleton<SubtitleLoader>(() => SubtitleLoader());
   if (Platform.isAndroid) {
-    getIt.registerLazySingleton<ILyricOverlayController>(() => LyricOverlayController());
+    getIt.registerLazySingleton<ILyricOverlayController>(
+        () => LyricOverlayController());
   } else {
-    getIt.registerLazySingleton<ILyricOverlayController>(() => DummyLyricOverlayController());
+    getIt.registerLazySingleton<ILyricOverlayController>(
+        () => DummyLyricOverlayController());
   }
   getIt.registerLazySingleton(() => LyricOverlayManager(
-    controller: getIt(),
-    subtitleService: getIt(),
-  ));
+        controller: getIt(),
+        subtitleService: getIt(),
+      ));
 
   // 初始化悬浮窗管理器
   await getIt<LyricOverlayManager>().initialize();

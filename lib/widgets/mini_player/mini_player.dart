@@ -1,14 +1,15 @@
+import 'package:asmrapp/presentation/viewmodels/player_viewmodel.dart';
 import 'package:asmrapp/screens/player_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:asmrapp/presentation/viewmodels/player_viewmodel.dart';
-import 'mini_player_controls.dart';
-import 'mini_player_progress.dart';
 import 'package:get_it/get_it.dart';
+
+import 'mini_player_controls.dart';
 import 'mini_player_cover.dart';
+import 'mini_player_progress.dart';
 
 class MiniPlayer extends StatelessWidget {
   static const height = 48.0;
-  
+
   const MiniPlayer({super.key});
 
   @override
@@ -24,13 +25,14 @@ class MiniPlayer extends StatelessWidget {
                 pageBuilder: (context, animation, secondaryAnimation) {
                   return const PlayerScreen();
                 },
-                transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) {
                   // 创建一个曲线动画
                   final curvedAnimation = CurvedAnimation(
                     parent: animation,
                     curve: Curves.easeOutQuart,
                   );
-                  
+
                   return Stack(
                     children: [
                       // 背景淡入效果
@@ -67,7 +69,7 @@ class MiniPlayer extends StatelessWidget {
               color: Theme.of(context).colorScheme.surface,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, -1),
                 ),

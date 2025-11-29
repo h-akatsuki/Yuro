@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:asmrapp/data/models/my_lists/my_playlists/playlist.dart';
-import 'package:asmrapp/screens/contents/playlists/playlists_list_view.dart';
 import 'package:asmrapp/screens/contents/playlists/playlist_works_view.dart';
-import 'package:asmrapp/presentation/viewmodels/playlists_viewmodel.dart';
+import 'package:asmrapp/screens/contents/playlists/playlists_list_view.dart';
+import 'package:flutter/material.dart';
 
 class PlaylistsContent extends StatefulWidget {
   const PlaylistsContent({super.key});
@@ -12,7 +10,8 @@ class PlaylistsContent extends StatefulWidget {
   State<PlaylistsContent> createState() => _PlaylistsContentState();
 }
 
-class _PlaylistsContentState extends State<PlaylistsContent> with AutomaticKeepAliveClientMixin {
+class _PlaylistsContentState extends State<PlaylistsContent>
+    with AutomaticKeepAliveClientMixin {
   Playlist? _selectedPlaylist;
 
   @override
@@ -30,18 +29,10 @@ class _PlaylistsContentState extends State<PlaylistsContent> with AutomaticKeepA
     });
   }
 
-  Future<bool> _onWillPop() async {
-    if (_selectedPlaylist != null) {
-      _handleBack();
-      return false;
-    }
-    return true;
-  }
-
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    
+
     return PopScope(
       canPop: _selectedPlaylist == null,
       onPopInvokedWithResult: (didPop, result) {

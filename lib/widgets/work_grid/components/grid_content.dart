@@ -59,8 +59,8 @@ class GridContent extends StatelessWidget {
             },
           ),
         ),
-        if (config?.enablePagination != false && 
-            currentPage != null && 
+        if (config?.enablePagination != false &&
+            currentPage != null &&
             totalPages != null)
           SliverToBoxAdapter(
             child: PaginationControls(
@@ -78,4 +78,4 @@ class GridContent extends StatelessWidget {
       ],
     );
   }
-} 
+}

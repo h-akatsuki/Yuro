@@ -30,9 +30,10 @@ abstract class PaginatedWorksViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   int get currentPage => _currentPage;
-  int? get totalPages => _pagination?.totalCount != null && _pagination?.pageSize != null
-      ? (_pagination!.totalCount! / _pagination!.pageSize!).ceil()
-      : null;
+  int? get totalPages =>
+      _pagination?.totalCount != null && _pagination?.pageSize != null
+          ? (_pagination!.totalCount! / _pagination!.pageSize!).ceil()
+          : null;
 
   // 获取页面名称，用于日志
   String get pageName;
@@ -82,4 +83,4 @@ abstract class PaginatedWorksViewModel extends ChangeNotifier {
 
   // 添加 pagination getter
   Pagination? get pagination => _pagination;
-} 
+}

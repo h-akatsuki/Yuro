@@ -17,25 +17,25 @@ class ThemeController extends ChangeNotifier {
   }
 
   ThemeMode _themeMode = ThemeMode.system;
-  
+
   ThemeMode get themeMode => _themeMode;
 
   // 切换主题模式
   Future<void> setThemeMode(ThemeMode mode) async {
     if (_themeMode == mode) return;
-    
+
     _themeMode = mode;
     notifyListeners();
-    
+
     // 保存到持久化存储
     await _prefs.setString(_themeKey, mode.toString());
   }
 
   // 切换到下一个主题模式
   Future<void> toggleThemeMode() async {
-    final modes = ThemeMode.values;
+    const modes = ThemeMode.values;
     final currentIndex = modes.indexOf(_themeMode);
     final nextIndex = (currentIndex + 1) % modes.length;
     await setThemeMode(modes[nextIndex]);
   }
-} 
+}

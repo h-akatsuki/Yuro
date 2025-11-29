@@ -52,4 +52,4 @@ class FavoritesViewModel extends ChangeNotifier {
   Future<void> loadFavorites({bool refresh = false}) async {
     await loadPage(1);
   }
-} 
+}

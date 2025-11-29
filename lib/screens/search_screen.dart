@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:asmrapp/presentation/viewmodels/search_viewmodel.dart';
-import 'package:asmrapp/widgets/work_grid_view.dart';
 import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
+import 'package:asmrapp/presentation/viewmodels/search_viewmodel.dart';
 import 'package:asmrapp/utils/logger.dart';
 import 'package:asmrapp/widgets/pagination_controls.dart';
+import 'package:asmrapp/widgets/work_grid_view.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatelessWidget {
   final String? initialKeyword;
@@ -44,7 +44,7 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
   void initState() {
     super.initState();
     _searchController = TextEditingController(text: widget.initialKeyword);
-    
+
     // 如果有初始关键词，自动执行搜索
     if (widget.initialKeyword?.isNotEmpty == true) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -126,7 +126,7 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
                       fillColor: Theme.of(context)
                           .colorScheme
                           .surfaceContainerHighest
-                          .withOpacity(0.5),
+                          .withValues(alpha: 0.5),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(24),
                         borderSide: BorderSide.none,

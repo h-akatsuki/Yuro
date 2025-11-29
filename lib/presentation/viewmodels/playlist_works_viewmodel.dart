@@ -9,7 +9,7 @@ import 'package:get_it/get_it.dart';
 class PlaylistWorksViewModel extends ChangeNotifier {
   final ApiService _apiService = GetIt.I<ApiService>();
   final Playlist playlist;
-  
+
   List<Work> _works = [];
   bool _isLoading = false;
   String? _error;
@@ -22,9 +22,10 @@ class PlaylistWorksViewModel extends ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
   int get currentPage => _currentPage;
-  int? get totalPages => _pagination?.totalCount != null && _pagination?.pageSize != null
-      ? (_pagination!.totalCount! / _pagination!.pageSize!).ceil()
-      : null;
+  int? get totalPages =>
+      _pagination?.totalCount != null && _pagination?.pageSize != null
+          ? (_pagination!.totalCount! / _pagination!.pageSize!).ceil()
+          : null;
 
   Future<void> loadWorks({int page = 1}) async {
     if (_isLoading) return;
@@ -39,7 +40,7 @@ class PlaylistWorksViewModel extends ChangeNotifier {
         playlistId: playlist.id!,
         page: page,
       );
-      
+
       _works = response.works;
       _pagination = response.pagination;
       _currentPage = page;

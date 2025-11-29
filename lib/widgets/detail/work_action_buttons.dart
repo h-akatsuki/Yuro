@@ -51,7 +51,9 @@ class WorkActionButtons extends StatelessWidget {
           ),
           _ActionButton(
             icon: Icons.recommend,
-            label: checkingRecommendations ? '检查中' : (hasRecommendations ? '相关推荐' : '暂无推荐'),
+            label: checkingRecommendations
+                ? '检查中'
+                : (hasRecommendations ? '相关推荐' : '暂无推荐'),
             onTap: hasRecommendations ? onRecommendationsTap : null,
             loading: checkingRecommendations,
           ),
@@ -78,7 +80,7 @@ class _ActionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final disabled = onTap == null && !loading;
-    
+
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
@@ -99,8 +101,8 @@ class _ActionButton extends StatelessWidget {
             else
               Icon(
                 icon,
-                color: disabled 
-                    ? theme.colorScheme.onSurface.withOpacity(0.38)
+                color: disabled
+                    ? theme.colorScheme.onSurface.withValues(alpha: 0.38)
                     : null,
               ),
             const SizedBox(height: 4),
@@ -108,7 +110,7 @@ class _ActionButton extends StatelessWidget {
               label,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: disabled
-                    ? theme.colorScheme.onSurface.withOpacity(0.38)
+                    ? theme.colorScheme.onSurface.withValues(alpha: 0.38)
                     : null,
               ),
             ),
@@ -117,4 +119,4 @@ class _ActionButton extends StatelessWidget {
       ),
     );
   }
-} 
+}

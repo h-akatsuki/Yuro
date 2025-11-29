@@ -1,9 +1,10 @@
-import 'dart:io';
-import 'package:path_provider/path_provider.dart';
-import 'package:crypto/crypto.dart';
 import 'dart:convert';
-import 'package:just_audio/just_audio.dart';
+import 'dart:io';
+
 import 'package:asmrapp/utils/logger.dart';
+import 'package:crypto/crypto.dart';
+import 'package:just_audio/just_audio.dart';
+import 'package:path_provider/path_provider.dart';
 
 /// 音频缓存管理器
 /// 负责管理音频文件的缓存,对外隐藏具体的缓存实现
@@ -18,10 +19,10 @@ class AudioCacheManager {
       final cacheFile = await _getCacheFile(url);
       final fileName = _generateFileName(url);
       AppLogger.debug('准备创建音频源 - URL: $url, 缓存文件名: $fileName');
-      
+
       // 检查缓存文件是否存在且有效
       final isValid = await _isCacheValid(cacheFile, fileName);
-      
+
       if (isValid) {
         AppLogger.debug('[$fileName] 使用已有缓存文件');
         return _createCachingSource(url, cacheFile);
@@ -29,7 +30,6 @@ class AudioCacheManager {
 
       AppLogger.debug('[$fileName] 创建新的缓存源');
       return _createCachingSource(url, cacheFile);
-      
     } catch (e) {
       AppLogger.error('创建缓存音频源失败,使用非缓存源', e);
       return ProgressiveAudioSource(Uri.parse(url));
@@ -41,7 +41,7 @@ class AudioCacheManager {
     try {
       final cacheDir = await _getCacheDir();
       final files = await cacheDir.list().toList();
-      
+
       // 按修改时间排序
       files.sort((a, b) {
         return a.statSync().modified.compareTo(b.statSync().modified);
@@ -51,7 +51,7 @@ class AudioCacheManager {
       for (var file in files) {
         if (file is File) {
           final stat = await file.stat();
-          
+
           // 检查是否过期
           if (DateTime.now().difference(stat.modified) > _cacheExpiration) {
             await file.delete();
@@ -59,7 +59,7 @@ class AudioCacheManager {
           }
 
           totalSize += stat.size;
-          
+
           // 如果总大小超过限制,删除最旧的文件
           if (totalSize > _maxCacheSize) {
             await file.delete();
@@ -76,7 +76,7 @@ class AudioCacheManager {
     try {
       final cacheDir = await _getCacheDir();
       final files = await cacheDir.list().toList();
-      
+
       var totalSize = 0;
       for (var file in files) {
         if (file is File) {
@@ -94,10 +94,7 @@ class AudioCacheManager {
 
   /// 创建缓存音频源
   static AudioSource _createCachingSource(String url, File cacheFile) {
-    return LockCachingAudioSource(
-      Uri.parse(url),
-      cacheFile: cacheFile
-    );
+    return LockCachingAudioSource(Uri.parse(url), cacheFile: cacheFile);
   }
 
   /// 检查缓存是否有效
@@ -112,9 +109,9 @@ class AudioCacheManager {
       final stat = await cacheFile.stat();
       final size = stat.size;
       final age = DateTime.now().difference(stat.modified);
-      
+
       AppLogger.debug('[$fileName] 缓存验证: 大小=${size}bytes, 年龄=$age');
-      
+
       // 移除单个文件大小检查，只保留过期检查
       if (age > _cacheExpiration) {
         AppLogger.debug('[$fileName] 缓存无效: 文件过期 ($age > $_cacheExpiration)');

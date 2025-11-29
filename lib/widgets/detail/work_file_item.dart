@@ -19,7 +19,7 @@ class WorkFileItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isAudio = file.type?.toLowerCase() == 'audio';
     final colorScheme = Theme.of(context).colorScheme;
-    
+
     return Padding(
       padding: EdgeInsets.only(left: indentation),
       child: ListTile(
@@ -40,10 +40,12 @@ class WorkFileItem extends StatelessWidget {
           color: isAudio ? Colors.green : Colors.blue,
         ),
         dense: true,
-        onTap: isAudio ? () {
-          AppLogger.debug('点击音频文件: ${file.title}');
-          onFileTap?.call(file);
-        } : null,
+        onTap: isAudio
+            ? () {
+                AppLogger.debug('点击音频文件: ${file.title}');
+                onFileTap?.call(file);
+              }
+            : null,
       ),
     );
   }

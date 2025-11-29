@@ -15,7 +15,7 @@ class PopularViewModel extends PaginatedWorksViewModel {
 
   @override
   Future<void> onInit() async {
-    await _loadSubtitleFilter();  // 使用 onInit 钩子加载状态
+    await _loadSubtitleFilter(); // 使用 onInit 钩子加载状态
   }
 
   Future<void> _loadSubtitleFilter() async {
@@ -81,12 +81,12 @@ class PopularViewModel extends PaginatedWorksViewModel {
   }
 
   // 保持原有的便捷方法
-  Future<void> loadPopular({bool refresh = false}) => 
-    refresh ? this.refresh() : loadPage(1);
+  Future<void> loadPopular({bool refresh = false}) =>
+      refresh ? this.refresh() : loadPage(1);
 
   @override
   void dispose() {
     _saveFilterState();
     super.dispose();
   }
-} 
+}

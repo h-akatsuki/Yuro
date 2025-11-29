@@ -22,10 +22,11 @@ class WorkRow extends StatelessWidget {
         children: [
           // 第一个卡片
           Expanded(
-            child: works.isNotEmpty 
+            child: works.isNotEmpty
                 ? WorkCard(
                     work: works[0],
-                    onTap: onWorkTap != null ? () => onWorkTap!(works[0]) : null,
+                    onTap:
+                        onWorkTap != null ? () => onWorkTap!(works[0]) : null,
                   )
                 : const SizedBox.shrink(),
           ),
@@ -35,7 +36,8 @@ class WorkRow extends StatelessWidget {
             child: works.length > 1
                 ? WorkCard(
                     work: works[1],
-                    onTap: onWorkTap != null ? () => onWorkTap!(works[1]) : null,
+                    onTap:
+                        onWorkTap != null ? () => onWorkTap!(works[1]) : null,
                   )
                 : const SizedBox.shrink(), // 空占位符，保持两列布局
           ),

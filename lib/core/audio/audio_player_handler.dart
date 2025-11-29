@@ -9,7 +9,7 @@ class AudioPlayerHandler extends BaseAudioHandler {
 
   AudioPlayerHandler(this._player, this._eventHub) {
     AppLogger.debug('AudioPlayerHandler 初始化');
-    
+
     // 改为监听 EventHub
     _eventHub.playbackState.listen((event) {
       final state = PlaybackState(

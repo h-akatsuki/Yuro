@@ -9,12 +9,12 @@ class LyricOverlayManager {
   final ISubtitleService _subtitleService;
   StreamSubscription? _subscription;
   bool _isShowing = false;
-  
+
   LyricOverlayManager({
     required ILyricOverlayController controller,
     required ISubtitleService subtitleService,
-  }) : _controller = controller,
-       _subtitleService = subtitleService;
+  })  : _controller = controller,
+        _subtitleService = subtitleService;
 
   Future<void> initialize() async {
     await _controller.initialize();
@@ -23,19 +23,19 @@ class LyricOverlayManager {
         _controller.updateLyric(subtitle?.text);
       }
     });
-    
+
     _isShowing = await _controller.isShowing();
-    
+
     if (_isShowing) {
       await show();
     }
   }
-  
+
   Future<void> dispose() async {
     await _subscription?.cancel();
     await _controller.dispose();
   }
-  
+
   Future<bool> checkPermission() async {
     return await _controller.checkPermission();
   }
@@ -81,22 +81,23 @@ class LyricOverlayManager {
 
   Future<bool> _showPermissionDialog(BuildContext context) async {
     return await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('开启悬浮歌词'),
-        content: const Text('需要悬浮窗权限来显示歌词，是否授予权限？'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('取消'),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('开启悬浮歌词'),
+            content: const Text('需要悬浮窗权限来显示歌词，是否授予权限？'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('取消'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('确定'),
+              ),
+            ],
           ),
-          TextButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('确定'),
-          ),
-        ],
-      ),
-    ) ?? false;
+        ) ??
+        false;
   }
 
   /// 切换显示/隐藏状态
@@ -107,10 +108,10 @@ class LyricOverlayManager {
       await showWithPermissionCheck(context);
     }
   }
-  
+
   // 其他控制方法...
 
   Future<void> syncState() async {
     _isShowing = await _controller.isShowing();
   }
-} 
+}

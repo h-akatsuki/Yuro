@@ -8,7 +8,7 @@ class PlayerControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final viewModel = GetIt.I<PlayerViewModel>();
-    
+
     return ListenableBuilder(
       listenable: viewModel,
       builder: (context, _) {
@@ -48,4 +48,4 @@ class PlayerControls extends StatelessWidget {
       },
     );
   }
-} 
+}

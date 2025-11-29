@@ -1,10 +1,9 @@
+import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
+import 'package:asmrapp/presentation/viewmodels/recommend_viewmodel.dart';
+import 'package:asmrapp/widgets/filter/filter_with_keyword.dart';
+import 'package:asmrapp/widgets/work_grid/enhanced_work_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:asmrapp/presentation/viewmodels/recommend_viewmodel.dart';
-import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
-import 'package:asmrapp/widgets/work_grid/enhanced_work_grid_view.dart';
-import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
-import 'package:asmrapp/widgets/filter/filter_with_keyword.dart';
 
 class RecommendContent extends StatefulWidget {
   const RecommendContent({super.key});
@@ -13,7 +12,8 @@ class RecommendContent extends StatefulWidget {
   State<RecommendContent> createState() => _RecommendContentState();
 }
 
-class _RecommendContentState extends State<RecommendContent> with AutomaticKeepAliveClientMixin {
+class _RecommendContentState extends State<RecommendContent>
+    with AutomaticKeepAliveClientMixin {
   final _layoutStrategy = const WorkLayoutStrategy();
   final _scrollController = ScrollController();
 
@@ -21,7 +21,8 @@ class _RecommendContentState extends State<RecommendContent> with AutomaticKeepA
   bool get wantKeepAlive => true;
 
   void _onScroll() {
-    if (_scrollController.position.pixels != _scrollController.position.minScrollExtent) {
+    if (_scrollController.position.pixels !=
+        _scrollController.position.minScrollExtent) {
       final viewModel = context.read<RecommendViewModel>();
       if (viewModel.filterPanelExpanded) {
         viewModel.closeFilterPanel();
@@ -85,4 +86,4 @@ class _RecommendContentState extends State<RecommendContent> with AutomaticKeepA
       },
     );
   }
-} 
+}

@@ -37,10 +37,10 @@ class AuthViewModel extends ChangeNotifier {
     try {
       AppLogger.info('AuthViewModel: 开始登录流程');
       _authData = await _authService.login(name, password);
-      
+
       // 保存认证数据
       await _authRepository.saveAuthData(_authData!);
-      
+
       AppLogger.info('''
 登录成功，完整数据:
 - token: ${_authData?.token}
@@ -50,7 +50,6 @@ class AuthViewModel extends ChangeNotifier {
 - email: ${_authData?.user?.email}
 - recommenderUuid: ${_authData?.user?.recommenderUuid}
       ''');
-
     } catch (e) {
       AppLogger.error('AuthViewModel: 登录失败', e);
       _error = e.toString();
@@ -69,7 +68,7 @@ class AuthViewModel extends ChangeNotifier {
 - group: ${_authData?.user?.group}
 - token: ${_authData?.token}
     ''');
-    
+
     await _authRepository.clearAuthData();
     _authData = null;
     notifyListeners();
@@ -91,4 +90,4 @@ class AuthViewModel extends ChangeNotifier {
     }
     notifyListeners();
   }
-} 
+}
