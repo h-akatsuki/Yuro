@@ -12,52 +12,52 @@ class AppLocalizationsJa extends AppLocalizations {
   String get appName => 'asmr.one';
 
   @override
-  String get retry => '重试';
+  String get retry => '再試行';
 
   @override
-  String get cancel => '取消';
+  String get cancel => 'キャンセル';
 
   @override
-  String get confirm => '确认';
+  String get confirm => '確認';
 
   @override
-  String get login => '登录';
+  String get login => 'ログイン';
 
   @override
-  String get favorites => '我的收藏';
+  String get favorites => 'お気に入り';
 
   @override
-  String get settings => '设置';
+  String get settings => '設定';
 
   @override
-  String get cacheManager => '缓存管理';
+  String get cacheManager => 'キャッシュ管理';
 
   @override
-  String get screenAlwaysOn => '屏幕常亮';
+  String get screenAlwaysOn => '画面常時オン';
 
   @override
-  String get themeSystem => '跟随系统主题';
+  String get themeSystem => 'システムと同じ';
 
   @override
-  String get themeLight => '浅色模式';
+  String get themeLight => 'ライトモード';
 
   @override
-  String get themeDark => '深色模式';
+  String get themeDark => 'ダークモード';
 
   @override
-  String get navigationFavorites => '收藏';
+  String get navigationFavorites => 'お気に入り';
 
   @override
-  String get navigationHome => '主页';
+  String get navigationHome => 'ホーム';
 
   @override
-  String get navigationForYou => '为你推荐';
+  String get navigationForYou => 'あなた向け';
 
   @override
-  String get navigationPopularWorks => '热门作品';
+  String get navigationPopularWorks => '人気作品';
 
   @override
-  String get navigationRecommend => '推荐';
+  String get navigationRecommend => 'おすすめ';
 
   @override
   String titleWithCount(String title, int count) {
@@ -65,278 +65,278 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get search => '搜索';
+  String get search => '検索';
 
   @override
-  String get searchHint => '搜索...';
+  String get searchHint => '検索...';
 
   @override
-  String get searchPromptInitial => '输入关键词开始搜索';
+  String get searchPromptInitial => 'キーワードを入力して検索';
 
   @override
-  String get searchNoResults => '没有找到相关结果';
+  String get searchNoResults => '該当する結果がありません';
 
   @override
   String get subtitle => '字幕';
 
   @override
-  String get subtitleAvailable => '有字幕';
+  String get subtitleAvailable => '字幕あり';
 
   @override
-  String get orderFieldCollectionTime => '收录时间';
+  String get orderFieldCollectionTime => '収録日時';
 
   @override
-  String get orderFieldReleaseDate => '发售日期';
+  String get orderFieldReleaseDate => '発売日';
 
   @override
-  String get orderFieldSales => '销量';
+  String get orderFieldSales => '売上';
 
   @override
-  String get orderFieldPrice => '价格';
+  String get orderFieldPrice => '価格';
 
   @override
-  String get orderFieldRating => '评价';
+  String get orderFieldRating => '評価';
 
   @override
-  String get orderFieldReviewCount => '评论数量';
+  String get orderFieldReviewCount => 'レビュー数';
 
   @override
-  String get orderFieldId => 'RJ号';
+  String get orderFieldId => 'RJ番号';
 
   @override
-  String get orderFieldMyRating => '我的评价';
+  String get orderFieldMyRating => '自分の評価';
 
   @override
-  String get orderFieldAllAges => '全年龄';
+  String get orderFieldAllAges => '全年齢';
 
   @override
-  String get orderFieldRandom => '随机';
+  String get orderFieldRandom => 'ランダム';
 
   @override
-  String get orderLabel => '排序';
+  String get orderLabel => '並び替え';
 
   @override
-  String get orderDirectionDesc => '降序';
+  String get orderDirectionDesc => '降順';
 
   @override
-  String get orderDirectionAsc => '升序';
+  String get orderDirectionAsc => '昇順';
 
   @override
-  String get searchOrderNewest => '最新收录';
+  String get searchOrderNewest => '最新収録';
 
   @override
-  String get searchOrderOldest => '最早收录';
+  String get searchOrderOldest => '最古の収録';
 
   @override
-  String get searchOrderReleaseDesc => '发售日期倒序';
+  String get searchOrderReleaseDesc => '発売日(新しい順)';
 
   @override
-  String get searchOrderReleaseAsc => '发售日期顺序';
+  String get searchOrderReleaseAsc => '発売日(古い順)';
 
   @override
-  String get searchOrderSalesDesc => '销量倒序';
+  String get searchOrderSalesDesc => '売上(高い順)';
 
   @override
-  String get searchOrderSalesAsc => '销量顺序';
+  String get searchOrderSalesAsc => '売上(低い順)';
 
   @override
-  String get searchOrderPriceDesc => '价格倒序';
+  String get searchOrderPriceDesc => '価格(高い順)';
 
   @override
-  String get searchOrderPriceAsc => '价格顺序';
+  String get searchOrderPriceAsc => '価格(低い順)';
 
   @override
-  String get searchOrderRatingDesc => '评价倒序';
+  String get searchOrderRatingDesc => '評価(高い順)';
 
   @override
-  String get searchOrderReviewCountDesc => '评论数量倒序';
+  String get searchOrderReviewCountDesc => 'レビュー数(多い順)';
 
   @override
-  String get searchOrderIdDesc => 'RJ号倒序';
+  String get searchOrderIdDesc => 'RJ番号(大きい順)';
 
   @override
-  String get searchOrderIdAsc => 'RJ号顺序';
+  String get searchOrderIdAsc => 'RJ番号(小さい順)';
 
   @override
-  String get searchOrderRandom => '随机排序';
+  String get searchOrderRandom => 'ランダム順';
 
   @override
-  String get favoritesTitle => '我的收藏';
+  String get favoritesTitle => 'お気に入り';
 
   @override
-  String get pleaseLogin => '请先登录';
+  String get pleaseLogin => '先にログインしてください';
 
   @override
-  String get emptyContent => '暂无内容';
+  String get emptyContent => '内容がありません';
 
   @override
-  String get emptyWorks => '暂无作品';
+  String get emptyWorks => '作品がありません';
 
   @override
-  String get similarWorksTitle => '相关推荐';
+  String get similarWorksTitle => '関連作品';
 
   @override
-  String get playlistAddToFavorites => '添加到收藏夹';
+  String get playlistAddToFavorites => 'お気に入りに追加';
 
   @override
-  String get playlistEmpty => '暂无收藏夹';
+  String get playlistEmpty => 'リストがありません';
 
   @override
   String playlistAddSuccess(String name) {
-    return '添加成功: $name';
+    return '追加しました: $name';
   }
 
   @override
   String playlistRemoveSuccess(String name) {
-    return '移除成功: $name';
+    return '削除しました: $name';
   }
 
   @override
-  String get playlistSystemMarked => '我标记的';
+  String get playlistSystemMarked => '自分のマーク';
 
   @override
-  String get playlistSystemLiked => '我喜欢的';
+  String get playlistSystemLiked => 'いいねした';
 
   @override
   String playlistWorksCount(int count) {
-    return '$count 个作品';
+    return '$count 件の作品';
   }
 
   @override
-  String get workActionFavorite => '收藏';
+  String get workActionFavorite => 'お気に入り';
 
   @override
-  String get workActionMark => '标记';
+  String get workActionMark => 'マーク';
 
   @override
-  String get workActionRate => '评分';
+  String get workActionRate => '評価';
 
   @override
-  String get workActionChecking => '检查中';
+  String get workActionChecking => '確認中';
 
   @override
-  String get workActionRecommend => '相关推荐';
+  String get workActionRecommend => 'おすすめ';
 
   @override
-  String get workActionNoRecommendation => '暂无推荐';
+  String get workActionNoRecommendation => 'おすすめはありません';
 
   @override
-  String get markStatusTitle => '标记状态';
+  String get markStatusTitle => 'マーク状態';
 
   @override
-  String get markStatusWantToListen => '想听';
+  String get markStatusWantToListen => '聴きたい';
 
   @override
-  String get markStatusListening => '在听';
+  String get markStatusListening => '聴いている';
 
   @override
-  String get markStatusListened => '听过';
+  String get markStatusListened => '聴いた';
 
   @override
-  String get markStatusRelistening => '重听';
+  String get markStatusRelistening => '聴き直し';
 
   @override
-  String get markStatusOnHold => '搁置';
+  String get markStatusOnHold => '保留';
 
   @override
   String markUpdated(String status) {
-    return '已标记为$status';
+    return '状態を$statusに変更';
   }
 
   @override
   String markFailed(String error) {
-    return '标记失败: $error';
+    return 'マーク失敗: $error';
   }
 
   @override
-  String get workFilesTitle => '文件列表';
+  String get workFilesTitle => 'ファイル一覧';
 
   @override
   String playUnsupportedFileType(String type) {
-    return '不支持的文件类型: $type';
+    return '未対応形式: $type';
   }
 
   @override
-  String get playUrlMissing => '无法播放：文件URL不存在';
+  String get playUrlMissing => '再生できません: URLがありません';
 
   @override
-  String get playFilesNotLoaded => '文件列表未加载';
+  String get playFilesNotLoaded => 'ファイル一覧未読み込み';
 
   @override
   String playFailed(String error) {
-    return '播放失败: $error';
+    return '再生失敗: $error';
   }
 
   @override
   String operationFailed(String error) {
-    return '操作失败: $error';
+    return '操作失敗: $error';
   }
 
   @override
-  String get cacheManagerTitle => '缓存管理';
+  String get cacheManagerTitle => 'キャッシュ管理';
 
   @override
-  String get cacheAudio => '音频缓存';
+  String get cacheAudio => '音声キャッシュ';
 
   @override
-  String get cacheSubtitle => '字幕缓存';
+  String get cacheSubtitle => '字幕キャッシュ';
 
   @override
-  String get cacheTotal => '总缓存大小';
+  String get cacheTotal => 'キャッシュ総量';
 
   @override
-  String get cacheClear => '清理';
+  String get cacheClear => '削除';
 
   @override
-  String get cacheClearAll => '清理全部';
+  String get cacheClearAll => '全て削除';
 
   @override
-  String get cacheInfoTitle => '缓存说明';
+  String get cacheInfoTitle => 'キャッシュについて';
 
   @override
   String get cacheDescription =>
-      '缓存用于存储最近播放的音频文件和字幕文件，以提高再次播放时的加载速度。系统会自动清理过期和超量的缓存。';
+      'キャッシュは直近の音声と字幕を保存し、次回再生を速くします。期限切れや容量超過は自動で整理されます。';
 
   @override
   String cacheLoadFailed(String error) {
-    return '加载失败: $error';
+    return '読み込み失敗: $error';
   }
 
   @override
   String cacheClearFailed(String error) {
-    return '清理失败: $error';
+    return '削除失敗: $error';
   }
 
   @override
   String get subtitleTag => '字幕';
 
   @override
-  String get noPlaying => '未在播放';
+  String get noPlaying => '再生中なし';
 
   @override
-  String get screenOnDisable => '关闭屏幕常亮';
+  String get screenOnDisable => '画面常時オンをオフ';
 
   @override
-  String get screenOnEnable => '开启屏幕常亮';
+  String get screenOnEnable => '画面常時オンをオン';
 
   @override
-  String get unknownWorkTitle => '未知作品';
+  String get unknownWorkTitle => '不明な作品';
 
   @override
-  String get unknownArtist => '未知演员';
+  String get unknownArtist => '不明な出演者';
 
   @override
-  String get lyricsEmpty => '无歌词';
+  String get lyricsEmpty => '歌詞なし';
 
   @override
-  String get loginTitle => '登录';
+  String get loginTitle => 'ログイン';
 
   @override
-  String get loginUsernameLabel => '用户名';
+  String get loginUsernameLabel => 'ユーザー名';
 
   @override
-  String get loginPasswordLabel => '密码';
+  String get loginPasswordLabel => 'パスワード';
 
   @override
-  String get loginAction => '登录';
+  String get loginAction => 'ログイン';
 }

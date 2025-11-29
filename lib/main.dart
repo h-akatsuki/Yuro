@@ -1,14 +1,15 @@
-import 'package:flutter/material.dart';
-import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
-import 'core/di/service_locator.dart';
-import 'package:provider/provider.dart';
-import 'screens/main_screen.dart';
 import 'package:asmrapp/core/theme/app_theme.dart';
 import 'package:asmrapp/core/theme/theme_controller.dart';
-import 'screens/search_screen.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:asmrapp/l10n/app_localizations.dart';
 import 'package:asmrapp/l10n/l10n.dart';
+import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
+
+import 'core/di/service_locator.dart';
+import 'screens/main_screen.dart';
+import 'screens/search_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

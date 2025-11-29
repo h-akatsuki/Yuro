@@ -1,22 +1,22 @@
 {
   "@@locale": "ja",
   "appName": "asmr.one",
-  "retry": "重试",
-  "cancel": "取消",
-  "confirm": "确认",
-  "login": "登录",
-  "favorites": "我的收藏",
-  "settings": "设置",
-  "cacheManager": "缓存管理",
-  "screenAlwaysOn": "屏幕常亮",
-  "themeSystem": "跟随系统主题",
-  "themeLight": "浅色模式",
-  "themeDark": "深色模式",
-  "navigationFavorites": "收藏",
-  "navigationHome": "主页",
-  "navigationForYou": "为你推荐",
-  "navigationPopularWorks": "热门作品",
-  "navigationRecommend": "推荐",
+  "retry": "再試行",
+  "cancel": "キャンセル",
+  "confirm": "確認",
+  "login": "ログイン",
+  "favorites": "お気に入り",
+  "settings": "設定",
+  "cacheManager": "キャッシュ管理",
+  "screenAlwaysOn": "画面常時オン",
+  "themeSystem": "システムと同じ",
+  "themeLight": "ライトモード",
+  "themeDark": "ダークモード",
+  "navigationFavorites": "お気に入り",
+  "navigationHome": "ホーム",
+  "navigationForYou": "あなた向け",
+  "navigationPopularWorks": "人気作品",
+  "navigationRecommend": "おすすめ",
   "titleWithCount": "{title} ({count})",
   "@titleWithCount": {
     "placeholders": {
@@ -28,46 +28,46 @@
       }
     }
   },
-  "search": "搜索",
-  "searchHint": "搜索...",
-  "searchPromptInitial": "输入关键词开始搜索",
-  "searchNoResults": "没有找到相关结果",
+  "search": "検索",
+  "searchHint": "検索...",
+  "searchPromptInitial": "キーワードを入力して検索",
+  "searchNoResults": "該当する結果がありません",
   "subtitle": "字幕",
-  "subtitleAvailable": "有字幕",
-  "orderFieldCollectionTime": "收录时间",
-  "orderFieldReleaseDate": "发售日期",
-  "orderFieldSales": "销量",
-  "orderFieldPrice": "价格",
-  "orderFieldRating": "评价",
-  "orderFieldReviewCount": "评论数量",
-  "orderFieldId": "RJ号",
-  "orderFieldMyRating": "我的评价",
-  "orderFieldAllAges": "全年龄",
-  "orderFieldRandom": "随机",
-  "orderLabel": "排序",
-  "orderDirectionDesc": "降序",
-  "orderDirectionAsc": "升序",
-  "searchOrderNewest": "最新收录",
-  "searchOrderOldest": "最早收录",
-  "searchOrderReleaseDesc": "发售日期倒序",
-  "searchOrderReleaseAsc": "发售日期顺序",
-  "searchOrderSalesDesc": "销量倒序",
-  "searchOrderSalesAsc": "销量顺序",
-  "searchOrderPriceDesc": "价格倒序",
-  "searchOrderPriceAsc": "价格顺序",
-  "searchOrderRatingDesc": "评价倒序",
-  "searchOrderReviewCountDesc": "评论数量倒序",
-  "searchOrderIdDesc": "RJ号倒序",
-  "searchOrderIdAsc": "RJ号顺序",
-  "searchOrderRandom": "随机排序",
-  "favoritesTitle": "我的收藏",
-  "pleaseLogin": "请先登录",
-  "emptyContent": "暂无内容",
-  "emptyWorks": "暂无作品",
-  "similarWorksTitle": "相关推荐",
-  "playlistAddToFavorites": "添加到收藏夹",
-  "playlistEmpty": "暂无收藏夹",
-  "playlistAddSuccess": "添加成功: {name}",
+  "subtitleAvailable": "字幕あり",
+  "orderFieldCollectionTime": "収録日時",
+  "orderFieldReleaseDate": "発売日",
+  "orderFieldSales": "売上",
+  "orderFieldPrice": "価格",
+  "orderFieldRating": "評価",
+  "orderFieldReviewCount": "レビュー数",
+  "orderFieldId": "RJ番号",
+  "orderFieldMyRating": "自分の評価",
+  "orderFieldAllAges": "全年齢",
+  "orderFieldRandom": "ランダム",
+  "orderLabel": "並び替え",
+  "orderDirectionDesc": "降順",
+  "orderDirectionAsc": "昇順",
+  "searchOrderNewest": "最新収録",
+  "searchOrderOldest": "最古の収録",
+  "searchOrderReleaseDesc": "発売日(新しい順)",
+  "searchOrderReleaseAsc": "発売日(古い順)",
+  "searchOrderSalesDesc": "売上(高い順)",
+  "searchOrderSalesAsc": "売上(低い順)",
+  "searchOrderPriceDesc": "価格(高い順)",
+  "searchOrderPriceAsc": "価格(低い順)",
+  "searchOrderRatingDesc": "評価(高い順)",
+  "searchOrderReviewCountDesc": "レビュー数(多い順)",
+  "searchOrderIdDesc": "RJ番号(大きい順)",
+  "searchOrderIdAsc": "RJ番号(小さい順)",
+  "searchOrderRandom": "ランダム順",
+  "favoritesTitle": "お気に入り",
+  "pleaseLogin": "先にログインしてください",
+  "emptyContent": "内容がありません",
+  "emptyWorks": "作品がありません",
+  "similarWorksTitle": "関連作品",
+  "playlistAddToFavorites": "お気に入りに追加",
+  "playlistEmpty": "リストがありません",
+  "playlistAddSuccess": "追加しました: {name}",
   "@playlistAddSuccess": {
     "placeholders": {
       "name": {
@@ -75,7 +75,7 @@
       }
     }
   },
-  "playlistRemoveSuccess": "移除成功: {name}",
+  "playlistRemoveSuccess": "削除しました: {name}",
   "@playlistRemoveSuccess": {
     "placeholders": {
       "name": {
@@ -83,9 +83,9 @@
       }
     }
   },
-  "playlistSystemMarked": "我标记的",
-  "playlistSystemLiked": "我喜欢的",
-  "playlistWorksCount": "{count} 个作品",
+  "playlistSystemMarked": "自分のマーク",
+  "playlistSystemLiked": "いいねした",
+  "playlistWorksCount": "{count} 件の作品",
   "@playlistWorksCount": {
     "placeholders": {
       "count": {
@@ -93,19 +93,19 @@
       }
     }
   },
-  "workActionFavorite": "收藏",
-  "workActionMark": "标记",
-  "workActionRate": "评分",
-  "workActionChecking": "检查中",
-  "workActionRecommend": "相关推荐",
-  "workActionNoRecommendation": "暂无推荐",
-  "markStatusTitle": "标记状态",
-  "markStatusWantToListen": "想听",
-  "markStatusListening": "在听",
-  "markStatusListened": "听过",
-  "markStatusRelistening": "重听",
-  "markStatusOnHold": "搁置",
-  "markUpdated": "已标记为{status}",
+  "workActionFavorite": "お気に入り",
+  "workActionMark": "マーク",
+  "workActionRate": "評価",
+  "workActionChecking": "確認中",
+  "workActionRecommend": "おすすめ",
+  "workActionNoRecommendation": "おすすめはありません",
+  "markStatusTitle": "マーク状態",
+  "markStatusWantToListen": "聴きたい",
+  "markStatusListening": "聴いている",
+  "markStatusListened": "聴いた",
+  "markStatusRelistening": "聴き直し",
+  "markStatusOnHold": "保留",
+  "markUpdated": "状態を{status}に変更",
   "@markUpdated": {
     "placeholders": {
       "status": {
@@ -113,7 +113,7 @@
       }
     }
   },
-  "markFailed": "标记失败: {error}",
+  "markFailed": "マーク失敗: {error}",
   "@markFailed": {
     "placeholders": {
       "error": {
@@ -121,8 +121,8 @@
       }
     }
   },
-  "workFilesTitle": "文件列表",
-  "playUnsupportedFileType": "不支持的文件类型: {type}",
+  "workFilesTitle": "ファイル一覧",
+  "playUnsupportedFileType": "未対応形式: {type}",
   "@playUnsupportedFileType": {
     "placeholders": {
       "type": {
@@ -130,9 +130,9 @@
       }
     }
   },
-  "playUrlMissing": "无法播放：文件URL不存在",
-  "playFilesNotLoaded": "文件列表未加载",
-  "playFailed": "播放失败: {error}",
+  "playUrlMissing": "再生できません: URLがありません",
+  "playFilesNotLoaded": "ファイル一覧未読み込み",
+  "playFailed": "再生失敗: {error}",
   "@playFailed": {
     "placeholders": {
       "error": {
@@ -140,7 +140,7 @@
       }
     }
   },
-  "operationFailed": "操作失败: {error}",
+  "operationFailed": "操作失敗: {error}",
   "@operationFailed": {
     "placeholders": {
       "error": {
@@ -148,15 +148,15 @@
       }
     }
   },
-  "cacheManagerTitle": "缓存管理",
-  "cacheAudio": "音频缓存",
-  "cacheSubtitle": "字幕缓存",
-  "cacheTotal": "总缓存大小",
-  "cacheClear": "清理",
-  "cacheClearAll": "清理全部",
-  "cacheInfoTitle": "缓存说明",
-  "cacheDescription": "缓存用于存储最近播放的音频文件和字幕文件，以提高再次播放时的加载速度。系统会自动清理过期和超量的缓存。",
-  "cacheLoadFailed": "加载失败: {error}",
+  "cacheManagerTitle": "キャッシュ管理",
+  "cacheAudio": "音声キャッシュ",
+  "cacheSubtitle": "字幕キャッシュ",
+  "cacheTotal": "キャッシュ総量",
+  "cacheClear": "削除",
+  "cacheClearAll": "全て削除",
+  "cacheInfoTitle": "キャッシュについて",
+  "cacheDescription": "キャッシュは直近の音声と字幕を保存し、次回再生を速くします。期限切れや容量超過は自動で整理されます。",
+  "cacheLoadFailed": "読み込み失敗: {error}",
   "@cacheLoadFailed": {
     "placeholders": {
       "error": {
@@ -164,7 +164,7 @@
       }
     }
   },
-  "cacheClearFailed": "清理失败: {error}",
+  "cacheClearFailed": "削除失敗: {error}",
   "@cacheClearFailed": {
     "placeholders": {
       "error": {
@@ -173,14 +173,14 @@
     }
   },
   "subtitleTag": "字幕",
-  "noPlaying": "未在播放",
-  "screenOnDisable": "关闭屏幕常亮",
-  "screenOnEnable": "开启屏幕常亮",
-  "unknownWorkTitle": "未知作品",
-  "unknownArtist": "未知演员",
-  "lyricsEmpty": "无歌词",
-  "loginTitle": "登录",
-  "loginUsernameLabel": "用户名",
-  "loginPasswordLabel": "密码",
-  "loginAction": "登录"
+  "noPlaying": "再生中なし",
+  "screenOnDisable": "画面常時オンをオフ",
+  "screenOnEnable": "画面常時オンをオン",
+  "unknownWorkTitle": "不明な作品",
+  "unknownArtist": "不明な出演者",
+  "lyricsEmpty": "歌詞なし",
+  "loginTitle": "ログイン",
+  "loginUsernameLabel": "ユーザー名",
+  "loginPasswordLabel": "パスワード",
+  "loginAction": "ログイン"
 }
