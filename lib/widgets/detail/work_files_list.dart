@@ -3,6 +3,7 @@ import 'package:asmrapp/data/models/files/files.dart';
 import 'package:asmrapp/widgets/detail/work_file_item.dart';
 import 'package:asmrapp/widgets/detail/work_folder_item.dart';
 import 'package:flutter/material.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class WorkFilesList extends StatelessWidget {
   final Files files;
@@ -27,7 +28,7 @@ class WorkFilesList extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16),
             child: Text(
-              '文件列表',
+              context.l10n.workFilesTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),

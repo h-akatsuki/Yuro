@@ -1,5 +1,7 @@
 import 'package:asmrapp/data/models/mark_status.dart';
 import 'package:flutter/material.dart';
+import 'package:asmrapp/l10n/l10n.dart';
+import 'package:asmrapp/common/extensions/mark_status_localizations.dart';
 
 class MarkSelectionDialog extends StatelessWidget {
   final MarkStatus? currentStatus;
@@ -20,7 +22,7 @@ class MarkSelectionDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: isDark ? const Color(0xFF2C2C2C) : Colors.white,
       title: Text(
-        '标记状态',
+        context.l10n.markStatusTitle,
         style: TextStyle(
           color: isDark ? Colors.white70 : Colors.black87,
         ),
@@ -53,7 +55,7 @@ class MarkSelectionDialog extends StatelessWidget {
               }),
             ),
             title: Text(
-              status.label,
+              status.localizedLabel(context.l10n),
               style: TextStyle(
                 color: loading
                     ? (isDark ? Colors.white38 : Colors.black38)

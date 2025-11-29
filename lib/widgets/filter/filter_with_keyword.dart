@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class FilterWithKeyword extends StatelessWidget {
   final bool hasSubtitle;
@@ -61,7 +62,7 @@ class FilterWithKeyword extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '有字幕',
+                          context.l10n.subtitleAvailable,
                           style: TextStyle(
                             color: hasSubtitle
                                 ? colorScheme.primary

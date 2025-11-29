@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:asmrapp/common/constants/strings.dart';
 import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
 import 'core/di/service_locator.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +6,9 @@ import 'screens/main_screen.dart';
 import 'package:asmrapp/core/theme/app_theme.dart';
 import 'package:asmrapp/core/theme/theme_controller.dart';
 import 'screens/search_screen.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:asmrapp/l10n/app_localizations.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,7 +36,14 @@ class MyApp extends StatelessWidget {
       child: Consumer<ThemeController>(
         builder: (context, themeController, child) {
           return MaterialApp(
-            title: Strings.appName,
+            onGenerateTitle: (context) => context.l10n.appName,
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeController.themeMode,

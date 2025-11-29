@@ -13,6 +13,27 @@ import 'package:asmrapp/widgets/detail/playlist_selection_dialog.dart';
 import 'package:asmrapp/data/models/mark_status.dart';
 import 'package:asmrapp/widgets/detail/mark_selection_dialog.dart';
 import 'package:dio/dio.dart';
+import 'package:asmrapp/l10n/l10n.dart';
+import 'package:asmrapp/common/extensions/mark_status_localizations.dart';
+
+enum PlaybackError {
+  unsupportedType,
+  missingUrl,
+  filesNotLoaded,
+  failed,
+}
+
+class PlaybackException implements Exception {
+  final PlaybackError error;
+  final String? detail;
+  final Object? originalError;
+
+  const PlaybackException(
+    this.error, {
+    this.detail,
+    this.originalError,
+  });
+}
 
 class DetailViewModel extends ChangeNotifier {
   late final ApiService _apiService;
@@ -119,15 +140,18 @@ class DetailViewModel extends ChangeNotifier {
 
   Future<void> playFile(Child file, BuildContext context) async {
     if (file.type?.toLowerCase() != 'audio') {
-      throw Exception('不支持的文件类型: ${file.type}');
+      throw PlaybackException(
+        PlaybackError.unsupportedType,
+        detail: file.type,
+      );
     }
 
     if (file.mediaDownloadUrl == null) {
-      throw Exception('无法播放：文件URL不存在');
+      throw const PlaybackException(PlaybackError.missingUrl);
     }
 
     if (_files == null) {
-      throw Exception('文件列表未加载');
+      throw const PlaybackException(PlaybackError.filesNotLoaded);
     }
 
     try {
@@ -142,7 +166,11 @@ class DetailViewModel extends ChangeNotifier {
       if (!_disposed) {
         AppLogger.error('播放失败', e);
       }
-      rethrow;
+      throw PlaybackException(
+        PlaybackError.failed,
+        detail: e.toString(),
+        originalError: e,
+      );
     }
   }
 
@@ -196,7 +224,11 @@ class DetailViewModel extends ChangeNotifier {
             } catch (e) {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('操作失败: $e')),
+                  SnackBar(
+                    content: Text(
+                      context.l10n.operationFailed(e.toString()),
+                    ),
+                  ),
                 );
               }
             }
@@ -273,7 +305,10 @@ class DetailViewModel extends ChangeNotifier {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('已标记为${status.label}'),
+                  content: Text(
+                    context.l10n
+                        .markUpdated(status.localizedLabel(context.l10n)),
+                  ),
                   duration: const Duration(seconds: 2),
                   behavior: SnackBarBehavior.floating,
                 ),
@@ -282,7 +317,9 @@ class DetailViewModel extends ChangeNotifier {
           } catch (e) {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('标记失败: $e')),
+                SnackBar(
+                  content: Text(context.l10n.markFailed(e.toString())),
+                ),
               );
             }
           }

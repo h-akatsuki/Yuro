@@ -4,6 +4,7 @@ import 'package:asmrapp/widgets/filter/filter_with_keyword.dart';
 import 'package:asmrapp/widgets/work_grid/enhanced_work_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class RecommendContent extends StatefulWidget {
   const RecommendContent({super.key});
@@ -57,7 +58,9 @@ class _RecommendContentState extends State<RecommendContent>
             EnhancedWorkGridView(
               works: viewModel.works,
               isLoading: viewModel.isLoading,
-              error: viewModel.error,
+              error: viewModel.loginRequired
+                  ? context.l10n.pleaseLogin
+                  : viewModel.error,
               currentPage: viewModel.currentPage,
               totalPages: viewModel.totalPages,
               onPageChanged: (page) => viewModel.loadPage(page),

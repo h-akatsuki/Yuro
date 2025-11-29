@@ -130,18 +130,6 @@ class PlaylistsViewModel extends ChangeNotifier {
   /// 刷新播放列表作品
   Future<void> refreshWorks() => loadPlaylistWorks(page: 1);
 
-  /// 获取播放列表显示名称
-  String getDisplayName(String? name) {
-    switch (name) {
-      case '__SYS_PLAYLIST_MARKED':
-        return '我标记的';
-      case '__SYS_PLAYLIST_LIKED':
-        return '我喜欢的';
-      default:
-        return name ?? '';
-    }
-  }
-
   @override
   void dispose() {
     AppLogger.info('销毁 PlaylistsViewModel');

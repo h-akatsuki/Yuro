@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class GridError extends StatelessWidget {
   final String error;
@@ -32,7 +33,7 @@ class GridError extends StatelessWidget {
             FilledButton.icon(
               onPressed: onRetry,
               icon: const Icon(Icons.refresh),
-              label: const Text('重试'),
+              label: Text(context.l10n.retry),
             ),
           ],
         ],

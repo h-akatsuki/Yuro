@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class FilterPanel extends StatelessWidget {
   final bool expanded;
@@ -20,30 +21,30 @@ class FilterPanel extends StatelessWidget {
     required this.onSortDirectionChanged,
   });
 
-  String _getOrderFieldText(String field) {
+  String _getOrderFieldText(BuildContext context, String field) {
     switch (field) {
       case 'create_date':
-        return '收录时间';
+        return context.l10n.orderFieldCollectionTime;
       case 'release':
-        return '发售日期';
+        return context.l10n.orderFieldReleaseDate;
       case 'dl_count':
-        return '销量';
+        return context.l10n.orderFieldSales;
       case 'price':
-        return '价格';
+        return context.l10n.orderFieldPrice;
       case 'rate_average_2dp':
-        return '评价';
+        return context.l10n.orderFieldRating;
       case 'review_count':
-        return '评论数量';
+        return context.l10n.orderFieldReviewCount;
       case 'id':
-        return 'RJ号';
+        return context.l10n.orderFieldId;
       case 'rating':
-        return '我的评价';
+        return context.l10n.orderFieldMyRating;
       case 'nsfw':
-        return '全年龄';
+        return context.l10n.orderFieldAllAges;
       case 'random':
-        return '随机';
+        return context.l10n.orderFieldRandom;
       default:
-        return '排序';
+        return context.l10n.orderLabel;
     }
   }
 
@@ -87,7 +88,7 @@ class FilterPanel extends StatelessWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '有字幕',
+                          context.l10n.subtitleAvailable,
                           style: TextStyle(
                             color: hasSubtitle
                                 ? Theme.of(context).colorScheme.primary
@@ -119,23 +120,23 @@ class FilterPanel extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(_getOrderFieldText(orderField)),
+                      Text(_getOrderFieldText(context, orderField)),
                       const SizedBox(width: 4),
                       const Icon(Icons.arrow_drop_down, size: 20),
                     ],
                   ),
                 ),
                 itemBuilder: (context) => [
-                  _buildOrderMenuItem('收录时间', 'create_date'),
-                  _buildOrderMenuItem('发售日期', 'release'),
-                  _buildOrderMenuItem('销量', 'dl_count'),
-                  _buildOrderMenuItem('价格', 'price'),
-                  _buildOrderMenuItem('评价', 'rate_average_2dp'),
-                  _buildOrderMenuItem('评论数量', 'review_count'),
-                  _buildOrderMenuItem('RJ号', 'id'),
-                  _buildOrderMenuItem('我的评价', 'rating'),
-                  _buildOrderMenuItem('全年龄', 'nsfw'),
-                  _buildOrderMenuItem('随机', 'random'),
+                  _buildOrderMenuItem(context, 'create_date'),
+                  _buildOrderMenuItem(context, 'release'),
+                  _buildOrderMenuItem(context, 'dl_count'),
+                  _buildOrderMenuItem(context, 'price'),
+                  _buildOrderMenuItem(context, 'rate_average_2dp'),
+                  _buildOrderMenuItem(context, 'review_count'),
+                  _buildOrderMenuItem(context, 'id'),
+                  _buildOrderMenuItem(context, 'rating'),
+                  _buildOrderMenuItem(context, 'nsfw'),
+                  _buildOrderMenuItem(context, 'random'),
                 ],
               ),
             ),
@@ -162,7 +163,9 @@ class FilterPanel extends StatelessWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(isDescending ? '降序' : '升序'),
+                        Text(isDescending
+                            ? context.l10n.orderDirectionDesc
+                            : context.l10n.orderDirectionAsc),
                         const SizedBox(width: 4),
                         Icon(
                           isDescending
@@ -183,10 +186,13 @@ class FilterPanel extends StatelessWidget {
     );
   }
 
-  PopupMenuItem<String> _buildOrderMenuItem(String text, String value) {
+  PopupMenuItem<String> _buildOrderMenuItem(
+    BuildContext context,
+    String value,
+  ) {
     return PopupMenuItem(
       value: value,
-      child: Text(text),
+      child: Text(_getOrderFieldText(context, value)),
     );
   }
 }

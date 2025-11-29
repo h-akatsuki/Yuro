@@ -19,6 +19,7 @@ class RecommendViewModel extends ChangeNotifier {
   int _currentPage = 1;
   bool _hasSubtitle = false;
   bool _filterPanelExpanded = false;
+  bool _loginRequired = false;
 
   RecommendViewModel(this._authViewModel)
       : _apiService = GetIt.I<ApiService>() {
@@ -59,6 +60,7 @@ class RecommendViewModel extends ChangeNotifier {
           : null;
   bool get hasSubtitle => _hasSubtitle;
   bool get filterPanelExpanded => _filterPanelExpanded;
+  bool get loginRequired => _loginRequired;
 
   Pagination? get pagination => _pagination;
 
@@ -90,13 +92,15 @@ class RecommendViewModel extends ChangeNotifier {
     // 检查是否已登录
     final uuid = _authViewModel.recommenderUuid;
     if (uuid == null) {
-      _error = '请先登录';
+      _loginRequired = true;
+      _error = null;
       notifyListeners();
       return;
     }
 
     _isLoading = true;
     _error = null;
+    _loginRequired = false;
     notifyListeners();
 
     try {

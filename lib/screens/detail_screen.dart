@@ -9,6 +9,7 @@ import 'package:asmrapp/widgets/detail/work_files_skeleton.dart';
 import 'package:asmrapp/presentation/viewmodels/detail_viewmodel.dart';
 import 'package:asmrapp/widgets/detail/work_action_buttons.dart';
 import 'package:asmrapp/screens/similar_works_screen.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class DetailScreen extends StatelessWidget {
   final Work work;
@@ -100,7 +101,11 @@ class DetailScreen extends StatelessWidget {
                         } catch (e) {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('播放失败: $e')),
+                              SnackBar(
+                                content: Text(
+                                  _playbackErrorMessage(context, e),
+                                ),
+                              ),
                             );
                           }
                         }
@@ -117,5 +122,21 @@ class DetailScreen extends StatelessWidget {
         bottomSheet: const MiniPlayer(),
       ),
     );
+  }
+
+  String _playbackErrorMessage(BuildContext context, Object error) {
+    if (error is PlaybackException) {
+      switch (error.error) {
+        case PlaybackError.unsupportedType:
+          return context.l10n.playUnsupportedFileType(error.detail ?? '');
+        case PlaybackError.missingUrl:
+          return context.l10n.playUrlMissing;
+        case PlaybackError.filesNotLoaded:
+          return context.l10n.playFilesNotLoaded;
+        case PlaybackError.failed:
+          return context.l10n.playFailed(error.detail ?? '');
+      }
+    }
+    return context.l10n.playFailed(error.toString());
   }
 }

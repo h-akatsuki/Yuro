@@ -1,5 +1,7 @@
 import 'package:asmrapp/data/models/playlists_with_exist_statu/playlist.dart';
 import 'package:flutter/material.dart';
+import 'package:asmrapp/l10n/l10n.dart';
+import 'package:asmrapp/common/utils/playlist_localizations.dart';
 
 class PlaylistSelectionDialog extends StatefulWidget {
   final List<Playlist>? playlists;
@@ -68,7 +70,7 @@ class _PlaylistSelectionDialogState extends State<PlaylistSelectionDialog> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '添加到收藏夹',
+                context.l10n.playlistAddToFavorites,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 16),
@@ -99,7 +101,7 @@ class _PlaylistSelectionDialogState extends State<PlaylistSelectionDialog> {
               const SizedBox(height: 8),
               ElevatedButton(
                 onPressed: widget.onRetry,
-                child: const Text('重试'),
+                child: Text(context.l10n.retry),
               ),
             ],
           ],
@@ -108,8 +110,8 @@ class _PlaylistSelectionDialogState extends State<PlaylistSelectionDialog> {
     }
 
     if (widget.playlists == null || widget.playlists!.isEmpty) {
-      return const Center(
-        child: Text('暂无收藏夹'),
+      return Center(
+        child: Text(context.l10n.playlistEmpty),
       );
     }
 
@@ -147,10 +149,15 @@ class _PlaylistSelectionDialogState extends State<PlaylistSelectionDialog> {
           isLoading: false,
         );
 
+        final playlistName =
+            localizedPlaylistName(newPlaylist.name, context.l10n);
+        final message = newPlaylist.exist!
+            ? context.l10n.playlistAddSuccess(playlistName)
+            : context.l10n.playlistRemoveSuccess(playlistName);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              '${newPlaylist.exist! ? '添加成功' : '移除成功'}: ${_getDisplayName(newPlaylist.name)}',
+              message,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onSurface,
               ),
@@ -174,17 +181,6 @@ class _PlaylistSelectionDialogState extends State<PlaylistSelectionDialog> {
       }
     }
   }
-
-  String _getDisplayName(String? name) {
-    switch (name) {
-      case '__SYS_PLAYLIST_MARKED':
-        return '我标记的';
-      case '__SYS_PLAYLIST_LIKED':
-        return '我喜欢的';
-      default:
-        return name ?? '';
-    }
-  }
 }
 
 class _PlaylistItem extends StatelessWidget {
@@ -196,22 +192,15 @@ class _PlaylistItem extends StatelessWidget {
     this.onTap,
   });
 
-  String _getDisplayName(String? name) {
-    switch (name) {
-      case '__SYS_PLAYLIST_MARKED':
-        return '我标记的';
-      case '__SYS_PLAYLIST_LIKED':
-        return '我喜欢的';
-      default:
-        return name ?? '';
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: Text(_getDisplayName(state.playlist.name)),
-      subtitle: Text('${state.playlist.worksCount ?? 0} 个作品'),
+      title: Text(
+        localizedPlaylistName(state.playlist.name, context.l10n),
+      ),
+      subtitle: Text(
+        context.l10n.playlistWorksCount(state.playlist.worksCount ?? 0),
+      ),
       trailing: state.isLoading
           ? const SizedBox(
               width: 24,

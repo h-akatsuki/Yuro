@@ -3,6 +3,7 @@ import 'package:asmrapp/utils/logger.dart';
 import 'package:asmrapp/widgets/common/tag_chip.dart';
 import 'package:asmrapp/widgets/detail/work_stats_info.dart';
 import 'package:flutter/material.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class WorkInfoHeader extends StatelessWidget {
   final Work work;
@@ -56,7 +57,7 @@ class WorkInfoHeader extends StatelessWidget {
             ),
             if (work.hasSubtitle == true)
               TagChip(
-                text: '字幕',
+                text: context.l10n.subtitleTag,
                 backgroundColor: Colors.blue.withValues(alpha: 0.2),
                 textColor: Colors.blue[700],
               ),

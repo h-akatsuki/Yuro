@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:asmrapp/data/models/my_lists/my_playlists/playlist.dart';
 import 'package:asmrapp/presentation/viewmodels/playlist_works_viewmodel.dart';
-import 'package:asmrapp/presentation/viewmodels/playlists_viewmodel.dart';
 import 'package:asmrapp/widgets/work_grid/enhanced_work_grid_view.dart';
 import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
+import 'package:asmrapp/l10n/l10n.dart';
+import 'package:asmrapp/common/utils/playlist_localizations.dart';
 
 class PlaylistWorksView extends StatelessWidget {
   final Playlist playlist;
@@ -19,8 +20,6 @@ class PlaylistWorksView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final playlistsViewModel = context.read<PlaylistsViewModel>();
-
     return ChangeNotifierProvider(
       create: (_) => PlaylistWorksViewModel(playlist)..loadWorks(),
       child: Consumer<PlaylistWorksViewModel>(
@@ -39,7 +38,7 @@ class PlaylistWorksView extends StatelessWidget {
                       ),
                       Expanded(
                         child: Text(
-                          playlistsViewModel.getDisplayName(playlist.name),
+                          localizedPlaylistName(playlist.name, context.l10n),
                           style: Theme.of(context).textTheme.titleMedium,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -59,7 +58,7 @@ class PlaylistWorksView extends StatelessWidget {
                   totalPages: viewModel.totalPages,
                   onPageChanged: (page) => viewModel.loadWorks(page: page),
                   layoutStrategy: _layoutStrategy,
-                  emptyMessage: '暂无作品',
+                  emptyMessage: context.l10n.emptyWorks,
                 ),
               ),
             ],

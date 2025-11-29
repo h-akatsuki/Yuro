@@ -2,6 +2,7 @@ import 'package:asmrapp/presentation/viewmodels/player_viewmodel.dart';
 import 'package:asmrapp/screens/player_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 import 'mini_player_controls.dart';
 import 'mini_player_cover.dart';
@@ -98,7 +99,8 @@ class MiniPlayer extends StatelessWidget {
                             child: Material(
                               color: Colors.transparent,
                               child: Text(
-                                viewModel.currentTrackInfo?.title ?? '未在播放',
+                                viewModel.currentTrackInfo?.title ??
+                                    context.l10n.noPlaying,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: Theme.of(context).textTheme.titleSmall,

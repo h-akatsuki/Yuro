@@ -5,6 +5,7 @@ import 'package:asmrapp/widgets/pagination_controls.dart';
 import 'package:asmrapp/widgets/work_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class SearchScreen extends StatelessWidget {
   final String? initialKeyword;
@@ -80,26 +81,33 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
     }
   }
 
-  String _getOrderText(String order, String sort) {
+  String _getOrderText(BuildContext context, String order, String sort) {
+    final l10n = context.l10n;
     switch (order) {
       case 'create_date':
-        return sort == 'desc' ? '最新收录' : '最早收录';
+        return sort == 'desc' ? l10n.searchOrderNewest : l10n.searchOrderOldest;
       case 'release':
-        return sort == 'desc' ? '发售日期倒序' : '发售日期顺序';
+        return sort == 'desc'
+            ? l10n.searchOrderReleaseDesc
+            : l10n.searchOrderReleaseAsc;
       case 'dl_count':
-        return sort == 'desc' ? '销量倒序' : '销量顺序';
+        return sort == 'desc'
+            ? l10n.searchOrderSalesDesc
+            : l10n.searchOrderSalesAsc;
       case 'price':
-        return sort == 'desc' ? '价格倒序' : '价格顺序';
+        return sort == 'desc'
+            ? l10n.searchOrderPriceDesc
+            : l10n.searchOrderPriceAsc;
       case 'rate_average_2dp':
-        return '评价倒序';
+        return l10n.searchOrderRatingDesc;
       case 'review_count':
-        return '评论数量倒序';
+        return l10n.searchOrderReviewCountDesc;
       case 'id':
-        return sort == 'desc' ? 'RJ号倒序' : 'RJ号顺序';
+        return sort == 'desc' ? l10n.searchOrderIdDesc : l10n.searchOrderIdAsc;
       case 'random':
-        return '随机排序';
+        return l10n.searchOrderRandom;
       default:
-        return '排序';
+        return l10n.orderLabel;
     }
   }
 
@@ -121,7 +129,7 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
                   child: TextField(
                     controller: _searchController,
                     decoration: InputDecoration(
-                      hintText: '搜索...',
+                      hintText: context.l10n.searchHint,
                       filled: true,
                       fillColor: Theme.of(context)
                           .colorScheme
@@ -158,7 +166,7 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
                       // 字幕选项
                       Consumer<SearchViewModel>(
                         builder: (context, viewModel, _) => FilterChip(
-                          label: const Text('字幕'),
+                          label: Text(context.l10n.subtitle),
                           selected: viewModel.hasSubtitle,
                           onSelected: (_) => viewModel.toggleSubtitle(),
                           showCheckmark: true,
@@ -170,56 +178,57 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
                         builder: (context, viewModel, _) =>
                             PopupMenuButton<(String, String)>(
                           child: Chip(
-                            label: Text(
-                                _getOrderText(viewModel.order, viewModel.sort)),
+                            label: Text(_getOrderText(
+                                context, viewModel.order, viewModel.sort)),
                             deleteIcon:
                                 const Icon(Icons.arrow_drop_down, size: 18),
                             onDeleted: null,
                           ),
                           itemBuilder: (context) => [
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('create_date', 'desc'),
-                              child: Text('最新收录'),
+                              child: Text(context.l10n.searchOrderNewest),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('release', 'desc'),
-                              child: Text('发售日期倒序'),
+                              child: Text(context.l10n.searchOrderReleaseDesc),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('release', 'asc'),
-                              child: Text('发售日期顺序'),
+                              child: Text(context.l10n.searchOrderReleaseAsc),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('dl_count', 'desc'),
-                              child: Text('销量倒序'),
+                              child: Text(context.l10n.searchOrderSalesDesc),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('price', 'asc'),
-                              child: Text('价格顺序'),
+                              child: Text(context.l10n.searchOrderPriceAsc),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('price', 'desc'),
-                              child: Text('价格倒序'),
+                              child: Text(context.l10n.searchOrderPriceDesc),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('rate_average_2dp', 'desc'),
-                              child: Text('评价倒序'),
+                              child: Text(context.l10n.searchOrderRatingDesc),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('review_count', 'desc'),
-                              child: Text('评论数量倒序'),
+                              child:
+                                  Text(context.l10n.searchOrderReviewCountDesc),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('id', 'desc'),
-                              child: Text('RJ号倒序'),
+                              child: Text(context.l10n.searchOrderIdDesc),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('id', 'asc'),
-                              child: Text('RJ号顺序'),
+                              child: Text(context.l10n.searchOrderIdAsc),
                             ),
-                            const PopupMenuItem(
+                            PopupMenuItem(
                               value: ('random', 'desc'),
-                              child: Text('随机排序'),
+                              child: Text(context.l10n.searchOrderRandom),
                             ),
                           ],
                           onSelected: (value) =>
@@ -237,12 +246,12 @@ class _SearchScreenContentState extends State<SearchScreenContent> {
               builder: (context, viewModel, child) {
                 Widget? emptyWidget;
                 if (viewModel.works.isEmpty && viewModel.keyword.isEmpty) {
-                  emptyWidget = const Center(
-                    child: Text('输入关键词开始搜索'),
+                  emptyWidget = Center(
+                    child: Text(context.l10n.searchPromptInitial),
                   );
                 } else if (viewModel.works.isEmpty) {
-                  emptyWidget = const Center(
-                    child: Text('没有找到相关结果'),
+                  emptyWidget = Center(
+                    child: Text(context.l10n.searchNoResults),
                   );
                 }
 

@@ -7,13 +7,16 @@ class CacheManagerViewModel extends ChangeNotifier {
   bool _isLoading = false;
   int _audioCacheSize = 0;
   int _subtitleCacheSize = 0;
-  String? _error;
+  String? _errorDetail;
+  CacheOperation? _lastFailedOperation;
 
   bool get isLoading => _isLoading;
   int get audioCacheSize => _audioCacheSize;
   int get subtitleCacheSize => _subtitleCacheSize;
   int get totalCacheSize => _audioCacheSize + _subtitleCacheSize;
-  String? get error => _error;
+  String? get error => _errorDetail;
+  String? get errorDetail => _errorDetail;
+  CacheOperation? get lastFailedOperation => _lastFailedOperation;
 
   // 格式化缓存大小显示
   String _formatSize(int size) {
@@ -30,6 +33,8 @@ class CacheManagerViewModel extends ChangeNotifier {
   Future<void> loadCacheSize() async {
     try {
       _isLoading = true;
+      _errorDetail = null;
+      _lastFailedOperation = null;
       notifyListeners();
 
       // 获取音频缓存大小
@@ -37,10 +42,11 @@ class CacheManagerViewModel extends ChangeNotifier {
       // 获取字幕缓存大小
       _subtitleCacheSize = await SubtitleCacheManager.getSize();
 
-      _error = null;
+      _errorDetail = null;
     } catch (e) {
       AppLogger.error('加载缓存大小失败', e);
-      _error = '加载失败: $e';
+      _errorDetail = e.toString();
+      _lastFailedOperation = CacheOperation.load;
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -51,14 +57,17 @@ class CacheManagerViewModel extends ChangeNotifier {
   Future<void> clearAudioCache() async {
     try {
       _isLoading = true;
+      _errorDetail = null;
+      _lastFailedOperation = null;
       notifyListeners();
 
       await AudioCacheManager.cleanCache();
       await loadCacheSize();
-      _error = null;
+      _errorDetail = null;
     } catch (e) {
       AppLogger.error('清理音频缓存失败', e);
-      _error = '清理失败: $e';
+      _errorDetail = e.toString();
+      _lastFailedOperation = CacheOperation.clearAudio;
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -69,14 +78,17 @@ class CacheManagerViewModel extends ChangeNotifier {
   Future<void> clearSubtitleCache() async {
     try {
       _isLoading = true;
+      _errorDetail = null;
+      _lastFailedOperation = null;
       notifyListeners();
 
       await SubtitleCacheManager.clearCache();
       await loadCacheSize();
-      _error = null;
+      _errorDetail = null;
     } catch (e) {
       AppLogger.error('清理字幕缓存失败', e);
-      _error = '清理失败: $e';
+      _errorDetail = e.toString();
+      _lastFailedOperation = CacheOperation.clearSubtitle;
     } finally {
       _isLoading = false;
       notifyListeners();
@@ -87,6 +99,8 @@ class CacheManagerViewModel extends ChangeNotifier {
   Future<void> clearAllCache() async {
     try {
       _isLoading = true;
+      _errorDetail = null;
+      _lastFailedOperation = null;
       notifyListeners();
 
       await Future.wait([
@@ -95,13 +109,21 @@ class CacheManagerViewModel extends ChangeNotifier {
       ]);
 
       await loadCacheSize();
-      _error = null;
+      _errorDetail = null;
     } catch (e) {
       AppLogger.error('清理缓存失败', e);
-      _error = '清理失败: $e';
+      _errorDetail = e.toString();
+      _lastFailedOperation = CacheOperation.clearAll;
     } finally {
       _isLoading = false;
       notifyListeners();
     }
   }
+}
+
+enum CacheOperation {
+  load,
+  clearAudio,
+  clearSubtitle,
+  clearAll,
 }

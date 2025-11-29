@@ -1,5 +1,7 @@
 import 'package:asmrapp/data/models/mark_status.dart';
 import 'package:flutter/material.dart';
+import 'package:asmrapp/l10n/l10n.dart';
+import 'package:asmrapp/common/extensions/mark_status_localizations.dart';
 
 class WorkActionButtons extends StatelessWidget {
   final VoidCallback onRecommendationsTap;
@@ -32,19 +34,20 @@ class WorkActionButtons extends StatelessWidget {
         children: [
           _ActionButton(
             icon: Icons.favorite_border,
-            label: '收藏',
+            label: context.l10n.workActionFavorite,
             onTap: onFavoriteTap,
             loading: loadingFavorite,
           ),
           _ActionButton(
             icon: Icons.bookmark_border,
-            label: currentMarkStatus?.label ?? '标记',
+            label: currentMarkStatus?.localizedLabel(context.l10n) ??
+                context.l10n.workActionMark,
             onTap: onMarkTap,
             loading: loadingMark,
           ),
           _ActionButton(
             icon: Icons.star_border,
-            label: '评分',
+            label: context.l10n.workActionRate,
             onTap: () {
               // TODO: 实现评分功能
             },
@@ -52,8 +55,10 @@ class WorkActionButtons extends StatelessWidget {
           _ActionButton(
             icon: Icons.recommend,
             label: checkingRecommendations
-                ? '检查中'
-                : (hasRecommendations ? '相关推荐' : '暂无推荐'),
+                ? context.l10n.workActionChecking
+                : (hasRecommendations
+                    ? context.l10n.workActionRecommend
+                    : context.l10n.workActionNoRecommendation),
             onTap: hasRecommendations ? onRecommendationsTap : null,
             loading: checkingRecommendations,
           ),

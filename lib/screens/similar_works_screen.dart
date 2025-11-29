@@ -6,6 +6,7 @@ import 'package:asmrapp/presentation/viewmodels/similar_works_viewmodel.dart';
 import 'package:asmrapp/widgets/work_grid_view.dart';
 import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
 import 'package:asmrapp/widgets/pagination_controls.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class SimilarWorksScreen extends StatefulWidget {
   final Work work;
@@ -63,7 +64,7 @@ class _SimilarWorksScreenState extends State<SimilarWorksScreen> {
       value: _viewModel,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('相关推荐'),
+          title: Text(context.l10n.similarWorksTitle),
           actions: [
             Consumer<SimilarWorksViewModel>(
               builder: (context, viewModel, _) => IconButton(

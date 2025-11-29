@@ -5,6 +5,7 @@ import 'package:asmrapp/presentation/viewmodels/favorites_viewmodel.dart';
 import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
 import 'package:asmrapp/widgets/pagination_controls.dart';
 import 'package:asmrapp/widgets/work_grid_view.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -48,7 +49,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       value: _viewModel,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('我的收藏'),
+          title: Text(context.l10n.favoritesTitle),
         ),
         drawer: const DrawerMenu(),
         body: Consumer<FavoritesViewModel>(

@@ -7,6 +7,7 @@ import 'package:asmrapp/core/subtitle/i_subtitle_service.dart';
 import 'package:asmrapp/core/audio/models/subtitle.dart';
 import 'lyric_line.dart';
 import 'package:asmrapp/presentation/viewmodels/player_viewmodel.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class PlayerLyricView extends StatefulWidget {
   final bool immediateScroll;
@@ -95,8 +96,8 @@ class _PlayerLyricViewState extends State<PlayerLyricView> {
         final subtitleList = _subtitleService.subtitleList;
 
         if (subtitleList == null || subtitleList.subtitles.isEmpty) {
-          return const Center(
-            child: Text('无歌词'),
+          return Center(
+            child: Text(context.l10n.lyricsEmpty),
           );
         }
 

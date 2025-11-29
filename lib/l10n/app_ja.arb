@@ -1,0 +1,186 @@
+{
+  "@@locale": "ja",
+  "appName": "asmr.one",
+  "retry": "重试",
+  "cancel": "取消",
+  "confirm": "确认",
+  "login": "登录",
+  "favorites": "我的收藏",
+  "settings": "设置",
+  "cacheManager": "缓存管理",
+  "screenAlwaysOn": "屏幕常亮",
+  "themeSystem": "跟随系统主题",
+  "themeLight": "浅色模式",
+  "themeDark": "深色模式",
+  "navigationFavorites": "收藏",
+  "navigationHome": "主页",
+  "navigationForYou": "为你推荐",
+  "navigationPopularWorks": "热门作品",
+  "navigationRecommend": "推荐",
+  "titleWithCount": "{title} ({count})",
+  "@titleWithCount": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "search": "搜索",
+  "searchHint": "搜索...",
+  "searchPromptInitial": "输入关键词开始搜索",
+  "searchNoResults": "没有找到相关结果",
+  "subtitle": "字幕",
+  "subtitleAvailable": "有字幕",
+  "orderFieldCollectionTime": "收录时间",
+  "orderFieldReleaseDate": "发售日期",
+  "orderFieldSales": "销量",
+  "orderFieldPrice": "价格",
+  "orderFieldRating": "评价",
+  "orderFieldReviewCount": "评论数量",
+  "orderFieldId": "RJ号",
+  "orderFieldMyRating": "我的评价",
+  "orderFieldAllAges": "全年龄",
+  "orderFieldRandom": "随机",
+  "orderLabel": "排序",
+  "orderDirectionDesc": "降序",
+  "orderDirectionAsc": "升序",
+  "searchOrderNewest": "最新收录",
+  "searchOrderOldest": "最早收录",
+  "searchOrderReleaseDesc": "发售日期倒序",
+  "searchOrderReleaseAsc": "发售日期顺序",
+  "searchOrderSalesDesc": "销量倒序",
+  "searchOrderSalesAsc": "销量顺序",
+  "searchOrderPriceDesc": "价格倒序",
+  "searchOrderPriceAsc": "价格顺序",
+  "searchOrderRatingDesc": "评价倒序",
+  "searchOrderReviewCountDesc": "评论数量倒序",
+  "searchOrderIdDesc": "RJ号倒序",
+  "searchOrderIdAsc": "RJ号顺序",
+  "searchOrderRandom": "随机排序",
+  "favoritesTitle": "我的收藏",
+  "pleaseLogin": "请先登录",
+  "emptyContent": "暂无内容",
+  "emptyWorks": "暂无作品",
+  "similarWorksTitle": "相关推荐",
+  "playlistAddToFavorites": "添加到收藏夹",
+  "playlistEmpty": "暂无收藏夹",
+  "playlistAddSuccess": "添加成功: {name}",
+  "@playlistAddSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistRemoveSuccess": "移除成功: {name}",
+  "@playlistRemoveSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistSystemMarked": "我标记的",
+  "playlistSystemLiked": "我喜欢的",
+  "playlistWorksCount": "{count} 个作品",
+  "@playlistWorksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "workActionFavorite": "收藏",
+  "workActionMark": "标记",
+  "workActionRate": "评分",
+  "workActionChecking": "检查中",
+  "workActionRecommend": "相关推荐",
+  "workActionNoRecommendation": "暂无推荐",
+  "markStatusTitle": "标记状态",
+  "markStatusWantToListen": "想听",
+  "markStatusListening": "在听",
+  "markStatusListened": "听过",
+  "markStatusRelistening": "重听",
+  "markStatusOnHold": "搁置",
+  "markUpdated": "已标记为{status}",
+  "@markUpdated": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "markFailed": "标记失败: {error}",
+  "@markFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "workFilesTitle": "文件列表",
+  "playUnsupportedFileType": "不支持的文件类型: {type}",
+  "@playUnsupportedFileType": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "playUrlMissing": "无法播放：文件URL不存在",
+  "playFilesNotLoaded": "文件列表未加载",
+  "playFailed": "播放失败: {error}",
+  "@playFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "operationFailed": "操作失败: {error}",
+  "@operationFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cacheManagerTitle": "缓存管理",
+  "cacheAudio": "音频缓存",
+  "cacheSubtitle": "字幕缓存",
+  "cacheTotal": "总缓存大小",
+  "cacheClear": "清理",
+  "cacheClearAll": "清理全部",
+  "cacheInfoTitle": "缓存说明",
+  "cacheDescription": "缓存用于存储最近播放的音频文件和字幕文件，以提高再次播放时的加载速度。系统会自动清理过期和超量的缓存。",
+  "cacheLoadFailed": "加载失败: {error}",
+  "@cacheLoadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cacheClearFailed": "清理失败: {error}",
+  "@cacheClearFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "subtitleTag": "字幕",
+  "noPlaying": "未在播放",
+  "screenOnDisable": "关闭屏幕常亮",
+  "screenOnEnable": "开启屏幕常亮",
+  "unknownWorkTitle": "未知作品",
+  "unknownArtist": "未知演员",
+  "lyricsEmpty": "无歌词",
+  "loginTitle": "登录",
+  "loginUsernameLabel": "用户名",
+  "loginPasswordLabel": "密码",
+  "loginAction": "登录"
+}

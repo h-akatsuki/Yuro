@@ -12,6 +12,7 @@ import 'package:asmrapp/widgets/drawer_menu.dart';
 import 'package:asmrapp/widgets/mini_player/mini_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 /// MainScreen 是应用的主界面，负责管理底部导航栏和对应的内容页面。
 /// 它采用了集中式的状态管理架构，所有子页面的 ViewModel 都在这里初始化和提供。
@@ -37,8 +38,6 @@ class _MainScreenState extends State<MainScreen> {
   late final PopularViewModel _popularViewModel;
   late final RecommendViewModel _recommendViewModel;
   late final PlaylistsViewModel _playlistsViewModel;
-
-  final _titles = const ['收藏', '主页', '为你推荐', '热门作品'];
 
   // 页面内容列表
   // 注意：这些页面不应该创建自己的 ViewModel 实例
@@ -110,10 +109,18 @@ class _MainScreenState extends State<MainScreen> {
                       ? context.watch<PopularViewModel>().pagination?.totalCount
                       : null;
 
+          final titles = [
+            context.l10n.navigationFavorites,
+            context.l10n.navigationHome,
+            context.l10n.navigationForYou,
+            context.l10n.navigationPopularWorks,
+          ];
+          final baseTitle = titles[_currentIndex];
+
           // 构建标题文本
           final title = totalCount != null
-              ? '${_titles[_currentIndex]} ($totalCount)'
-              : _titles[_currentIndex];
+              ? context.l10n.titleWithCount(baseTitle, totalCount)
+              : baseTitle;
 
           return Scaffold(
             appBar: AppBar(
@@ -162,26 +169,26 @@ class _MainScreenState extends State<MainScreen> {
                   elevation: 0,
                   selectedIndex: _currentIndex,
                   onDestinationSelected: _onTabTapped,
-                  destinations: const [
+                  destinations: [
                     NavigationDestination(
                       icon: Icon(Icons.favorite_outline),
                       selectedIcon: Icon(Icons.favorite),
-                      label: '收藏',
+                      label: context.l10n.navigationFavorites,
                     ),
                     NavigationDestination(
                       icon: Icon(Icons.home_outlined),
                       selectedIcon: Icon(Icons.home),
-                      label: '主页',
+                      label: context.l10n.navigationHome,
                     ),
                     NavigationDestination(
                       icon: Icon(Icons.recommend_outlined),
                       selectedIcon: Icon(Icons.recommend),
-                      label: '推荐',
+                      label: context.l10n.navigationRecommend,
                     ),
                     NavigationDestination(
                       icon: Icon(Icons.trending_up_outlined),
                       selectedIcon: Icon(Icons.trending_up),
-                      label: '热门',
+                      label: context.l10n.navigationPopularWorks,
                     ),
                   ],
                 ),

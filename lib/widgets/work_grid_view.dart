@@ -3,6 +3,7 @@ import 'package:asmrapp/data/models/works/work.dart';
 import 'package:asmrapp/widgets/work_grid.dart';
 import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
 import 'package:asmrapp/screens/detail_screen.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class WorkGridView extends StatelessWidget {
   final List<Work> works;
@@ -46,7 +47,7 @@ class WorkGridView extends StatelessWidget {
               const SizedBox(height: 16),
               ElevatedButton(
                 onPressed: onRetry,
-                child: const Text('重试'),
+                child: Text(context.l10n.retry),
               ),
             ],
           ],

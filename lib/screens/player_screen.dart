@@ -9,6 +9,7 @@ import 'package:asmrapp/widgets/player/player_progress.dart';
 import 'package:asmrapp/widgets/player/player_work_info.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class PlayerScreen extends StatefulWidget {
   const PlayerScreen({super.key});
@@ -102,7 +103,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                             child: Material(
                               color: Colors.transparent,
                               child: Text(
-                                _viewModel.currentTrackInfo?.title ?? '未在播放',
+                                _viewModel.currentTrackInfo?.title ??
+                                    context.l10n.noPlaying,
                                 style: Theme.of(context)
                                     .textTheme
                                     .titleLarge
@@ -185,7 +187,9 @@ class _PlayerScreenState extends State<PlayerScreen> {
                       ? Icons.lightbulb
                       : Icons.lightbulb_outline,
                 ),
-                tooltip: wakeLockController.enabled ? '关闭屏幕常亮' : '开启屏幕常亮',
+                tooltip: wakeLockController.enabled
+                    ? context.l10n.screenOnDisable
+                    : context.l10n.screenOnEnable,
                 onPressed: () => wakeLockController.toggle(),
               );
             },

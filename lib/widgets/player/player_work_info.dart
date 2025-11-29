@@ -1,6 +1,7 @@
 import 'package:asmrapp/core/audio/models/playback_context.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class PlayerWorkInfo extends StatelessWidget {
   final PlaybackContext? context;
@@ -21,7 +22,7 @@ class PlayerWorkInfo extends StatelessWidget {
           SizedBox(
             height: Theme.of(context).textTheme.titleMedium!.fontSize! * 1.5,
             child: Marquee(
-              text: this.context?.work.title ?? '未知作品',
+              text: this.context?.work.title ?? context.l10n.unknownWorkTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
@@ -46,7 +47,7 @@ class PlayerWorkInfo extends StatelessWidget {
                     ?.map((va) => va['name'] as String?)
                     .where((name) => name != null)
                     .join('、') ??
-                '未知演员',
+                context.l10n.unknownArtist,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: Theme.of(context)
                       .colorScheme

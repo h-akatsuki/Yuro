@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:asmrapp/utils/logger.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class LoginDialog extends StatefulWidget {
   const LoginDialog({super.key});
@@ -42,15 +43,15 @@ class _LoginDialogState extends State<LoginDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('登录'),
+      title: Text(context.l10n.loginTitle),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           TextField(
             controller: _nameController,
-            decoration: const InputDecoration(
-              labelText: '用户名',
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              labelText: context.l10n.loginUsernameLabel,
+              border: const OutlineInputBorder(),
             ),
             textInputAction: TextInputAction.next,
           ),
@@ -58,7 +59,7 @@ class _LoginDialogState extends State<LoginDialog> {
           TextField(
             controller: _passwordController,
             decoration: InputDecoration(
-              labelText: '密码',
+              labelText: context.l10n.loginPasswordLabel,
               border: const OutlineInputBorder(),
               suffixIcon: IconButton(
                 icon: Icon(
@@ -94,7 +95,7 @@ class _LoginDialogState extends State<LoginDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.pop(context),
-          child: const Text('取消'),
+          child: Text(context.l10n.cancel),
         ),
         Consumer<AuthViewModel>(
           builder: (context, authVM, _) {
@@ -108,7 +109,7 @@ class _LoginDialogState extends State<LoginDialog> {
                         strokeWidth: 2,
                       ),
                     )
-                  : const Text('登录'),
+                  : Text(context.l10n.loginAction),
             );
           },
         ),

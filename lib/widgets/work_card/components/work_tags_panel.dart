@@ -1,6 +1,7 @@
 import 'package:asmrapp/data/models/works/tag.dart';
 import 'package:asmrapp/data/models/works/work.dart';
 import 'package:flutter/material.dart';
+import 'package:asmrapp/l10n/l10n.dart';
 
 class WorkTagsPanel extends StatelessWidget {
   final Work work;
@@ -61,7 +62,7 @@ class WorkTagsPanel extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
             ),
             child: Text(
-              '字幕',
+              context.l10n.subtitleTag,
               style: TextStyle(
                 fontSize: 10,
                 color: Colors.blue[700],
