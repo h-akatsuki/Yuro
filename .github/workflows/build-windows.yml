@@ -1,0 +1,91 @@
+name: Build Windows
+
+permissions:
+  contents: write
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag (e.g. v1.0.0). Required if create_release is true."
+        required: false
+        type: string
+      create_release:
+        description: "Publish a GitHub Release with the Windows artifact"
+        required: true
+        default: false
+        type: boolean
+      prerelease:
+        description: "Mark the release as pre-release"
+        required: true
+        default: true
+        type: boolean
+
+env:
+  FLUTTER_VERSION: "3.27.0"
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: stable
+
+      - name: Enable Windows desktop
+        run: flutter config --enable-windows-desktop
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Windows
+        run: flutter build windows --release
+
+      - name: Archive build output
+        run: |
+          $zipPath = Join-Path $env:RUNNER_TEMP "windows-release.zip"
+          if (Test-Path $zipPath) { Remove-Item $zipPath }
+          Compress-Archive -Path "build/windows/runner/Release/*" -DestinationPath $zipPath
+          echo "WINDOWS_ZIP=$zipPath" >> $env:GITHUB_ENV
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: ${{ env.WINDOWS_ZIP }}
+
+  release:
+    needs: build-windows
+    runs-on: ubuntu-latest
+    if: ${{ inputs.create_release == true }}
+
+    steps:
+      - name: Ensure tag provided
+        run: |
+          if [ -z "${{ inputs.tag }}" ]; then
+            echo "A tag name is required when create_release is enabled." >&2
+            exit 1
+          fi
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-build
+          path: dist
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
+          prerelease: ${{ inputs.prerelease }}
+          files: dist/windows-release.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
