@@ -1,15 +1,15 @@
+import 'package:asmrapp/data/models/works/work.dart';
+import 'package:asmrapp/l10n/l10n.dart';
+import 'package:asmrapp/presentation/viewmodels/detail_viewmodel.dart';
+import 'package:asmrapp/screens/similar_works_screen.dart';
+import 'package:asmrapp/widgets/detail/work_action_buttons.dart';
+import 'package:asmrapp/widgets/detail/work_cover.dart';
+import 'package:asmrapp/widgets/detail/work_files_list.dart';
+import 'package:asmrapp/widgets/detail/work_files_skeleton.dart';
+import 'package:asmrapp/widgets/detail/work_info.dart';
 import 'package:asmrapp/widgets/mini_player/mini_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:asmrapp/data/models/works/work.dart';
-import 'package:asmrapp/widgets/detail/work_cover.dart';
-import 'package:asmrapp/widgets/detail/work_info.dart';
-import 'package:asmrapp/widgets/detail/work_files_list.dart';
-import 'package:asmrapp/widgets/detail/work_files_skeleton.dart';
-import 'package:asmrapp/presentation/viewmodels/detail_viewmodel.dart';
-import 'package:asmrapp/widgets/detail/work_action_buttons.dart';
-import 'package:asmrapp/screens/similar_works_screen.dart';
-import 'package:asmrapp/l10n/l10n.dart';
 
 class DetailScreen extends StatelessWidget {
   final Work work;
@@ -32,7 +32,9 @@ class DetailScreen extends StatelessWidget {
           title: Text(work.sourceId ?? ''),
         ),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.only(bottom: MiniPlayer.height),
+          padding: EdgeInsets.only(
+            bottom: MiniPlayer.heightWithSafeArea(context),
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

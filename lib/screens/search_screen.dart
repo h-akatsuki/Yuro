@@ -1,3 +1,4 @@
+import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
 import 'package:asmrapp/presentation/viewmodels/search_viewmodel.dart';
 import 'package:asmrapp/utils/logger.dart';
@@ -5,7 +6,6 @@ import 'package:asmrapp/widgets/pagination_controls.dart';
 import 'package:asmrapp/widgets/work_grid_view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:asmrapp/l10n/l10n.dart';
 
 class SearchScreen extends StatelessWidget {
   final String? initialKeyword;

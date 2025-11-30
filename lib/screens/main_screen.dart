@@ -1,3 +1,4 @@
+import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:asmrapp/presentation/viewmodels/home_viewmodel.dart';
 import 'package:asmrapp/presentation/viewmodels/playlists_viewmodel.dart';
@@ -12,7 +13,6 @@ import 'package:asmrapp/widgets/drawer_menu.dart';
 import 'package:asmrapp/widgets/mini_player/mini_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:asmrapp/l10n/l10n.dart';
 
 /// MainScreen 是应用的主界面，负责管理底部导航栏和对应的内容页面。
 /// 它采用了集中式的状态管理架构，所有子页面的 ViewModel 都在这里初始化和提供。
@@ -161,7 +161,7 @@ class _MainScreenState extends State<MainScreen> {
             bottomNavigationBar: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const MiniPlayer(),
+                const MiniPlayer(respectSafeArea: false),
                 NavigationBar(
                   height: 60,
                   labelBehavior: NavigationDestinationLabelBehavior.alwaysHide,
@@ -171,23 +171,23 @@ class _MainScreenState extends State<MainScreen> {
                   onDestinationSelected: _onTabTapped,
                   destinations: [
                     NavigationDestination(
-                      icon: Icon(Icons.favorite_outline),
-                      selectedIcon: Icon(Icons.favorite),
+                      icon: const Icon(Icons.favorite_outline),
+                      selectedIcon: const Icon(Icons.favorite),
                       label: context.l10n.navigationFavorites,
                     ),
                     NavigationDestination(
-                      icon: Icon(Icons.home_outlined),
-                      selectedIcon: Icon(Icons.home),
+                      icon: const Icon(Icons.home_outlined),
+                      selectedIcon: const Icon(Icons.home),
                       label: context.l10n.navigationHome,
                     ),
                     NavigationDestination(
-                      icon: Icon(Icons.recommend_outlined),
-                      selectedIcon: Icon(Icons.recommend),
+                      icon: const Icon(Icons.recommend_outlined),
+                      selectedIcon: const Icon(Icons.recommend),
                       label: context.l10n.navigationRecommend,
                     ),
                     NavigationDestination(
-                      icon: Icon(Icons.trending_up_outlined),
-                      selectedIcon: Icon(Icons.trending_up),
+                      icon: const Icon(Icons.trending_up_outlined),
+                      selectedIcon: const Icon(Icons.trending_up),
                       label: context.l10n.navigationPopularWorks,
                     ),
                   ],

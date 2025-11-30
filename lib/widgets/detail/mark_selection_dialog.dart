@@ -1,7 +1,7 @@
-import 'package:asmrapp/data/models/mark_status.dart';
-import 'package:flutter/material.dart';
-import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/common/extensions/mark_status_localizations.dart';
+import 'package:asmrapp/data/models/mark_status.dart';
+import 'package:asmrapp/l10n/l10n.dart';
+import 'package:flutter/material.dart';
 
 class MarkSelectionDialog extends StatelessWidget {
   final MarkStatus? currentStatus;
@@ -71,8 +71,8 @@ class MarkSelectionDialog extends StatelessWidget {
                     Navigator.of(context).pop();
                   },
             hoverColor: isDark
-                ? Colors.white.withOpacity(0.05)
-                : Colors.black.withOpacity(0.05),
+                ? Colors.white.withValues(alpha: 0.05)
+                : Colors.black.withValues(alpha: 0.05),
           );
         }).toList(),
       ),

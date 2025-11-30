@@ -11,11 +11,28 @@ import 'mini_player_progress.dart';
 class MiniPlayer extends StatelessWidget {
   static const height = 48.0;
 
-  const MiniPlayer({super.key});
+  final bool respectSafeArea;
+
+  const MiniPlayer({
+    super.key,
+    this.respectSafeArea = true,
+  });
+
+  static double heightWithSafeArea(
+    BuildContext context, {
+    bool respectSafeArea = true,
+  }) {
+    final bottomPadding =
+        respectSafeArea ? MediaQuery.of(context).padding.bottom : 0.0;
+    return height + bottomPadding;
+  }
 
   @override
   Widget build(BuildContext context) {
     final viewModel = GetIt.I<PlayerViewModel>();
+    final bottomPadding =
+        respectSafeArea ? MediaQuery.of(context).padding.bottom : 0.0;
+
     return ListenableBuilder(
       listenable: viewModel,
       builder: (context, _) {
@@ -65,7 +82,8 @@ class MiniPlayer extends StatelessWidget {
             );
           },
           child: Container(
-            height: height,
+            height: height + bottomPadding,
+            padding: EdgeInsets.only(bottom: bottomPadding),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.surface,
               boxShadow: [
