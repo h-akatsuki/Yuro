@@ -102,6 +102,7 @@
   "workActionChecking": "检查中",
   "workActionRecommend": "相关推荐",
   "workActionNoRecommendation": "暂无推荐",
+  "openDlsiteInBrowser": "在浏览器中打开DLsite",
   "markStatusTitle": "标记状态",
   "markStatusWantToListen": "想听",
   "markStatusListening": "在听",

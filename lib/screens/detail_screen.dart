@@ -13,10 +13,12 @@ import 'package:asmrapp/widgets/detail/work_info.dart';
 import 'package:asmrapp/widgets/mini_player/mini_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class DetailScreen extends StatelessWidget {
   final Work work;
   final bool fromPlayer;
+  static final RegExp _rjCodePattern = RegExp(r'(RJ\d+)', caseSensitive: false);
 
   const DetailScreen({
     super.key,
@@ -26,6 +28,8 @@ class DetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final rjCode = _extractRjCode();
+
     return ChangeNotifierProvider(
       create: (_) => DetailViewModel(
         work: work,
@@ -33,6 +37,14 @@ class DetailScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(work.sourceId ?? ''),
+          actions: [
+            if (rjCode != null)
+              IconButton(
+                tooltip: context.l10n.openDlsiteInBrowser,
+                icon: const Icon(Icons.open_in_new),
+                onPressed: () => _openDlsiteInBrowser(context, rjCode),
+              ),
+          ],
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -171,5 +183,38 @@ class DetailScreen extends StatelessWidget {
       }
     }
     return context.l10n.playFailed(error.toString());
+  }
+
+  String? _extractRjCode() {
+    final candidates = <String?>[
+      work.sourceId,
+      work.originalWorkno,
+      work.translationInfo?.originalWorkno,
+    ];
+
+    for (final candidate in candidates) {
+      if (candidate == null || candidate.trim().isEmpty) continue;
+      final match = _rjCodePattern.firstMatch(candidate);
+      final rjCode = match?.group(1);
+      if (rjCode != null && rjCode.isNotEmpty) {
+        return rjCode.toUpperCase();
+      }
+    }
+
+    return null;
+  }
+
+  Future<void> _openDlsiteInBrowser(BuildContext context, String rjCode) async {
+    final url = 'https://www.dlsite.com/maniax/work/=/product_id/$rjCode.html';
+    final opened = await launchUrl(
+      Uri.parse(url),
+      mode: LaunchMode.externalApplication,
+    );
+
+    if (!opened && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.operationFailed(url))),
+      );
+    }
   }
 }

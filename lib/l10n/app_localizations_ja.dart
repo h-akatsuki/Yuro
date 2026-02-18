@@ -230,6 +230,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get workActionNoRecommendation => 'おすすめはありません';
 
   @override
+  String get openDlsiteInBrowser => 'DLsiteをブラウザで開く';
+
+  @override
   String get markStatusTitle => 'マーク状態';
 
   @override

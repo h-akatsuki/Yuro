@@ -524,6 +524,12 @@ abstract class AppLocalizations {
   /// **'暂无推荐'**
   String get workActionNoRecommendation;
 
+  /// No description provided for @openDlsiteInBrowser.
+  ///
+  /// In zh, this message translates to:
+  /// **'在浏览器中打开DLsite'**
+  String get openDlsiteInBrowser;
+
   /// No description provided for @markStatusTitle.
   ///
   /// In zh, this message translates to:

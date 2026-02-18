@@ -230,6 +230,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get workActionNoRecommendation => '暂无推荐';
 
   @override
+  String get openDlsiteInBrowser => '在浏览器中打开DLsite';
+
+  @override
   String get markStatusTitle => '标记状态';
 
   @override

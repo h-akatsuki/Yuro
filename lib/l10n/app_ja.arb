@@ -102,6 +102,7 @@
   "workActionChecking": "確認中",
   "workActionRecommend": "おすすめ",
   "workActionNoRecommendation": "おすすめはありません",
+  "openDlsiteInBrowser": "DLsiteをブラウザで開く",
   "markStatusTitle": "マーク状態",
   "markStatusWantToListen": "聴きたい",
   "markStatusListening": "聴いている",
