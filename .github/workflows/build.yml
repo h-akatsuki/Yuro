@@ -93,9 +93,40 @@ jobs:
           name: ios-build
           path: build/ios/iphoneos/app-release.ipa
 
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # 获取完整的 git 历史
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+
+      - name: Get dependencies
+        run: flutter pub get
+
+      - name: Build Windows
+        run: flutter build windows --release
+
+      - name: Package Windows build
+        shell: pwsh
+        run: |
+          Compress-Archive -Path "build/windows/x64/runner/Release/*" -DestinationPath "build/windows/x64/runner/Release/windows-release.zip" -Force
+
+      - name: Upload Windows artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-build
+          path: build/windows/x64/runner/Release/windows-release.zip
+
   upload:
     runs-on: ubuntu-latest
-    needs: [build-android, build-ios]
+    needs: [build-android, build-ios, build-windows]
 
     steps:
       - uses: actions/checkout@v3
@@ -155,6 +186,8 @@ jobs:
             |------|-------------|----------|
             | `.apk` | Android Package | Direct installation for testing |
             | `.aab` | Android App Bundle | Google Play Store deployment |
+            | `.ipa` | iOS Package | iOS sideload/testing distribution |
+            | `.zip` | Windows Package | Windows desktop distribution |
 
             ### 🔍 Additional Notes
             - This is a pre-release build intended for testing purposes
@@ -170,6 +203,7 @@ jobs:
             dist/flutter-apk/app-release.apk
             dist/bundle/release/app-release.aab
             dist/app-release.ipa
+            dist/windows-release.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
