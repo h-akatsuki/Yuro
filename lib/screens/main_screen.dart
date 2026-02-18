@@ -10,6 +10,7 @@ import 'package:asmrapp/screens/contents/popular_content.dart';
 import 'package:asmrapp/screens/contents/recommend_content.dart';
 import 'package:asmrapp/screens/search_screen.dart';
 import 'package:asmrapp/widgets/drawer_menu.dart';
+import 'package:asmrapp/widgets/download/download_progress_panel.dart';
 import 'package:asmrapp/widgets/mini_player/mini_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -47,6 +48,7 @@ class _MainScreenState extends State<MainScreen> {
     HomeContent(),
     RecommendContent(),
     PopularContent(),
+    DownloadProgressPanel(),
   ];
 
   @override
@@ -103,9 +105,7 @@ class _MainScreenState extends State<MainScreen> {
           final homeViewModel = context.watch<HomeViewModel>();
           // 根据当前页面获取对应的总数
           final totalCount = _currentIndex == 1
-              ? homeViewModel.activeTabIndex == 0
-                  ? homeViewModel.pagination?.totalCount
-                  : null
+              ? homeViewModel.pagination?.totalCount
               : _currentIndex == 2
                   ? context.watch<RecommendViewModel>().pagination?.totalCount
                   : _currentIndex == 3
@@ -114,16 +114,14 @@ class _MainScreenState extends State<MainScreen> {
 
           final titles = [
             context.l10n.navigationFavorites,
-            homeViewModel.activeTabIndex == 0
-                ? context.l10n.navigationHome
-                : context.l10n.navigationDownloadProgress,
+            context.l10n.navigationHome,
             context.l10n.navigationForYou,
             context.l10n.navigationPopularWorks,
+            context.l10n.navigationDownloadProgress,
           ];
           final baseTitle = titles[_currentIndex];
-          final showFilterButton = _currentIndex == 1
-              ? homeViewModel.activeTabIndex == 0
-              : _currentIndex == 2 || _currentIndex == 3;
+          final showFilterButton =
+              _currentIndex == 1 || _currentIndex == 2 || _currentIndex == 3;
 
           // 构建标题文本
           final title = totalCount != null
@@ -198,6 +196,11 @@ class _MainScreenState extends State<MainScreen> {
                       icon: const Icon(Icons.trending_up_outlined),
                       selectedIcon: const Icon(Icons.trending_up),
                       label: context.l10n.navigationPopularWorks,
+                    ),
+                    NavigationDestination(
+                      icon: const Icon(Icons.download_outlined),
+                      selectedIcon: const Icon(Icons.download),
+                      label: context.l10n.navigationDownloadProgress,
                     ),
                   ],
                 ),
