@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:asmrapp/data/models/files/child.dart';
+import 'package:asmrapp/common/utils/file_preview_utils.dart';
 import 'package:asmrapp/utils/logger.dart';
 import 'package:asmrapp/utils/file_size_formatter.dart';
 
@@ -17,8 +18,27 @@ class WorkFileItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isAudio = file.type?.toLowerCase() == 'audio';
+    final isAudio = FilePreviewUtils.isAudio(file);
+    final isImage = FilePreviewUtils.isImage(file);
+    final isText = FilePreviewUtils.isText(file);
+    final isInteractive = isAudio || isImage || isText;
     final colorScheme = Theme.of(context).colorScheme;
+
+    final IconData iconData;
+    final Color iconColor;
+    if (isAudio) {
+      iconData = Icons.audio_file;
+      iconColor = Colors.green;
+    } else if (isImage) {
+      iconData = Icons.image;
+      iconColor = Colors.orange;
+    } else if (isText) {
+      iconData = Icons.text_snippet;
+      iconColor = Colors.teal;
+    } else {
+      iconData = Icons.insert_drive_file;
+      iconColor = Colors.blue;
+    }
 
     return Padding(
       padding: EdgeInsets.only(left: indentation),
@@ -35,14 +55,11 @@ class WorkFileItem extends StatelessWidget {
             color: colorScheme.onSurfaceVariant,
           ),
         ),
-        leading: Icon(
-          isAudio ? Icons.audio_file : Icons.insert_drive_file,
-          color: isAudio ? Colors.green : Colors.blue,
-        ),
+        leading: Icon(iconData, color: iconColor),
         dense: true,
-        onTap: isAudio
+        onTap: isInteractive
             ? () {
-                AppLogger.debug('点击音频文件: ${file.title}');
+                AppLogger.debug('点击文件: ${file.title}, type=${file.type}');
                 onFileTap?.call(file);
               }
             : null,

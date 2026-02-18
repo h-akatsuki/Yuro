@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:asmrapp/core/cache/recommendation_cache_manager.dart';
 import 'package:asmrapp/data/models/mark_status.dart';
 import 'package:asmrapp/data/models/playlists_with_exist_statu/playlists_with_exist_statu.dart';
@@ -56,6 +58,39 @@ class ApiService {
     } catch (e, stackTrace) {
       AppLogger.error('解析数据失败', e, stackTrace);
       throw Exception('解析数据失败: $e');
+    }
+  }
+
+  /// 获取文本文件内容
+  Future<String> getTextFileContent(
+    String url, {
+    CancelToken? cancelToken,
+  }) async {
+    try {
+      final response = await _dio.get<dynamic>(
+        url,
+        options: Options(responseType: ResponseType.bytes),
+        cancelToken: cancelToken,
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('获取文本文件失败: ${response.statusCode}');
+      }
+
+      final data = response.data;
+      if (data == null) return '';
+      if (data is String) return data;
+      if (data is List<int>) {
+        return utf8.decode(data, allowMalformed: true);
+      }
+
+      return data.toString();
+    } on DioException catch (e) {
+      AppLogger.error('文本文件请求失败', e, e.stackTrace);
+      throw Exception('网络请求失败: ${e.message}');
+    } catch (e, stackTrace) {
+      AppLogger.error('文本文件解析失败', e, stackTrace);
+      throw Exception('文本文件解析失败: $e');
     }
   }
 

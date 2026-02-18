@@ -1,7 +1,10 @@
+import 'package:asmrapp/common/utils/file_preview_utils.dart';
+import 'package:asmrapp/data/models/files/child.dart';
 import 'package:asmrapp/data/models/works/work.dart';
 import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/presentation/viewmodels/detail_viewmodel.dart';
 import 'package:asmrapp/screens/similar_works_screen.dart';
+import 'package:asmrapp/widgets/detail/file_preview_dialog.dart';
 import 'package:asmrapp/widgets/detail/work_action_buttons.dart';
 import 'package:asmrapp/widgets/detail/work_cover.dart';
 import 'package:asmrapp/widgets/detail/work_files_list.dart';
@@ -32,9 +35,6 @@ class DetailScreen extends StatelessWidget {
           title: Text(work.sourceId ?? ''),
         ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.only(
-            bottom: MiniPlayer.heightWithSafeArea(context),
-          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -97,21 +97,8 @@ class DetailScreen extends StatelessWidget {
                   if (viewModel.files != null) {
                     return WorkFilesList(
                       files: viewModel.files!,
-                      onFileTap: (file) async {
-                        try {
-                          await viewModel.playFile(file, context);
-                        } catch (e) {
-                          if (context.mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  _playbackErrorMessage(context, e),
-                                ),
-                              ),
-                            );
-                          }
-                        }
-                      },
+                      onFileTap: (file) =>
+                          _handleFileTap(context, viewModel, file),
                     );
                   }
 
@@ -121,7 +108,51 @@ class DetailScreen extends StatelessWidget {
             ],
           ),
         ),
-        bottomSheet: const MiniPlayer(),
+        bottomNavigationBar: const MiniPlayer(),
+      ),
+    );
+  }
+
+  Future<void> _handleFileTap(
+    BuildContext context,
+    DetailViewModel viewModel,
+    Child file,
+  ) async {
+    if (FilePreviewUtils.isAudio(file)) {
+      try {
+        await viewModel.playFile(file, context);
+      } catch (e) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                _playbackErrorMessage(context, e),
+              ),
+            ),
+          );
+        }
+      }
+      return;
+    }
+
+    if (viewModel.canPreviewFile(file)) {
+      if (!context.mounted) return;
+      await showDialog<void>(
+        context: context,
+        builder: (dialogContext) => FilePreviewDialog(
+          file: file,
+          loadTextPreview: viewModel.loadTextPreview,
+        ),
+      );
+      return;
+    }
+
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          context.l10n.playUnsupportedFileType(file.type ?? file.title ?? ''),
+        ),
       ),
     );
   }

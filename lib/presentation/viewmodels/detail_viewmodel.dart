@@ -2,6 +2,7 @@ import 'package:asmrapp/data/models/playlists_with_exist_statu/pagination.dart';
 import 'package:asmrapp/data/models/playlists_with_exist_statu/playlist.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
+import 'package:asmrapp/common/utils/file_preview_utils.dart';
 import 'package:asmrapp/data/models/files/files.dart';
 import 'package:asmrapp/data/models/files/child.dart';
 import 'package:asmrapp/data/models/works/work.dart';
@@ -23,12 +24,30 @@ enum PlaybackError {
   failed,
 }
 
+enum FilePreviewError {
+  unsupportedType,
+  missingUrl,
+  failed,
+}
+
 class PlaybackException implements Exception {
   final PlaybackError error;
   final String? detail;
   final Object? originalError;
 
   const PlaybackException(
+    this.error, {
+    this.detail,
+    this.originalError,
+  });
+}
+
+class FilePreviewException implements Exception {
+  final FilePreviewError error;
+  final String? detail;
+  final Object? originalError;
+
+  const FilePreviewException(
     this.error, {
     this.detail,
     this.originalError,
@@ -139,10 +158,10 @@ class DetailViewModel extends ChangeNotifier {
   }
 
   Future<void> playFile(Child file, BuildContext context) async {
-    if (file.type?.toLowerCase() != 'audio') {
+    if (!FilePreviewUtils.isAudio(file)) {
       throw PlaybackException(
         PlaybackError.unsupportedType,
-        detail: file.type,
+        detail: file.type ?? file.title,
       );
     }
 
@@ -168,6 +187,36 @@ class DetailViewModel extends ChangeNotifier {
       }
       throw PlaybackException(
         PlaybackError.failed,
+        detail: e.toString(),
+        originalError: e,
+      );
+    }
+  }
+
+  bool canPreviewFile(Child file) {
+    return FilePreviewUtils.canPreview(file);
+  }
+
+  Future<String> loadTextPreview(Child file) async {
+    if (!FilePreviewUtils.isText(file)) {
+      throw FilePreviewException(
+        FilePreviewError.unsupportedType,
+        detail: file.type ?? file.title,
+      );
+    }
+
+    if (file.mediaDownloadUrl == null || file.mediaDownloadUrl!.isEmpty) {
+      throw const FilePreviewException(FilePreviewError.missingUrl);
+    }
+
+    try {
+      return await _apiService.getTextFileContent(
+        file.mediaDownloadUrl!,
+        cancelToken: _cancelToken,
+      );
+    } catch (e) {
+      throw FilePreviewException(
+        FilePreviewError.failed,
         detail: e.toString(),
         originalError: e,
       );
