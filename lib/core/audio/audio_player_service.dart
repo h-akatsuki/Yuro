@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:asmrapp/utils/logger.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:audio_session/audio_session.dart';
@@ -14,10 +15,11 @@ import './events/playback_event_hub.dart';
 
 class AudioPlayerService implements IAudioPlayerService {
   late final AudioPlayer _player;
-  late final AudioNotificationService _notificationService;
+  AudioNotificationService? _notificationService;
   late final ConcatenatingAudioSource _playlist;
   late final PlaybackStateManager _stateManager;
   late final PlaybackController _playbackController;
+  late final Future<void> _initialization;
   final PlaybackEventHub _eventHub;
   final IPlaybackStateRepository _stateRepository;
 
@@ -26,7 +28,7 @@ class AudioPlayerService implements IAudioPlayerService {
     required IPlaybackStateRepository stateRepository,
   })  : _eventHub = eventHub,
         _stateRepository = stateRepository {
-    _init();
+    _initialization = _init();
   }
 
   static AudioPlayerService? _instance;
@@ -42,13 +44,23 @@ class AudioPlayerService implements IAudioPlayerService {
     return _instance!;
   }
 
+  bool get _supportsAudioSession =>
+      Platform.isAndroid || Platform.isIOS || Platform.isMacOS;
+
+  bool get _supportsNotificationService =>
+      Platform.isAndroid || Platform.isIOS || Platform.isMacOS;
+
+  Future<void> _ensureInitialized() => _initialization;
+
   Future<void> _init() async {
     try {
       _player = AudioPlayer();
-      _notificationService = AudioNotificationService(
-        _player,
-        _eventHub,
-      );
+      if (_supportsNotificationService) {
+        _notificationService = AudioNotificationService(
+          _player,
+          _eventHub,
+        );
+      }
       _playlist = ConcatenatingAudioSource(children: []);
 
       _stateManager = PlaybackStateManager(
@@ -63,12 +75,27 @@ class AudioPlayerService implements IAudioPlayerService {
         playlist: _playlist,
       );
 
-      final session = await AudioSession.instance;
-      await session.configure(const AudioSessionConfiguration.music());
-      await _notificationService.init();
+      if (_supportsAudioSession) {
+        try {
+          final session = await AudioSession.instance;
+          await session.configure(const AudioSessionConfiguration.music());
+        } catch (e, stack) {
+          AppLogger.warning('音频会话初始化失败，将继续无会话模式运行');
+          AppLogger.error('音频会话初始化失败', e, stack);
+        }
+      }
+
+      if (_notificationService != null) {
+        try {
+          await _notificationService!.init();
+        } catch (e, stack) {
+          AppLogger.warning('通知服务初始化失败，将继续无通知模式运行');
+          AppLogger.error('通知服务初始化失败', e, stack);
+        }
+      }
 
       _stateManager.initStateListeners();
-      await restorePlaybackState();
+      await _restorePlaybackStateInternal();
     } catch (e, stack) {
       AudioErrorHandler.handleError(
         AudioErrorType.init,
@@ -86,29 +113,46 @@ class AudioPlayerService implements IAudioPlayerService {
 
   // 基础播放控制
   @override
-  Future<void> pause() => _playbackController.pause();
+  Future<void> pause() async {
+    await _ensureInitialized();
+    await _playbackController.pause();
+  }
 
   @override
-  Future<void> resume() => _playbackController.play();
+  Future<void> resume() async {
+    await _ensureInitialized();
+    await _playbackController.play();
+  }
 
   @override
   Future<void> stop() async {
+    await _ensureInitialized();
     await _playbackController.stop();
     _stateManager.clearState();
   }
 
   @override
-  Future<void> seek(Duration position) => _playbackController.seek(position);
+  Future<void> seek(Duration position) async {
+    await _ensureInitialized();
+    await _playbackController.seek(position);
+  }
 
   @override
-  Future<void> previous() => _playbackController.previous();
+  Future<void> previous() async {
+    await _ensureInitialized();
+    await _playbackController.previous();
+  }
 
   @override
-  Future<void> next() => _playbackController.next();
+  Future<void> next() async {
+    await _ensureInitialized();
+    await _playbackController.next();
+  }
 
   // 上下文管理
   @override
   Future<void> playWithContext(PlaybackContext context) async {
+    await _ensureInitialized();
     await _playbackController.setPlaybackContext(context);
     // 添加自动播放
     await resume();
@@ -123,10 +167,18 @@ class AudioPlayerService implements IAudioPlayerService {
 
   // 状态持久化
   @override
-  Future<void> savePlaybackState() => _stateManager.saveState();
+  Future<void> savePlaybackState() async {
+    await _ensureInitialized();
+    await _stateManager.saveState();
+  }
 
   @override
   Future<void> restorePlaybackState() async {
+    await _ensureInitialized();
+    await _restorePlaybackStateInternal();
+  }
+
+  Future<void> _restorePlaybackStateInternal() async {
     try {
       AppLogger.debug('开始恢复播放状态');
       final state = await _stateManager.loadState();
@@ -174,7 +226,8 @@ class AudioPlayerService implements IAudioPlayerService {
 
   @override
   Future<void> dispose() async {
-    _player.dispose();
-    _notificationService.dispose();
+    await _ensureInitialized();
+    await _player.dispose();
+    await _notificationService?.dispose();
   }
 }

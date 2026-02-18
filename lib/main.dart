@@ -5,6 +5,7 @@ import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:just_audio_media_kit/just_audio_media_kit.dart';
 import 'package:provider/provider.dart';
 
 import 'core/di/service_locator.dart';
@@ -13,6 +14,11 @@ import 'screens/search_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  JustAudioMediaKit.ensureInitialized(
+    android: false,
+    iOS: false,
+    macOS: false,
+  );
 
   // 初始化服务定位器
   await setupServiceLocator();
