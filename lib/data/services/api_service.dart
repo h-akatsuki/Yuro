@@ -432,6 +432,26 @@ class ApiService {
     }
   }
 
+  /// 更新作品评分
+  Future<void> updateWorkRating(String workId, int rating) async {
+    try {
+      final response = await _dio.put(
+        '/review',
+        data: {
+          'work_id': int.parse(workId),
+          'rating': rating,
+        },
+      );
+
+      if (response.statusCode != 200) {
+        throw Exception('评分失败: ${response.statusCode}');
+      }
+    } catch (e) {
+      AppLogger.error('更新评分失败', e);
+      rethrow;
+    }
+  }
+
   /// 将 MarkStatus 枚举转换为 API 参数
   String convertMarkStatusToApi(MarkStatus status) {
     switch (status) {

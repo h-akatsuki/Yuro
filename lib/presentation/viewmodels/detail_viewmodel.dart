@@ -106,6 +106,10 @@ class DetailViewModel extends ChangeNotifier {
 
   bool _loadingMark = false;
   bool get loadingMark => _loadingMark;
+  int? _currentRating;
+  int? get currentRating => _currentRating;
+  bool _loadingRating = false;
+  bool get loadingRating => _loadingRating;
   bool _downloadingFiles = false;
   bool get downloadingFiles => _downloadingFiles;
 
@@ -121,6 +125,7 @@ class DetailViewModel extends ChangeNotifier {
     _downloadProgressManager = GetIt.I<DownloadProgressManager>();
     _authRepository = GetIt.I<AuthRepository>();
     _fileDownloader = FileDownloader();
+    _currentRating = _normalizeRating(work.userRating);
     loadRecommendationsPreview();
   }
 
@@ -384,6 +389,23 @@ class DetailViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> updateRating(int rating) async {
+    _loadingRating = true;
+    notifyListeners();
+
+    try {
+      await _apiService.updateWorkRating(work.id.toString(), rating);
+      _currentRating = rating;
+      AppLogger.info('更新评分成功: $rating');
+    } catch (e) {
+      AppLogger.error('更新评分失败', e);
+      rethrow;
+    } finally {
+      _loadingRating = false;
+      notifyListeners();
+    }
+  }
+
   Future<DownloadBatchResult> downloadFiles(
     List<DownloadRequestItem> files,
   ) async {
@@ -627,6 +649,73 @@ class DetailViewModel extends ChangeNotifier {
         },
       ),
     );
+  }
+
+  Future<void> showRatingDialog(BuildContext context) async {
+    var selectedRating = _currentRating ?? 0;
+    final rating = await showDialog<int>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (builderContext, setState) => AlertDialog(
+          title: Text(builderContext.l10n.workActionRate),
+          content: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(5, (index) {
+              final value = index + 1;
+              return IconButton(
+                onPressed: _loadingRating
+                    ? null
+                    : () => setState(() {
+                          selectedRating = value;
+                        }),
+                icon: Icon(
+                  value <= selectedRating ? Icons.star : Icons.star_border,
+                  color: Colors.amber,
+                ),
+              );
+            }),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text(builderContext.l10n.cancel),
+            ),
+            TextButton(
+              onPressed: selectedRating == 0 || _loadingRating
+                  ? null
+                  : () => Navigator.of(dialogContext).pop(selectedRating),
+              child: Text(builderContext.l10n.confirm),
+            ),
+          ],
+        ),
+      ),
+    );
+
+    if (rating == null) return;
+
+    try {
+      await updateRating(rating);
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('${context.l10n.workActionRate}: $rating/5')),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.operationFailed(e.toString()))),
+      );
+    }
+  }
+
+  int? _normalizeRating(dynamic rating) {
+    final parsed = switch (rating) {
+      int value => value,
+      double value => value.round(),
+      String value => int.tryParse(value) ?? double.tryParse(value)?.round(),
+      _ => null,
+    };
+    if (parsed == null) return null;
+    return parsed.clamp(1, 5);
   }
 
   @override

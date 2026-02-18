@@ -9,6 +9,8 @@ class WorkActionButtons extends StatelessWidget {
   final VoidCallback onMarkTap;
   final MarkStatus? currentMarkStatus;
   final bool loadingMark;
+  final VoidCallback onRateTap;
+  final bool loadingRate;
   final VoidCallback? onDownloadTap;
   final bool loadingDownload;
 
@@ -19,6 +21,8 @@ class WorkActionButtons extends StatelessWidget {
     required this.onMarkTap,
     this.currentMarkStatus,
     this.loadingMark = false,
+    required this.onRateTap,
+    this.loadingRate = false,
     this.onDownloadTap,
     this.loadingDownload = false,
   });
@@ -48,9 +52,8 @@ class WorkActionButtons extends StatelessWidget {
           _ActionButton(
             icon: Icons.star_border,
             label: context.l10n.workActionRate,
-            onTap: () {
-              // TODO: 实现评分功能
-            },
+            onTap: onRateTap,
+            loading: loadingRate,
           ),
           _ActionButton(
             icon: Icons.download_outlined,

@@ -68,6 +68,8 @@ class DetailScreen extends StatelessWidget {
                   onMarkTap: () => viewModel.showMarkDialog(context),
                   currentMarkStatus: viewModel.currentMarkStatus,
                   loadingMark: viewModel.loadingMark,
+                  onRateTap: () => viewModel.showRatingDialog(context),
+                  loadingRate: viewModel.loadingRating,
                   onDownloadTap: viewModel.files == null
                       ? null
                       : () => _showDownloadDialog(context, viewModel),
