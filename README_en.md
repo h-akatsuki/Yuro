@@ -1,6 +1,6 @@
 # ASMR One App
 
-[中文说明](README.md)
+[中文说明](README.md) | [日本語](README_ja.md)
 
 A beautiful and modern ASMR player application built with Flutter.
 

@@ -1,6 +1,6 @@
 # Yuro
 
-[English](README_en.md)
+[English](README_en.md) | [日本語](README_ja.md)
 
 一个使用 Flutter 构建的 ASMR.ONE 客户端。
 
