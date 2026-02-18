@@ -94,6 +94,32 @@ class ApiService {
     }
   }
 
+  /// 下载文件到指定路径
+  Future<void> downloadFileToPath(
+    String url,
+    String savePath, {
+    CancelToken? cancelToken,
+  }) async {
+    try {
+      final response = await _dio.download(
+        url,
+        savePath,
+        cancelToken: cancelToken,
+      );
+
+      final statusCode = response.statusCode ?? 0;
+      if (statusCode < 200 || statusCode >= 300) {
+        throw Exception('下载失败: $statusCode');
+      }
+    } on DioException catch (e) {
+      AppLogger.error('文件下载失败', e, e.stackTrace);
+      throw Exception('网络请求失败: ${e.message}');
+    } catch (e, stackTrace) {
+      AppLogger.error('文件下载异常', e, stackTrace);
+      throw Exception('文件下载失败: $e');
+    }
+  }
+
   /// 获取作品列表
   Future<WorksResponse> getWorks({
     int page = 1,

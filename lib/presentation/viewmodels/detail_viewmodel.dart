@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:asmrapp/data/models/playlists_with_exist_statu/pagination.dart';
 import 'package:asmrapp/data/models/playlists_with_exist_statu/playlist.dart';
 import 'package:get_it/get_it.dart';
@@ -16,6 +18,7 @@ import 'package:asmrapp/widgets/detail/mark_selection_dialog.dart';
 import 'package:dio/dio.dart';
 import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/common/extensions/mark_status_localizations.dart';
+import 'package:path_provider/path_provider.dart';
 
 enum PlaybackError {
   unsupportedType,
@@ -54,6 +57,18 @@ class FilePreviewException implements Exception {
   });
 }
 
+class DownloadBatchResult {
+  final int successCount;
+  final int failedCount;
+  final String saveDirectoryPath;
+
+  const DownloadBatchResult({
+    required this.successCount,
+    required this.failedCount,
+    required this.saveDirectoryPath,
+  });
+}
+
 class DetailViewModel extends ChangeNotifier {
   late final ApiService _apiService;
   late final IAudioPlayerService _audioService;
@@ -64,8 +79,10 @@ class DetailViewModel extends ChangeNotifier {
   String? _error;
   bool _disposed = false;
 
+  List<Work> _recommendedWorks = [];
   bool _hasRecommendations = false;
-  bool _checkingRecommendations = false;
+  bool _loadingRecommendations = false;
+  String? _recommendationsError;
 
   // 收藏夹相关状态
   bool _loadingPlaylists = false;
@@ -81,6 +98,8 @@ class DetailViewModel extends ChangeNotifier {
 
   bool _loadingMark = false;
   bool get loadingMark => _loadingMark;
+  bool _downloadingFiles = false;
+  bool get downloadingFiles => _downloadingFiles;
 
   // 添加取消标记
   final _cancelToken = CancelToken();
@@ -90,14 +109,16 @@ class DetailViewModel extends ChangeNotifier {
   }) {
     _audioService = GetIt.I<IAudioPlayerService>();
     _apiService = GetIt.I<ApiService>();
-    _checkRecommendations();
+    loadRecommendationsPreview();
   }
 
   Files? get files => _files;
   bool get isLoading => _isLoading;
   String? get error => _error;
+  List<Work> get recommendedWorks => _recommendedWorks;
   bool get hasRecommendations => _hasRecommendations;
-  bool get checkingRecommendations => _checkingRecommendations;
+  bool get loadingRecommendations => _loadingRecommendations;
+  String? get recommendationsError => _recommendationsError;
 
   // 收藏夹相关 getters
   bool get loadingPlaylists => _loadingPlaylists;
@@ -109,8 +130,11 @@ class DetailViewModel extends ChangeNotifier {
           .ceil()
       : null;
 
-  Future<void> _checkRecommendations() async {
-    _checkingRecommendations = true;
+  Future<void> loadRecommendationsPreview() async {
+    if (_loadingRecommendations) return;
+
+    _loadingRecommendations = true;
+    _recommendationsError = null;
     notifyListeners();
 
     try {
@@ -118,13 +142,19 @@ class DetailViewModel extends ChangeNotifier {
         itemId: work.id.toString(),
         page: 1,
       );
-      _hasRecommendations = (response.pagination.totalCount ?? 0) > 0;
+      _recommendedWorks = response.works
+          .where((recommendedWork) => recommendedWork.id != work.id)
+          .toList();
+      _hasRecommendations = (response.pagination.totalCount ?? 0) > 0 ||
+          _recommendedWorks.isNotEmpty;
     } catch (e) {
       AppLogger.error('检查相关推荐失败', e);
+      _recommendedWorks = [];
       _hasRecommendations = false;
+      _recommendationsError = e.toString();
     } finally {
       if (!_disposed) {
-        _checkingRecommendations = false;
+        _loadingRecommendations = false;
         notifyListeners();
       }
     }
@@ -340,6 +370,126 @@ class DetailViewModel extends ChangeNotifier {
       _loadingMark = false;
       notifyListeners();
     }
+  }
+
+  Future<DownloadBatchResult> downloadFiles(List<Child> files) async {
+    _downloadingFiles = true;
+    notifyListeners();
+
+    var successCount = 0;
+    var failedCount = 0;
+    var saveDirectoryPath = '';
+
+    try {
+      final saveDirectory = await _resolveDownloadDirectory();
+      saveDirectoryPath = saveDirectory.path;
+
+      for (final file in files) {
+        final downloadUrl = file.mediaDownloadUrl;
+        if (downloadUrl == null || downloadUrl.isEmpty) {
+          failedCount++;
+          continue;
+        }
+
+        final safeFileName = _sanitizeFileName(file.title);
+        final savePath =
+            await _createUniqueSavePath(saveDirectory, safeFileName);
+
+        try {
+          await _apiService.downloadFileToPath(
+            downloadUrl,
+            savePath,
+            cancelToken: _cancelToken,
+          );
+          successCount++;
+        } catch (e) {
+          failedCount++;
+          AppLogger.error('下载文件失败: ${file.title}', e);
+        }
+      }
+    } finally {
+      _downloadingFiles = false;
+      if (!_disposed) {
+        notifyListeners();
+      }
+    }
+
+    return DownloadBatchResult(
+      successCount: successCount,
+      failedCount: failedCount,
+      saveDirectoryPath: saveDirectoryPath,
+    );
+  }
+
+  Future<Directory> _resolveDownloadDirectory() async {
+    final candidateBaseDirectories = <Directory?>[];
+
+    try {
+      candidateBaseDirectories.add(await getDownloadsDirectory());
+    } catch (_) {
+      candidateBaseDirectories.add(null);
+    }
+    candidateBaseDirectories.add(await getApplicationDocumentsDirectory());
+
+    final workFolderName = _sanitizeFileName(
+      (work.sourceId?.trim().isNotEmpty ?? false)
+          ? work.sourceId!
+          : 'work_${work.id ?? 'unknown'}',
+    );
+
+    for (final baseDirectory in candidateBaseDirectories) {
+      if (baseDirectory == null) continue;
+
+      try {
+        final rootDirectory = Directory(
+          '${baseDirectory.path}${Platform.pathSeparator}asmr_downloads',
+        );
+        if (!await rootDirectory.exists()) {
+          await rootDirectory.create(recursive: true);
+        }
+
+        final workDirectory = Directory(
+          '${rootDirectory.path}${Platform.pathSeparator}$workFolderName',
+        );
+        if (!await workDirectory.exists()) {
+          await workDirectory.create(recursive: true);
+        }
+
+        return workDirectory;
+      } catch (e) {
+        AppLogger.error('创建下载目录失败: ${baseDirectory.path}', e);
+      }
+    }
+
+    throw Exception('无法创建下载目录');
+  }
+
+  Future<String> _createUniqueSavePath(
+    Directory directory,
+    String fileName,
+  ) async {
+    final dotIndex = fileName.lastIndexOf('.');
+    final baseName = dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
+    final extension = dotIndex > 0 ? fileName.substring(dotIndex) : '';
+
+    var candidateName = fileName;
+    var counter = 1;
+    while (await File(
+      '${directory.path}${Platform.pathSeparator}$candidateName',
+    ).exists()) {
+      candidateName = '$baseName ($counter)$extension';
+      counter++;
+    }
+
+    return '${directory.path}${Platform.pathSeparator}$candidateName';
+  }
+
+  String _sanitizeFileName(String? original) {
+    final normalized = (original ?? '').trim();
+    if (normalized.isEmpty) {
+      return 'file';
+    }
+    return normalized.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
   }
 
   void showMarkDialog(BuildContext context) {

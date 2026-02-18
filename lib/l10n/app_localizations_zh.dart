@@ -185,6 +185,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get similarWorksTitle => '相关推荐';
 
   @override
+  String get similarWorksSeeAll => '查看全部';
+
+  @override
   String get playlistAddToFavorites => '添加到收藏夹';
 
   @override
@@ -221,6 +224,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get workActionRate => '评分';
 
   @override
+  String get workActionDownload => '下载';
+
+  @override
   String get workActionChecking => '检查中';
 
   @override
@@ -228,6 +234,41 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get workActionNoRecommendation => '暂无推荐';
+
+  @override
+  String get downloadDialogTitle => '选择要下载的文件';
+
+  @override
+  String get downloadDialogNoFiles => '没有可下载的文件';
+
+  @override
+  String downloadSelectedCount(int count) {
+    return '已选择 $count 个';
+  }
+
+  @override
+  String get downloadSelectAll => '全选';
+
+  @override
+  String get downloadClearSelection => '清空选择';
+
+  @override
+  String get downloadNoFilesSelected => '请选择要下载的文件';
+
+  @override
+  String downloadSuccess(int count, String path) {
+    return '已下载 $count 个文件: $path';
+  }
+
+  @override
+  String downloadPartial(int successCount, int failedCount) {
+    return '下载完成 $successCount 个，失败 $failedCount 个';
+  }
+
+  @override
+  String downloadAllFailed(int failedCount) {
+    return '下载失败（$failedCount 个）';
+  }
 
   @override
   String get openDlsiteInBrowser => '在浏览器中打开DLsite';

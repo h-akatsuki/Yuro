@@ -68,6 +68,7 @@
   "emptyContent": "内容がありません",
   "emptyWorks": "作品がありません",
   "similarWorksTitle": "関連作品",
+  "similarWorksSeeAll": "すべて見る",
   "playlistAddToFavorites": "お気に入りに追加",
   "playlistEmpty": "リストがありません",
   "playlistAddSuccess": "追加しました: {name}",
@@ -99,9 +100,53 @@
   "workActionFavorite": "お気に入り",
   "workActionMark": "マーク",
   "workActionRate": "評価",
+  "workActionDownload": "ダウンロード",
   "workActionChecking": "確認中",
   "workActionRecommend": "おすすめ",
   "workActionNoRecommendation": "おすすめはありません",
+  "downloadDialogTitle": "ダウンロードするファイルを選択",
+  "downloadDialogNoFiles": "ダウンロード可能なファイルがありません",
+  "downloadSelectedCount": "選択中: {count}件",
+  "@downloadSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadSelectAll": "すべて選択",
+  "downloadClearSelection": "選択解除",
+  "downloadNoFilesSelected": "ダウンロードするファイルを選択してください",
+  "downloadSuccess": "{count}件のダウンロードが完了しました: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadPartial": "ダウンロード完了 {successCount}件 / 失敗 {failedCount}件",
+  "@downloadPartial": {
+    "placeholders": {
+      "successCount": {
+        "type": "int"
+      },
+      "failedCount": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadAllFailed": "ダウンロードに失敗しました（{failedCount}件）",
+  "@downloadAllFailed": {
+    "placeholders": {
+      "failedCount": {
+        "type": "int"
+      }
+    }
+  },
   "openDlsiteInBrowser": "DLsiteをブラウザで開く",
   "markStatusTitle": "マーク状態",
   "markStatusWantToListen": "聴きたい",

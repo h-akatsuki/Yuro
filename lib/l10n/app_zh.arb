@@ -68,6 +68,7 @@
   "emptyContent": "暂无内容",
   "emptyWorks": "暂无作品",
   "similarWorksTitle": "相关推荐",
+  "similarWorksSeeAll": "查看全部",
   "playlistAddToFavorites": "添加到收藏夹",
   "playlistEmpty": "暂无收藏夹",
   "playlistAddSuccess": "添加成功: {name}",
@@ -99,9 +100,53 @@
   "workActionFavorite": "收藏",
   "workActionMark": "标记",
   "workActionRate": "评分",
+  "workActionDownload": "下载",
   "workActionChecking": "检查中",
   "workActionRecommend": "相关推荐",
   "workActionNoRecommendation": "暂无推荐",
+  "downloadDialogTitle": "选择要下载的文件",
+  "downloadDialogNoFiles": "没有可下载的文件",
+  "downloadSelectedCount": "已选择 {count} 个",
+  "@downloadSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadSelectAll": "全选",
+  "downloadClearSelection": "清空选择",
+  "downloadNoFilesSelected": "请选择要下载的文件",
+  "downloadSuccess": "已下载 {count} 个文件: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadPartial": "下载完成 {successCount} 个，失败 {failedCount} 个",
+  "@downloadPartial": {
+    "placeholders": {
+      "successCount": {
+        "type": "int"
+      },
+      "failedCount": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadAllFailed": "下载失败（{failedCount} 个）",
+  "@downloadAllFailed": {
+    "placeholders": {
+      "failedCount": {
+        "type": "int"
+      }
+    }
+  },
   "openDlsiteInBrowser": "在浏览器中打开DLsite",
   "markStatusTitle": "标记状态",
   "markStatusWantToListen": "想听",

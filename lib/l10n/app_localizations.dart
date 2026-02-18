@@ -446,6 +446,12 @@ abstract class AppLocalizations {
   /// **'相关推荐'**
   String get similarWorksTitle;
 
+  /// No description provided for @similarWorksSeeAll.
+  ///
+  /// In zh, this message translates to:
+  /// **'查看全部'**
+  String get similarWorksSeeAll;
+
   /// No description provided for @playlistAddToFavorites.
   ///
   /// In zh, this message translates to:
@@ -506,6 +512,12 @@ abstract class AppLocalizations {
   /// **'评分'**
   String get workActionRate;
 
+  /// No description provided for @workActionDownload.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载'**
+  String get workActionDownload;
+
   /// No description provided for @workActionChecking.
   ///
   /// In zh, this message translates to:
@@ -523,6 +535,60 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'暂无推荐'**
   String get workActionNoRecommendation;
+
+  /// No description provided for @downloadDialogTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择要下载的文件'**
+  String get downloadDialogTitle;
+
+  /// No description provided for @downloadDialogNoFiles.
+  ///
+  /// In zh, this message translates to:
+  /// **'没有可下载的文件'**
+  String get downloadDialogNoFiles;
+
+  /// No description provided for @downloadSelectedCount.
+  ///
+  /// In zh, this message translates to:
+  /// **'已选择 {count} 个'**
+  String downloadSelectedCount(int count);
+
+  /// No description provided for @downloadSelectAll.
+  ///
+  /// In zh, this message translates to:
+  /// **'全选'**
+  String get downloadSelectAll;
+
+  /// No description provided for @downloadClearSelection.
+  ///
+  /// In zh, this message translates to:
+  /// **'清空选择'**
+  String get downloadClearSelection;
+
+  /// No description provided for @downloadNoFilesSelected.
+  ///
+  /// In zh, this message translates to:
+  /// **'请选择要下载的文件'**
+  String get downloadNoFilesSelected;
+
+  /// No description provided for @downloadSuccess.
+  ///
+  /// In zh, this message translates to:
+  /// **'已下载 {count} 个文件: {path}'**
+  String downloadSuccess(int count, String path);
+
+  /// No description provided for @downloadPartial.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载完成 {successCount} 个，失败 {failedCount} 个'**
+  String downloadPartial(int successCount, int failedCount);
+
+  /// No description provided for @downloadAllFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载失败（{failedCount} 个）'**
+  String downloadAllFailed(int failedCount);
 
   /// No description provided for @openDlsiteInBrowser.
   ///

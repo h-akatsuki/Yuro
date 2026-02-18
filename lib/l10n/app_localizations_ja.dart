@@ -185,6 +185,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get similarWorksTitle => '関連作品';
 
   @override
+  String get similarWorksSeeAll => 'すべて見る';
+
+  @override
   String get playlistAddToFavorites => 'お気に入りに追加';
 
   @override
@@ -221,6 +224,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get workActionRate => '評価';
 
   @override
+  String get workActionDownload => 'ダウンロード';
+
+  @override
   String get workActionChecking => '確認中';
 
   @override
@@ -228,6 +234,41 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get workActionNoRecommendation => 'おすすめはありません';
+
+  @override
+  String get downloadDialogTitle => 'ダウンロードするファイルを選択';
+
+  @override
+  String get downloadDialogNoFiles => 'ダウンロード可能なファイルがありません';
+
+  @override
+  String downloadSelectedCount(int count) {
+    return '選択中: $count件';
+  }
+
+  @override
+  String get downloadSelectAll => 'すべて選択';
+
+  @override
+  String get downloadClearSelection => '選択解除';
+
+  @override
+  String get downloadNoFilesSelected => 'ダウンロードするファイルを選択してください';
+
+  @override
+  String downloadSuccess(int count, String path) {
+    return '$count件のダウンロードが完了しました: $path';
+  }
+
+  @override
+  String downloadPartial(int successCount, int failedCount) {
+    return 'ダウンロード完了 $successCount件 / 失敗 $failedCount件';
+  }
+
+  @override
+  String downloadAllFailed(int failedCount) {
+    return 'ダウンロードに失敗しました（$failedCount件）';
+  }
 
   @override
   String get openDlsiteInBrowser => 'DLsiteをブラウザで開く';

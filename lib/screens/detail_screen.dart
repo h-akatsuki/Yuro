@@ -5,6 +5,8 @@ import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/presentation/viewmodels/detail_viewmodel.dart';
 import 'package:asmrapp/screens/similar_works_screen.dart';
 import 'package:asmrapp/widgets/detail/file_preview_dialog.dart';
+import 'package:asmrapp/widgets/detail/download_file_selection_dialog.dart';
+import 'package:asmrapp/widgets/detail/related_works_section.dart';
 import 'package:asmrapp/widgets/detail/work_action_buttons.dart';
 import 'package:asmrapp/widgets/detail/work_cover.dart';
 import 'package:asmrapp/widgets/detail/work_files_list.dart';
@@ -60,34 +62,15 @@ class DetailScreen extends StatelessWidget {
               WorkInfo(work: work),
               Consumer<DetailViewModel>(
                 builder: (context, viewModel, _) => WorkActionButtons(
-                  hasRecommendations: viewModel.hasRecommendations,
-                  checkingRecommendations: viewModel.checkingRecommendations,
-                  onRecommendationsTap: () {
-                    Navigator.of(context).push(
-                      PageRouteBuilder(
-                        pageBuilder: (context, animation, secondaryAnimation) =>
-                            SimilarWorksScreen(work: work),
-                        transitionsBuilder:
-                            (context, animation, secondaryAnimation, child) {
-                          const begin = Offset(1.0, 0.0);
-                          const end = Offset.zero;
-                          const curve = Curves.easeInOut;
-                          var tween = Tween(begin: begin, end: end).chain(
-                            CurveTween(curve: curve),
-                          );
-                          return SlideTransition(
-                            position: animation.drive(tween),
-                            child: child,
-                          );
-                        },
-                      ),
-                    );
-                  },
                   onFavoriteTap: () => viewModel.showPlaylistsDialog(context),
                   loadingFavorite: viewModel.loadingFavorite,
                   onMarkTap: () => viewModel.showMarkDialog(context),
                   currentMarkStatus: viewModel.currentMarkStatus,
                   loadingMark: viewModel.loadingMark,
+                  onDownloadTap: viewModel.files == null
+                      ? null
+                      : () => _showDownloadDialog(context, viewModel),
+                  loadingDownload: viewModel.downloadingFiles,
                 ),
               ),
               Consumer<DetailViewModel>(
@@ -116,6 +99,18 @@ class DetailScreen extends StatelessWidget {
 
                   return const SizedBox.shrink();
                 },
+              ),
+              Consumer<DetailViewModel>(
+                builder: (context, viewModel, _) => RelatedWorksSection(
+                  works: viewModel.recommendedWorks,
+                  isLoading: viewModel.loadingRecommendations,
+                  error: viewModel.recommendationsError,
+                  hasRecommendations: viewModel.hasRecommendations,
+                  onSeeAll: () => _openSimilarWorksScreen(context),
+                  onRetry: viewModel.loadRecommendationsPreview,
+                  onWorkTap: (relatedWork) =>
+                      _openWorkDetail(context, relatedWork),
+                ),
               ),
             ],
           ),
@@ -169,6 +164,82 @@ class DetailScreen extends StatelessWidget {
     );
   }
 
+  Future<void> _showDownloadDialog(
+    BuildContext context,
+    DetailViewModel viewModel,
+  ) async {
+    final files = viewModel.files?.children;
+    if (files == null || files.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.playFilesNotLoaded)),
+      );
+      return;
+    }
+
+    final selectedFiles = await showDialog<List<Child>>(
+      context: context,
+      builder: (dialogContext) => DownloadFileSelectionDialog(
+        rootFiles: files,
+      ),
+    );
+
+    if (selectedFiles == null) return;
+    if (selectedFiles.isEmpty) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.downloadNoFilesSelected)),
+      );
+      return;
+    }
+
+    late final DownloadBatchResult result;
+    try {
+      result = await viewModel.downloadFiles(selectedFiles);
+    } catch (e) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.operationFailed(e.toString()))),
+      );
+      return;
+    }
+
+    if (!context.mounted) return;
+
+    if (result.successCount > 0 && result.failedCount == 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            context.l10n.downloadSuccess(
+              result.successCount,
+              result.saveDirectoryPath,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+
+    if (result.successCount > 0 && result.failedCount > 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            context.l10n.downloadPartial(
+              result.successCount,
+              result.failedCount,
+            ),
+          ),
+        ),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(context.l10n.downloadAllFailed(result.failedCount)),
+      ),
+    );
+  }
+
   String _playbackErrorMessage(BuildContext context, Object error) {
     if (error is PlaybackException) {
       switch (error.error) {
@@ -183,6 +254,35 @@ class DetailScreen extends StatelessWidget {
       }
     }
     return context.l10n.playFailed(error.toString());
+  }
+
+  void _openWorkDetail(BuildContext context, Work targetWork) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailScreen(work: targetWork),
+      ),
+    );
+  }
+
+  void _openSimilarWorksScreen(BuildContext context) {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            SimilarWorksScreen(work: work),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          const begin = Offset(1.0, 0.0);
+          const end = Offset.zero;
+          const curve = Curves.easeInOut;
+          final tween =
+              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          return SlideTransition(
+            position: animation.drive(tween),
+            child: child,
+          );
+        },
+      ),
+    );
   }
 
   String? _extractRjCode() {

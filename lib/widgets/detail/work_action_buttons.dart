@@ -4,33 +4,33 @@ import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/common/extensions/mark_status_localizations.dart';
 
 class WorkActionButtons extends StatelessWidget {
-  final VoidCallback onRecommendationsTap;
-  final bool hasRecommendations;
-  final bool checkingRecommendations;
   final VoidCallback onFavoriteTap;
   final bool loadingFavorite;
   final VoidCallback onMarkTap;
   final MarkStatus? currentMarkStatus;
   final bool loadingMark;
+  final VoidCallback? onDownloadTap;
+  final bool loadingDownload;
 
   const WorkActionButtons({
     super.key,
-    required this.onRecommendationsTap,
-    required this.hasRecommendations,
-    required this.checkingRecommendations,
     required this.onFavoriteTap,
     this.loadingFavorite = false,
     required this.onMarkTap,
     this.currentMarkStatus,
     this.loadingMark = false,
+    this.onDownloadTap,
+    this.loadingDownload = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Wrap(
+        alignment: WrapAlignment.spaceEvenly,
+        spacing: 12,
+        runSpacing: 8,
         children: [
           _ActionButton(
             icon: Icons.favorite_border,
@@ -53,14 +53,10 @@ class WorkActionButtons extends StatelessWidget {
             },
           ),
           _ActionButton(
-            icon: Icons.recommend,
-            label: checkingRecommendations
-                ? context.l10n.workActionChecking
-                : (hasRecommendations
-                    ? context.l10n.workActionRecommend
-                    : context.l10n.workActionNoRecommendation),
-            onTap: hasRecommendations ? onRecommendationsTap : null,
-            loading: checkingRecommendations,
+            icon: Icons.download_outlined,
+            label: context.l10n.workActionDownload,
+            onTap: onDownloadTap,
+            loading: loadingDownload,
           ),
         ],
       ),
