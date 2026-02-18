@@ -1,4 +1,5 @@
 import 'package:asmrapp/common/utils/file_preview_utils.dart';
+import 'package:asmrapp/core/download/download_request_item.dart';
 import 'package:asmrapp/data/models/files/child.dart';
 import 'package:asmrapp/data/models/works/work.dart';
 import 'package:asmrapp/l10n/l10n.dart';
@@ -176,7 +177,7 @@ class DetailScreen extends StatelessWidget {
       return;
     }
 
-    final selectedFiles = await showDialog<List<Child>>(
+    final selectedFiles = await showDialog<List<DownloadRequestItem>>(
       context: context,
       builder: (dialogContext) => DownloadFileSelectionDialog(
         rootFiles: files,

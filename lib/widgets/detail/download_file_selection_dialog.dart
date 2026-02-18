@@ -1,4 +1,5 @@
 import 'package:asmrapp/common/utils/file_preview_utils.dart';
+import 'package:asmrapp/core/download/download_request_item.dart';
 import 'package:asmrapp/data/models/files/child.dart';
 import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/utils/file_size_formatter.dart';
@@ -20,7 +21,7 @@ class DownloadFileSelectionDialog extends StatefulWidget {
 class _DownloadFileSelectionDialogState
     extends State<DownloadFileSelectionDialog> {
   final Set<String> _selectedPaths = <String>{};
-  late final Map<String, Child> _downloadableFiles;
+  late final Map<String, DownloadRequestItem> _downloadableFiles;
   late final Map<String, Set<String>> _folderDescendantFiles;
 
   @override
@@ -105,7 +106,7 @@ class _DownloadFileSelectionDialogState
               : () {
                   final selectedFiles = _selectedPaths
                       .map((path) => _downloadableFiles[path])
-                      .whereType<Child>()
+                      .whereType<DownloadRequestItem>()
                       .toList(growable: false);
                   Navigator.of(context).pop(selectedFiles);
                 },
@@ -226,11 +227,12 @@ class _DownloadFileSelectionDialogState
     );
   }
 
-  Map<String, Child> _collectDownloadableFiles(
+  Map<String, DownloadRequestItem> _collectDownloadableFiles(
     List<Child> nodes, {
     String parentPath = '',
+    List<String> parentDirectories = const <String>[],
   }) {
-    final result = <String, Child>{};
+    final result = <String, DownloadRequestItem>{};
     for (var i = 0; i < nodes.length; i++) {
       final node = nodes[i];
       final currentPath = _buildNodePath(
@@ -245,13 +247,20 @@ class _DownloadFileSelectionDialogState
           _collectDownloadableFiles(
             children,
             parentPath: currentPath,
+            parentDirectories: [
+              ...parentDirectories,
+              _buildStorageSegment(node, index: i),
+            ],
           ),
         );
         continue;
       }
 
       if (_isDownloadable(node)) {
-        result[currentPath] = node;
+        result[currentPath] = DownloadRequestItem(
+          file: node,
+          relativeDirectories: List<String>.from(parentDirectories),
+        );
       }
     }
     return result;
@@ -331,14 +340,18 @@ class _DownloadFileSelectionDialogState
     required Child node,
     required int index,
   }) {
+    final segment = _buildStorageSegment(node, index: index);
+    final indexedSegment = '${index}_$segment';
+    return parentPath.isEmpty ? indexedSegment : '$parentPath/$indexedSegment';
+  }
+
+  String _buildStorageSegment(Child node, {required int index}) {
     final title = node.title?.trim();
-    final segment = (title != null && title.isNotEmpty)
+    return (title != null && title.isNotEmpty)
         ? title
         : (node.hash?.isNotEmpty ?? false)
             ? node.hash!
             : 'item_$index';
-    final indexedSegment = '${index}_$segment';
-    return parentPath.isEmpty ? indexedSegment : '$parentPath/$indexedSegment';
   }
 
   bool? _folderSelectionValue(String folderPath) {

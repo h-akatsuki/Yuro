@@ -62,6 +62,7 @@ dependencies:
   marquee: ^2.3.0
   wakelock_plus: ^1.2.8
   url_launcher: ^6.3.2
+  background_downloader: ^9.5.2
 
 dev_dependencies:
   flutter_test:

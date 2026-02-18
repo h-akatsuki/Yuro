@@ -1,7 +1,9 @@
 import 'dart:io';
 
+import 'package:asmrapp/core/download/download_request_item.dart';
 import 'package:asmrapp/data/models/playlists_with_exist_statu/pagination.dart';
 import 'package:asmrapp/data/models/playlists_with_exist_statu/playlist.dart';
+import 'package:asmrapp/data/repositories/auth_repository.dart';
 import 'package:get_it/get_it.dart';
 import 'package:flutter/material.dart';
 import 'package:asmrapp/common/utils/file_preview_utils.dart';
@@ -17,6 +19,7 @@ import 'package:asmrapp/data/models/mark_status.dart';
 import 'package:asmrapp/widgets/detail/mark_selection_dialog.dart';
 import 'package:asmrapp/core/download/download_directory_controller.dart';
 import 'package:asmrapp/core/download/download_progress_manager.dart';
+import 'package:background_downloader/background_downloader.dart';
 import 'package:dio/dio.dart';
 import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/common/extensions/mark_status_localizations.dart';
@@ -75,6 +78,8 @@ class DetailViewModel extends ChangeNotifier {
   late final IAudioPlayerService _audioService;
   late final DownloadDirectoryController _downloadDirectoryController;
   late final DownloadProgressManager _downloadProgressManager;
+  late final AuthRepository _authRepository;
+  late final FileDownloader _fileDownloader;
   final Work work;
 
   Files? _files;
@@ -114,6 +119,8 @@ class DetailViewModel extends ChangeNotifier {
     _apiService = GetIt.I<ApiService>();
     _downloadDirectoryController = GetIt.I<DownloadDirectoryController>();
     _downloadProgressManager = GetIt.I<DownloadProgressManager>();
+    _authRepository = GetIt.I<AuthRepository>();
+    _fileDownloader = FileDownloader();
     loadRecommendationsPreview();
   }
 
@@ -377,7 +384,9 @@ class DetailViewModel extends ChangeNotifier {
     }
   }
 
-  Future<DownloadBatchResult> downloadFiles(List<Child> files) async {
+  Future<DownloadBatchResult> downloadFiles(
+    List<DownloadRequestItem> files,
+  ) async {
     _downloadingFiles = true;
     notifyListeners();
 
@@ -386,21 +395,28 @@ class DetailViewModel extends ChangeNotifier {
     var saveDirectoryPath = '';
 
     try {
+      await _fileDownloader.ready;
       final rootDirectory =
           await _downloadDirectoryController.resolveDownloadRootDirectory();
       final saveDirectory = await _resolveWorkDirectory(rootDirectory);
       saveDirectoryPath = saveDirectory.path;
+      final downloadHeaders = await _buildDownloadHeaders();
 
-      for (final file in files) {
+      for (final requestItem in files) {
+        final file = requestItem.file;
         final downloadUrl = file.mediaDownloadUrl;
         if (downloadUrl == null || downloadUrl.isEmpty) {
           failedCount++;
           continue;
         }
 
+        final targetDirectory = await _resolveTargetDirectory(
+          saveDirectory,
+          requestItem.relativeDirectories,
+        );
         final safeFileName = _sanitizeFileName(file.title);
         final savePath =
-            await _createUniqueSavePath(saveDirectory, safeFileName);
+            await _createUniqueSavePath(targetDirectory, safeFileName);
         final taskId = _downloadProgressManager.createTask(
           workId: work.id,
           workTitle: _resolveWorkTitle(),
@@ -410,20 +426,43 @@ class DetailViewModel extends ChangeNotifier {
 
         try {
           _downloadProgressManager.markStarted(taskId);
-          await _apiService.downloadFileToPath(
-            downloadUrl,
-            savePath,
-            cancelToken: _cancelToken,
-            onReceiveProgress: (receivedBytes, totalBytes) {
-              _downloadProgressManager.updateProgress(
-                taskId,
-                receivedBytes,
-                totalBytes,
-              );
+          final expectedBytes = (file.size ?? 0) > 0 ? file.size! : 0;
+          final statusUpdate = await _fileDownloader.download(
+            DownloadTask(
+              taskId: taskId,
+              url: downloadUrl,
+              filename: _fileNameFromPath(savePath),
+              directory: targetDirectory.path,
+              baseDirectory: BaseDirectory.root,
+              headers: downloadHeaders,
+              updates: Updates.statusAndProgress,
+            ),
+            onProgress: (progress) {
+              if (expectedBytes > 0) {
+                final receivedBytes =
+                    (expectedBytes * progress.clamp(0.0, 1.0)).round();
+                _downloadProgressManager.updateProgress(
+                  taskId,
+                  receivedBytes,
+                  expectedBytes,
+                );
+                return;
+              }
+              _downloadProgressManager.updateProgress(taskId, 0, 0);
             },
           );
-          _downloadProgressManager.markCompleted(taskId);
-          successCount++;
+
+          if (statusUpdate.status == TaskStatus.complete) {
+            _downloadProgressManager.markCompleted(taskId);
+            successCount++;
+            continue;
+          }
+
+          final errorMessage = statusUpdate.exception?.description ??
+              '下载状态异常: ${statusUpdate.status.name}';
+          _downloadProgressManager.markFailed(taskId, errorMessage);
+          failedCount++;
+          AppLogger.error('下载文件失败: ${file.title}', errorMessage);
         } catch (e) {
           _downloadProgressManager.markFailed(taskId, e);
           failedCount++;
@@ -444,6 +483,15 @@ class DetailViewModel extends ChangeNotifier {
     );
   }
 
+  Future<Map<String, String>> _buildDownloadHeaders() async {
+    final authData = await _authRepository.getAuthData();
+    final token = authData?.token?.trim();
+    if (token == null || token.isEmpty) {
+      return const <String, String>{};
+    }
+    return <String, String>{'Authorization': 'Bearer $token'};
+  }
+
   Future<Directory> _resolveWorkDirectory(Directory rootDirectory) async {
     final workFolderName = _sanitizeFileName(
       (work.sourceId?.trim().isNotEmpty ?? false)
@@ -458,6 +506,33 @@ class DetailViewModel extends ChangeNotifier {
       await workDirectory.create(recursive: true);
     }
     return workDirectory;
+  }
+
+  Future<Directory> _resolveTargetDirectory(
+    Directory workDirectory,
+    List<String> relativeDirectories,
+  ) async {
+    if (relativeDirectories.isEmpty) {
+      return workDirectory;
+    }
+
+    final safeSegments = relativeDirectories
+        .map((segment) => _sanitizePathSegment(segment, fallback: 'folder'))
+        .where((segment) => segment.isNotEmpty)
+        .toList(growable: false);
+    if (safeSegments.isEmpty) {
+      return workDirectory;
+    }
+
+    var targetPath = workDirectory.path;
+    for (final segment in safeSegments) {
+      targetPath = '$targetPath${Platform.pathSeparator}$segment';
+    }
+    final targetDirectory = Directory(targetPath);
+    if (!await targetDirectory.exists()) {
+      await targetDirectory.create(recursive: true);
+    }
+    return targetDirectory;
   }
 
   Future<String> _createUniqueSavePath(
@@ -481,11 +556,30 @@ class DetailViewModel extends ChangeNotifier {
   }
 
   String _sanitizeFileName(String? original) {
-    final normalized = (original ?? '').trim();
-    if (normalized.isEmpty) {
+    return _sanitizePathSegment(original, fallback: 'file');
+  }
+
+  String _fileNameFromPath(String fullPath) {
+    final segments = fullPath.split(RegExp(r'[\\/]'));
+    if (segments.isEmpty || segments.last.isEmpty) {
       return 'file';
     }
-    return normalized.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
+    return segments.last;
+  }
+
+  String _sanitizePathSegment(
+    String? original, {
+    required String fallback,
+  }) {
+    final normalized = (original ?? '').trim();
+    if (normalized.isEmpty) {
+      return fallback;
+    }
+    final sanitized = normalized.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
+    if (sanitized == '.' || sanitized == '..') {
+      return fallback;
+    }
+    return sanitized;
   }
 
   String _resolveWorkTitle() {
