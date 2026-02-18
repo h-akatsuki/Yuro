@@ -114,6 +114,7 @@ class FilterPanel extends StatelessWidget {
                 borderRadius: BorderRadius.circular(8),
               ),
               child: PopupMenuButton<String>(
+                onSelected: onOrderFieldChanged,
                 child: Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
