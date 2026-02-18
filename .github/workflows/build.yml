@@ -6,11 +6,11 @@ permissions:
 on:
   push:
     tags:
-      - 'v*'  # 当推送 v 开头的tag时触发，如 v1.0.0
+      - "v*" # 当推送 v 开头的tag时触发，如 v1.0.0
   workflow_dispatch:
 
 env:
-  FLUTTER_VERSION: '3.27.0'
+  FLUTTER_VERSION: "3.41.1"
 
 jobs:
   build-android:
@@ -19,19 +19,19 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # 获取完整的 git 历史
+          fetch-depth: 0 # 获取完整的 git 历史
 
       - name: Setup Java
         uses: actions/setup-java@v3
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: 'stable'
+          channel: "stable"
 
       - name: Get dependencies
         run: flutter pub get
@@ -66,13 +66,13 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # 获取完整的 git 历史
+          fetch-depth: 0 # 获取完整的 git 历史
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.0'
-          channel: 'stable'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
 
       - name: Get dependencies
         run: flutter pub get
@@ -95,12 +95,12 @@ jobs:
 
   upload:
     runs-on: ubuntu-latest
-    needs: [ build-android, build-ios ]
+    needs: [build-android, build-ios]
 
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0  # 获取完整的 git 历史
+          fetch-depth: 0 # 获取完整的 git 历史
 
       - name: Download artifacts
         uses: actions/download-artifact@v4
@@ -141,30 +141,30 @@ jobs:
           draft: false
           body: |
             ## 🚧 Pre-release Version
-            
+
             ### 📋 Release Information
             **Version:** ${{ github.ref_name }}
             **Previous Version:** ${{ steps.previoustag.outputs.tag }}
             **Build Environment:** Flutter ${{ env.FLUTTER_VERSION }}
-            
+
             ### 📝 Changelog
             ${{ steps.commits.outputs.commits }}
-            
+
             ### 📦 Distribution
             | File | Description | Purpose |
             |------|-------------|----------|
             | `.apk` | Android Package | Direct installation for testing |
             | `.aab` | Android App Bundle | Google Play Store deployment |
-            
+
             ### 🔍 Additional Notes
             - This is a pre-release build intended for testing purposes
             - Features and functionality may not be fully stable
             - Not recommended for production use
-            
+
             ### 📱 Compatibility
             - Minimum Android SDK: 21 (Android 5.0)
             - Target Android SDK: 33 (Android 13)
-            
+
             > **Note:** Please report any issues or bugs through the GitHub issue tracker.
           files: |
             dist/flutter-apk/app-release.apk
