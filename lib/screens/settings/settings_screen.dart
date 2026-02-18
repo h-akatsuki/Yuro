@@ -1,4 +1,5 @@
 import 'package:asmrapp/core/download/download_directory_controller.dart';
+import 'package:asmrapp/core/locale/locale_controller.dart';
 import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/screens/settings/cache_manager_screen.dart';
 import 'package:file_selector/file_selector.dart';
@@ -24,8 +25,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
         title: Text(l10n.settings),
       ),
       body: Consumer<DownloadDirectoryController>(
-        builder: (context, controller, _) {
-          final path = controller.customDirectoryPath;
+        builder: (context, downloadController, _) {
+          final path = downloadController.customDirectoryPath;
+          final localeController = context.watch<LocaleController>();
+          final selectedLanguageCode =
+              localeController.locale?.languageCode ?? 'system';
           return ListView(
             padding: const EdgeInsets.all(16),
             children: [
@@ -77,33 +81,86 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                 ? null
                                 : () => _pickDownloadDirectory(
                                       context,
-                                      controller,
+                                      downloadController,
                                     ),
                             icon: const Icon(Icons.folder_open),
                             label: Text(l10n.downloadDirectoryPick),
                           ),
                           OutlinedButton.icon(
                             onPressed: _updatingDirectory ||
-                                    !controller.hasCustomDirectory
+                                    !downloadController.hasCustomDirectory
                                 ? null
                                 : () => _resetDownloadDirectory(
                                       context,
-                                      controller,
+                                      downloadController,
                                     ),
                             icon: const Icon(Icons.undo),
                             label: Text(l10n.downloadDirectoryReset),
                           ),
                         ],
                       ),
-                      if (controller.lastError != null) ...[
+                      if (downloadController.lastError != null) ...[
                         const SizedBox(height: 12),
                         Text(
-                          controller.lastError!,
+                          downloadController.lastError!,
                           style: TextStyle(
                             color: Theme.of(context).colorScheme.error,
                           ),
                         ),
                       ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        l10n.languageTitle,
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        l10n.languageDescription,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const SizedBox(height: 12),
+                      DropdownButtonFormField<String>(
+                        initialValue: selectedLanguageCode,
+                        decoration: const InputDecoration(
+                          border: OutlineInputBorder(),
+                        ),
+                        items: [
+                          DropdownMenuItem(
+                            value: 'system',
+                            child: Text(l10n.languageSystem),
+                          ),
+                          DropdownMenuItem(
+                            value: 'en',
+                            child: Text(l10n.languageEnglish),
+                          ),
+                          DropdownMenuItem(
+                            value: 'ja',
+                            child: Text(l10n.languageJapanese),
+                          ),
+                          DropdownMenuItem(
+                            value: 'zh',
+                            child: Text(l10n.languageChinese),
+                          ),
+                        ],
+                        onChanged: (value) async {
+                          if (value == null) {
+                            return;
+                          }
+                          final nextLocale =
+                              value == 'system' ? null : Locale(value);
+                          await localeController.setLocale(nextLocale);
+                        },
+                      ),
                     ],
                   ),
                 ),

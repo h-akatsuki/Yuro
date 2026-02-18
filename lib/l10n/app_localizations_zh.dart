@@ -39,6 +39,24 @@ class AppLocalizationsZh extends AppLocalizations {
   String get settings => '设置';
 
   @override
+  String get languageTitle => '语言';
+
+  @override
+  String get languageDescription => '可以选择应用显示语言。';
+
+  @override
+  String get languageSystem => '跟随系统';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageJapanese => '日本語';
+
+  @override
+  String get languageChinese => '中文';
+
+  @override
   String get cacheManager => '缓存管理';
 
   @override

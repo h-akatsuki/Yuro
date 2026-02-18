@@ -1,5 +1,6 @@
 import 'package:asmrapp/core/download/download_directory_controller.dart';
 import 'package:asmrapp/core/download/download_progress_manager.dart';
+import 'package:asmrapp/core/locale/locale_controller.dart';
 import 'package:asmrapp/core/theme/app_theme.dart';
 import 'package:asmrapp/core/theme/theme_controller.dart';
 import 'package:asmrapp/l10n/app_localizations.dart';
@@ -42,14 +43,17 @@ class MyApp extends StatelessWidget {
           create: (_) => getIt<ThemeController>(),
         ),
         ChangeNotifierProvider(
+          create: (_) => getIt<LocaleController>(),
+        ),
+        ChangeNotifierProvider(
           create: (_) => getIt<DownloadDirectoryController>(),
         ),
         ChangeNotifierProvider(
           create: (_) => getIt<DownloadProgressManager>(),
         ),
       ],
-      child: Consumer<ThemeController>(
-        builder: (context, themeController, child) {
+      child: Consumer2<ThemeController, LocaleController>(
+        builder: (context, themeController, localeController, child) {
           return MaterialApp(
             onGenerateTitle: (context) => context.l10n.appName,
             localizationsDelegates: const [
@@ -59,6 +63,7 @@ class MyApp extends StatelessWidget {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: AppLocalizations.supportedLocales,
+            locale: localeController.locale,
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeController.themeMode,

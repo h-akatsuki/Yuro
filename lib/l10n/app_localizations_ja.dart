@@ -39,6 +39,24 @@ class AppLocalizationsJa extends AppLocalizations {
   String get settings => '設定';
 
   @override
+  String get languageTitle => '言語';
+
+  @override
+  String get languageDescription => 'アプリの表示言語を選択できます。';
+
+  @override
+  String get languageSystem => 'システムと同じ';
+
+  @override
+  String get languageEnglish => 'English';
+
+  @override
+  String get languageJapanese => '日本語';
+
+  @override
+  String get languageChinese => '中文';
+
+  @override
   String get cacheManager => 'キャッシュ管理';
 
   @override

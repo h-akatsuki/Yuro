@@ -16,6 +16,7 @@ import '../../core/audio/storage/i_playback_state_repository.dart';
 import '../../core/audio/storage/playback_state_repository.dart';
 import '../audio/events/playback_event_hub.dart';
 import '../../core/theme/theme_controller.dart';
+import '../locale/locale_controller.dart';
 import '../../core/platform/i_lyric_overlay_controller.dart';
 import '../../core/platform/lyric_overlay_controller.dart';
 import '../../core/platform/lyric_overlay_manager.dart';
@@ -92,6 +93,9 @@ Future<void> setupServiceLocator() async {
   // 注册主题控制器
   getIt.registerLazySingleton<ThemeController>(
     () => ThemeController(prefs),
+  );
+  getIt.registerLazySingleton<LocaleController>(
+    () => LocaleController(prefs),
   );
 
   // 注册 WakeLockController
