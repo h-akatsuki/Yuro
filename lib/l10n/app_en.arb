@@ -1,0 +1,261 @@
+{
+  "@@locale": "en",
+  "appName": "asmr.one",
+  "retry": "Retry",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "logoutAction": "Log out",
+  "logoutConfirmTitle": "Log out",
+  "logoutConfirmMessage": "Are you sure you want to log out?",
+  "login": "Log in",
+  "favorites": "Favorites",
+  "settings": "Settings",
+  "cacheManager": "Cache Manager",
+  "screenAlwaysOn": "Keep Screen On",
+  "themeSystem": "Follow System",
+  "themeLight": "Light Mode",
+  "themeDark": "Dark Mode",
+  "navigationFavorites": "Favorites",
+  "navigationHome": "Home",
+  "navigationDownloadProgress": "Downloads",
+  "navigationForYou": "For You",
+  "navigationPopularWorks": "Popular Works",
+  "navigationRecommend": "Recommendations",
+  "homeTabWorks": "Works",
+  "homeTabDownloads": "Progress",
+  "titleWithCount": "{title} ({count})",
+  "@titleWithCount": {
+    "placeholders": {
+      "title": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "search": "Search",
+  "searchHint": "Search...",
+  "searchPromptInitial": "Enter keywords to search",
+  "searchNoResults": "No results found",
+  "subtitle": "Subtitles",
+  "subtitleAvailable": "Subtitles available",
+  "orderFieldCollectionTime": "Collection Time",
+  "orderFieldReleaseDate": "Release Date",
+  "orderFieldSales": "Sales",
+  "orderFieldPrice": "Price",
+  "orderFieldRating": "Rating",
+  "orderFieldReviewCount": "Review Count",
+  "orderFieldId": "RJ Number",
+  "orderFieldMyRating": "My Rating",
+  "orderFieldAllAges": "All Ages",
+  "orderFieldRandom": "Random",
+  "orderLabel": "Sort By",
+  "orderDirectionDesc": "Descending",
+  "orderDirectionAsc": "Ascending",
+  "searchOrderNewest": "Newest Collected",
+  "searchOrderOldest": "Oldest Collected",
+  "searchOrderReleaseDesc": "Release Date (Newest)",
+  "searchOrderReleaseAsc": "Release Date (Oldest)",
+  "searchOrderSalesDesc": "Sales (High to Low)",
+  "searchOrderSalesAsc": "Sales (Low to High)",
+  "searchOrderPriceDesc": "Price (High to Low)",
+  "searchOrderPriceAsc": "Price (Low to High)",
+  "searchOrderRatingDesc": "Rating (High to Low)",
+  "searchOrderReviewCountDesc": "Review Count (High to Low)",
+  "searchOrderIdDesc": "RJ Number (High to Low)",
+  "searchOrderIdAsc": "RJ Number (Low to High)",
+  "searchOrderRandom": "Random Order",
+  "favoritesTitle": "Favorites",
+  "pleaseLogin": "Please log in first",
+  "emptyContent": "No content",
+  "emptyWorks": "No works",
+  "similarWorksTitle": "Similar Works",
+  "similarWorksSeeAll": "See All",
+  "playlistAddToFavorites": "Add to Favorites",
+  "playlistEmpty": "No playlists",
+  "playlistAddSuccess": "Added: {name}",
+  "@playlistAddSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistRemoveSuccess": "Removed: {name}",
+  "@playlistRemoveSuccess": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "playlistSystemMarked": "My Marks",
+  "playlistSystemLiked": "Liked",
+  "playlistWorksCount": "{count} works",
+  "@playlistWorksCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "workActionFavorite": "Favorite",
+  "workActionMark": "Mark",
+  "workActionRate": "Rate",
+  "workActionDownload": "Download",
+  "workActionChecking": "Checking",
+  "workActionRecommend": "Recommendations",
+  "workActionNoRecommendation": "No recommendations",
+  "downloadDialogTitle": "Select files to download",
+  "downloadDialogNoFiles": "No downloadable files",
+  "downloadSelectedCount": "Selected: {count}",
+  "@downloadSelectedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadSelectAll": "Select All",
+  "downloadClearSelection": "Clear Selection",
+  "downloadNoFilesSelected": "Please select files to download",
+  "downloadSuccess": "Downloaded {count} files: {path}",
+  "@downloadSuccess": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadPartial": "Downloaded {successCount} / Failed {failedCount}",
+  "@downloadPartial": {
+    "placeholders": {
+      "successCount": {
+        "type": "int"
+      },
+      "failedCount": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadAllFailed": "Download failed ({failedCount})",
+  "@downloadAllFailed": {
+    "placeholders": {
+      "failedCount": {
+        "type": "int"
+      }
+    }
+  },
+  "downloadDirectoryTitle": "Download Folder",
+  "downloadDirectoryDescription": "You can choose where downloads are saved. If not set, the default folder is used.",
+  "downloadDirectoryDefaultValue": "Not set (use default location)",
+  "downloadDirectoryPermissionHint": "Storage permission will be requested if needed.",
+  "downloadDirectoryPick": "Choose Folder",
+  "downloadDirectoryReset": "Reset to Default",
+  "downloadDirectoryUpdated": "Save location updated: {path}",
+  "@downloadDirectoryUpdated": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadDirectoryResetSuccess": "Save location reset to default",
+  "downloadProgressEmpty": "No active downloads",
+  "downloadProgressClearFinished": "Clear Completed",
+  "downloadProgressActiveSection": "Active",
+  "downloadProgressHistorySection": "History",
+  "downloadStatusQueued": "Queued",
+  "downloadStatusRunning": "Downloading",
+  "downloadStatusCompleted": "Completed",
+  "downloadStatusFailed": "Failed",
+  "openDlsiteInBrowser": "Open DLsite in Browser",
+  "markStatusTitle": "Mark Status",
+  "markStatusWantToListen": "Want to Listen",
+  "markStatusListening": "Listening",
+  "markStatusListened": "Listened",
+  "markStatusRelistening": "Relistening",
+  "markStatusOnHold": "On Hold",
+  "markUpdated": "Status changed to {status}",
+  "@markUpdated": {
+    "placeholders": {
+      "status": {
+        "type": "String"
+      }
+    }
+  },
+  "markFailed": "Failed to update mark: {error}",
+  "@markFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "workFilesTitle": "Files",
+  "playUnsupportedFileType": "Unsupported format: {type}",
+  "@playUnsupportedFileType": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "playUrlMissing": "Cannot play: URL is missing",
+  "playFilesNotLoaded": "File list not loaded",
+  "playFailed": "Playback failed: {error}",
+  "@playFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "operationFailed": "Operation failed: {error}",
+  "@operationFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cacheManagerTitle": "Cache Manager",
+  "cacheAudio": "Audio Cache",
+  "cacheSubtitle": "Subtitle Cache",
+  "cacheTotal": "Total Cache Size",
+  "cacheClear": "Clear",
+  "cacheClearAll": "Clear All",
+  "cacheInfoTitle": "About Cache",
+  "cacheDescription": "Cache keeps recent audio and subtitles to speed up playback. Expired and oversized data is cleaned up automatically.",
+  "cacheLoadFailed": "Failed to load: {error}",
+  "@cacheLoadFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "cacheClearFailed": "Failed to clear: {error}",
+  "@cacheClearFailed": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "subtitleTag": "Subtitles",
+  "noPlaying": "Nothing playing",
+  "screenOnDisable": "Disable Keep Screen On",
+  "screenOnEnable": "Enable Keep Screen On",
+  "unknownWorkTitle": "Unknown Work",
+  "unknownArtist": "Unknown Artist",
+  "lyricsEmpty": "No lyrics",
+  "loginTitle": "Log in",
+  "loginUsernameLabel": "Username",
+  "loginPasswordLabel": "Password",
+  "loginAction": "Log in"
+}
