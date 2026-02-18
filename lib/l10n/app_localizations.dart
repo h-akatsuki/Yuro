@@ -122,6 +122,24 @@ abstract class AppLocalizations {
   /// **'确认'**
   String get confirm;
 
+  /// No description provided for @logoutAction.
+  ///
+  /// In zh, this message translates to:
+  /// **'退出登录'**
+  String get logoutAction;
+
+  /// No description provided for @logoutConfirmTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'退出登录'**
+  String get logoutConfirmTitle;
+
+  /// No description provided for @logoutConfirmMessage.
+  ///
+  /// In zh, this message translates to:
+  /// **'确定要退出登录吗？'**
+  String get logoutConfirmMessage;
+
   /// No description provided for @login.
   ///
   /// In zh, this message translates to:

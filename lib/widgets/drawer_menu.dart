@@ -19,6 +19,28 @@ class DrawerMenu extends StatelessWidget {
     );
   }
 
+  Future<bool> _showLogoutConfirmDialog(BuildContext context) async {
+    final navigator = Navigator.of(context, rootNavigator: true);
+    return await showDialog<bool>(
+          context: navigator.context,
+          builder: (context) => AlertDialog(
+            title: Text(context.l10n.logoutConfirmTitle),
+            content: Text(context.l10n.logoutConfirmMessage),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: Text(context.l10n.cancel),
+              ),
+              FilledButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: Text(context.l10n.logoutAction),
+              ),
+            ],
+          ),
+        ) ??
+        false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -54,10 +76,13 @@ class DrawerMenu extends StatelessWidget {
                         ? authVM.username ?? ''
                         : context.l10n.login,
                   ),
-                  onTap: () {
+                  onTap: () async {
                     Navigator.pop(context);
                     if (authVM.isLoggedIn) {
-                      authVM.logout();
+                      final shouldLogout = await _showLogoutConfirmDialog(context);
+                      if (shouldLogout) {
+                        await authVM.logout();
+                      }
                     } else {
                       _showLoginDialog(context);
                     }
