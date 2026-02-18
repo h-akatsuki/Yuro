@@ -17,9 +17,12 @@
   "themeDark": "ダークモード",
   "navigationFavorites": "お気に入り",
   "navigationHome": "ホーム",
+  "navigationDownloadProgress": "ダウンロード進捗",
   "navigationForYou": "あなた向け",
   "navigationPopularWorks": "人気作品",
   "navigationRecommend": "おすすめ",
+  "homeTabWorks": "作品",
+  "homeTabDownloads": "進捗",
   "titleWithCount": "{title} ({count})",
   "@titleWithCount": {
     "placeholders": {
@@ -147,6 +150,29 @@
       }
     }
   },
+  "downloadDirectoryTitle": "ダウンロードフォルダ",
+  "downloadDirectoryDescription": "保存先フォルダを指定できます。未指定時は既定のダウンロード先を使います。",
+  "downloadDirectoryDefaultValue": "未設定（既定の保存先）",
+  "downloadDirectoryPermissionHint": "必要な場合はストレージ権限を要求します。",
+  "downloadDirectoryPick": "フォルダを選択",
+  "downloadDirectoryReset": "既定に戻す",
+  "downloadDirectoryUpdated": "保存先を更新しました: {path}",
+  "@downloadDirectoryUpdated": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadDirectoryResetSuccess": "保存先を既定に戻しました",
+  "downloadProgressEmpty": "進行中のダウンロードはありません",
+  "downloadProgressClearFinished": "完了履歴をクリア",
+  "downloadProgressActiveSection": "進行中",
+  "downloadProgressHistorySection": "履歴",
+  "downloadStatusQueued": "待機中",
+  "downloadStatusRunning": "ダウンロード中",
+  "downloadStatusCompleted": "完了",
+  "downloadStatusFailed": "失敗",
   "openDlsiteInBrowser": "DLsiteをブラウザで開く",
   "markStatusTitle": "マーク状態",
   "markStatusWantToListen": "聴きたい",

@@ -60,6 +60,9 @@ class AppLocalizationsZh extends AppLocalizations {
   String get navigationHome => '主页';
 
   @override
+  String get navigationDownloadProgress => '下载进度';
+
+  @override
   String get navigationForYou => '为你推荐';
 
   @override
@@ -67,6 +70,12 @@ class AppLocalizationsZh extends AppLocalizations {
 
   @override
   String get navigationRecommend => '推荐';
+
+  @override
+  String get homeTabWorks => '作品';
+
+  @override
+  String get homeTabDownloads => '进度';
 
   @override
   String titleWithCount(String title, int count) {
@@ -269,6 +278,56 @@ class AppLocalizationsZh extends AppLocalizations {
   String downloadAllFailed(int failedCount) {
     return '下载失败（$failedCount 个）';
   }
+
+  @override
+  String get downloadDirectoryTitle => '下载文件夹';
+
+  @override
+  String get downloadDirectoryDescription => '可指定下载保存位置。未设置时使用默认下载目录。';
+
+  @override
+  String get downloadDirectoryDefaultValue => '未设置（使用默认目录）';
+
+  @override
+  String get downloadDirectoryPermissionHint => '必要时会请求存储权限。';
+
+  @override
+  String get downloadDirectoryPick => '选择文件夹';
+
+  @override
+  String get downloadDirectoryReset => '恢复默认';
+
+  @override
+  String downloadDirectoryUpdated(String path) {
+    return '下载目录已更新：$path';
+  }
+
+  @override
+  String get downloadDirectoryResetSuccess => '已恢复默认下载目录';
+
+  @override
+  String get downloadProgressEmpty => '当前没有下载任务';
+
+  @override
+  String get downloadProgressClearFinished => '清空已完成';
+
+  @override
+  String get downloadProgressActiveSection => '进行中';
+
+  @override
+  String get downloadProgressHistorySection => '历史记录';
+
+  @override
+  String get downloadStatusQueued => '等待中';
+
+  @override
+  String get downloadStatusRunning => '下载中';
+
+  @override
+  String get downloadStatusCompleted => '已完成';
+
+  @override
+  String get downloadStatusFailed => '失败';
 
   @override
   String get openDlsiteInBrowser => '在浏览器中打开DLsite';

@@ -60,6 +60,9 @@ class AppLocalizationsJa extends AppLocalizations {
   String get navigationHome => 'ホーム';
 
   @override
+  String get navigationDownloadProgress => 'ダウンロード進捗';
+
+  @override
   String get navigationForYou => 'あなた向け';
 
   @override
@@ -67,6 +70,12 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get navigationRecommend => 'おすすめ';
+
+  @override
+  String get homeTabWorks => '作品';
+
+  @override
+  String get homeTabDownloads => '進捗';
 
   @override
   String titleWithCount(String title, int count) {
@@ -269,6 +278,57 @@ class AppLocalizationsJa extends AppLocalizations {
   String downloadAllFailed(int failedCount) {
     return 'ダウンロードに失敗しました（$failedCount件）';
   }
+
+  @override
+  String get downloadDirectoryTitle => 'ダウンロードフォルダ';
+
+  @override
+  String get downloadDirectoryDescription =>
+      '保存先フォルダを指定できます。未指定時は既定のダウンロード先を使います。';
+
+  @override
+  String get downloadDirectoryDefaultValue => '未設定（既定の保存先）';
+
+  @override
+  String get downloadDirectoryPermissionHint => '必要な場合はストレージ権限を要求します。';
+
+  @override
+  String get downloadDirectoryPick => 'フォルダを選択';
+
+  @override
+  String get downloadDirectoryReset => '既定に戻す';
+
+  @override
+  String downloadDirectoryUpdated(String path) {
+    return '保存先を更新しました: $path';
+  }
+
+  @override
+  String get downloadDirectoryResetSuccess => '保存先を既定に戻しました';
+
+  @override
+  String get downloadProgressEmpty => '進行中のダウンロードはありません';
+
+  @override
+  String get downloadProgressClearFinished => '完了履歴をクリア';
+
+  @override
+  String get downloadProgressActiveSection => '進行中';
+
+  @override
+  String get downloadProgressHistorySection => '履歴';
+
+  @override
+  String get downloadStatusQueued => '待機中';
+
+  @override
+  String get downloadStatusRunning => 'ダウンロード中';
+
+  @override
+  String get downloadStatusCompleted => '完了';
+
+  @override
+  String get downloadStatusFailed => '失敗';
 
   @override
   String get openDlsiteInBrowser => 'DLsiteをブラウザで開く';

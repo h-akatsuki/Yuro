@@ -13,10 +13,12 @@ class HomeViewModel extends PaginatedWorksViewModel {
   bool _filterPanelExpanded = false;
   bool _hasSubtitle = false;
   FilterState _filterState = const FilterState();
+  int _activeTabIndex = 0;
 
   bool get filterPanelExpanded => _filterPanelExpanded;
   bool get hasSubtitle => _hasSubtitle;
   FilterState get filterState => _filterState;
+  int get activeTabIndex => _activeTabIndex;
 
   HomeViewModel() : super(GetIt.I<ApiService>());
 
@@ -104,6 +106,17 @@ class HomeViewModel extends PaginatedWorksViewModel {
       _filterPanelExpanded = false;
       notifyListeners();
     }
+  }
+
+  void setActiveTabIndex(int index) {
+    if (index == _activeTabIndex) {
+      return;
+    }
+    _activeTabIndex = index;
+    if (_activeTabIndex != 0 && _filterPanelExpanded) {
+      _filterPanelExpanded = false;
+    }
+    notifyListeners();
   }
 
   @override

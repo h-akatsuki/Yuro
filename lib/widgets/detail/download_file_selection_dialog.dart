@@ -21,11 +21,13 @@ class _DownloadFileSelectionDialogState
     extends State<DownloadFileSelectionDialog> {
   final Set<String> _selectedPaths = <String>{};
   late final Map<String, Child> _downloadableFiles;
+  late final Map<String, Set<String>> _folderDescendantFiles;
 
   @override
   void initState() {
     super.initState();
     _downloadableFiles = _collectDownloadableFiles(widget.rootFiles);
+    _folderDescendantFiles = _collectFolderDescendantFiles(widget.rootFiles);
   }
 
   @override
@@ -148,13 +150,41 @@ class _DownloadFileSelectionDialogState
       }
 
       final children = node.children ?? const <Child>[];
+      final descendantFiles =
+          _folderDescendantFiles[currentPath] ?? const <String>{};
+      if (descendantFiles.isEmpty) {
+        return const SizedBox.shrink();
+      }
+      final folderSelectionValue = _folderSelectionValue(currentPath);
+
       return Padding(
         padding: EdgeInsets.only(left: indentation),
         child: Theme(
           data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
           child: ExpansionTile(
+            tilePadding: const EdgeInsets.only(left: 8, right: 8),
+            childrenPadding: const EdgeInsets.only(bottom: 4),
             leading: const Icon(Icons.folder_outlined),
-            title: Text(_displayName(node)),
+            title: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _displayName(node),
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Checkbox(
+                  value: folderSelectionValue,
+                  tristate: true,
+                  onChanged: (_) => _toggleFolderSelection(
+                    currentPath,
+                    folderSelectionValue != true,
+                  ),
+                ),
+              ],
+            ),
             children: _buildTreeNodes(
               children,
               parentPath: currentPath,
@@ -186,7 +216,11 @@ class _DownloadFileSelectionDialogState
           });
         },
         secondary: Icon(_iconForFile(node)),
-        title: Text(_displayName(node)),
+        title: Text(
+          _displayName(node),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
         subtitle: Text(FileSizeFormatter.format(node.size)),
       ),
     );
@@ -223,6 +257,55 @@ class _DownloadFileSelectionDialogState
     return result;
   }
 
+  Map<String, Set<String>> _collectFolderDescendantFiles(
+    List<Child> nodes, {
+    String parentPath = '',
+  }) {
+    final result = <String, Set<String>>{};
+
+    void visitNode(Child node, String currentParentPath, int index) {
+      final currentPath = _buildNodePath(
+        parentPath: currentParentPath,
+        node: node,
+        index: index,
+      );
+
+      if (!_isFolder(node)) {
+        return;
+      }
+
+      final descendants = <String>{};
+      final children = node.children ?? const <Child>[];
+
+      for (var i = 0; i < children.length; i++) {
+        final child = children[i];
+        final childPath = _buildNodePath(
+          parentPath: currentPath,
+          node: child,
+          index: i,
+        );
+
+        if (_isFolder(child)) {
+          visitNode(child, currentPath, i);
+          descendants.addAll(result[childPath] ?? const <String>{});
+          continue;
+        }
+
+        if (_isDownloadable(child)) {
+          descendants.add(childPath);
+        }
+      }
+
+      result[currentPath] = descendants;
+    }
+
+    for (var i = 0; i < nodes.length; i++) {
+      visitNode(nodes[i], parentPath, i);
+    }
+
+    return result;
+  }
+
   bool _isFolder(Child node) => node.type?.toLowerCase() == 'folder';
 
   bool _isDownloadable(Child node) {
@@ -254,7 +337,45 @@ class _DownloadFileSelectionDialogState
         : (node.hash?.isNotEmpty ?? false)
             ? node.hash!
             : 'item_$index';
-    return parentPath.isEmpty ? segment : '$parentPath/$segment';
+    final indexedSegment = '${index}_$segment';
+    return parentPath.isEmpty ? indexedSegment : '$parentPath/$indexedSegment';
+  }
+
+  bool? _folderSelectionValue(String folderPath) {
+    final descendants = _folderDescendantFiles[folderPath];
+    if (descendants == null || descendants.isEmpty) {
+      return false;
+    }
+
+    var selectedCount = 0;
+    for (final path in descendants) {
+      if (_selectedPaths.contains(path)) {
+        selectedCount++;
+      }
+    }
+
+    if (selectedCount == 0) {
+      return false;
+    }
+    if (selectedCount == descendants.length) {
+      return true;
+    }
+    return null;
+  }
+
+  void _toggleFolderSelection(String folderPath, bool shouldSelectAll) {
+    final descendants = _folderDescendantFiles[folderPath];
+    if (descendants == null || descendants.isEmpty) {
+      return;
+    }
+
+    setState(() {
+      if (shouldSelectAll) {
+        _selectedPaths.addAll(descendants);
+      } else {
+        _selectedPaths.removeAll(descendants);
+      }
+    });
   }
 
   String _displayName(Child node) {

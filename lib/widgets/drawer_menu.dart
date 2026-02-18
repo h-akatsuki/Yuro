@@ -5,6 +5,7 @@ import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:asmrapp/presentation/widgets/auth/login_dialog.dart';
 import 'package:asmrapp/screens/favorites_screen.dart';
 import 'package:asmrapp/screens/settings/cache_manager_screen.dart';
+import 'package:asmrapp/screens/settings/settings_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -79,7 +80,8 @@ class DrawerMenu extends StatelessWidget {
                   onTap: () async {
                     Navigator.pop(context);
                     if (authVM.isLoggedIn) {
-                      final shouldLogout = await _showLogoutConfirmDialog(context);
+                      final shouldLogout =
+                          await _showLogoutConfirmDialog(context);
                       if (shouldLogout) {
                         await authVM.logout();
                       }
@@ -116,7 +118,12 @@ class DrawerMenu extends StatelessWidget {
               title: Text(context.l10n.settings),
               onTap: () {
                 Navigator.pop(context);
-                // TODO: 导航到设置页面
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsScreen(),
+                  ),
+                );
               },
             ),
             ListTile(

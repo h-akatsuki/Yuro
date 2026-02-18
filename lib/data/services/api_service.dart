@@ -99,12 +99,14 @@ class ApiService {
     String url,
     String savePath, {
     CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
   }) async {
     try {
       final response = await _dio.download(
         url,
         savePath,
         cancelToken: cancelToken,
+        onReceiveProgress: onReceiveProgress,
       );
 
       final statusCode = response.statusCode ?? 0;

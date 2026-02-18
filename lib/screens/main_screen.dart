@@ -100,9 +100,12 @@ class _MainScreenState extends State<MainScreen> {
       ],
       child: Builder(
         builder: (context) {
+          final homeViewModel = context.watch<HomeViewModel>();
           // 根据当前页面获取对应的总数
           final totalCount = _currentIndex == 1
-              ? context.watch<HomeViewModel>().pagination?.totalCount
+              ? homeViewModel.activeTabIndex == 0
+                  ? homeViewModel.pagination?.totalCount
+                  : null
               : _currentIndex == 2
                   ? context.watch<RecommendViewModel>().pagination?.totalCount
                   : _currentIndex == 3
@@ -111,11 +114,16 @@ class _MainScreenState extends State<MainScreen> {
 
           final titles = [
             context.l10n.navigationFavorites,
-            context.l10n.navigationHome,
+            homeViewModel.activeTabIndex == 0
+                ? context.l10n.navigationHome
+                : context.l10n.navigationDownloadProgress,
             context.l10n.navigationForYou,
             context.l10n.navigationPopularWorks,
           ];
           final baseTitle = titles[_currentIndex];
+          final showFilterButton = _currentIndex == 1
+              ? homeViewModel.activeTabIndex == 0
+              : _currentIndex == 2 || _currentIndex == 3;
 
           // 构建标题文本
           final title = totalCount != null
@@ -126,18 +134,19 @@ class _MainScreenState extends State<MainScreen> {
             appBar: AppBar(
               title: Text(title),
               actions: [
-                IconButton(
-                  icon: const Icon(Icons.filter_list),
-                  onPressed: () {
-                    if (_currentIndex == 1) {
-                      context.read<HomeViewModel>().toggleFilterPanel();
-                    } else if (_currentIndex == 2) {
-                      context.read<RecommendViewModel>().toggleFilterPanel();
-                    } else if (_currentIndex == 3) {
-                      context.read<PopularViewModel>().toggleFilterPanel();
-                    }
-                  },
-                ),
+                if (showFilterButton)
+                  IconButton(
+                    icon: const Icon(Icons.filter_list),
+                    onPressed: () {
+                      if (_currentIndex == 1) {
+                        context.read<HomeViewModel>().toggleFilterPanel();
+                      } else if (_currentIndex == 2) {
+                        context.read<RecommendViewModel>().toggleFilterPanel();
+                      } else if (_currentIndex == 3) {
+                        context.read<PopularViewModel>().toggleFilterPanel();
+                      }
+                    },
+                  ),
                 IconButton(
                   icon: const Icon(Icons.search),
                   onPressed: () {

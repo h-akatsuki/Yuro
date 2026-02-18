@@ -200,6 +200,12 @@ abstract class AppLocalizations {
   /// **'主页'**
   String get navigationHome;
 
+  /// No description provided for @navigationDownloadProgress.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载进度'**
+  String get navigationDownloadProgress;
+
   /// No description provided for @navigationForYou.
   ///
   /// In zh, this message translates to:
@@ -217,6 +223,18 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'推荐'**
   String get navigationRecommend;
+
+  /// No description provided for @homeTabWorks.
+  ///
+  /// In zh, this message translates to:
+  /// **'作品'**
+  String get homeTabWorks;
+
+  /// No description provided for @homeTabDownloads.
+  ///
+  /// In zh, this message translates to:
+  /// **'进度'**
+  String get homeTabDownloads;
 
   /// No description provided for @titleWithCount.
   ///
@@ -589,6 +607,102 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'下载失败（{failedCount} 个）'**
   String downloadAllFailed(int failedCount);
+
+  /// No description provided for @downloadDirectoryTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载文件夹'**
+  String get downloadDirectoryTitle;
+
+  /// No description provided for @downloadDirectoryDescription.
+  ///
+  /// In zh, this message translates to:
+  /// **'可指定下载保存位置。未设置时使用默认下载目录。'**
+  String get downloadDirectoryDescription;
+
+  /// No description provided for @downloadDirectoryDefaultValue.
+  ///
+  /// In zh, this message translates to:
+  /// **'未设置（使用默认目录）'**
+  String get downloadDirectoryDefaultValue;
+
+  /// No description provided for @downloadDirectoryPermissionHint.
+  ///
+  /// In zh, this message translates to:
+  /// **'必要时会请求存储权限。'**
+  String get downloadDirectoryPermissionHint;
+
+  /// No description provided for @downloadDirectoryPick.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择文件夹'**
+  String get downloadDirectoryPick;
+
+  /// No description provided for @downloadDirectoryReset.
+  ///
+  /// In zh, this message translates to:
+  /// **'恢复默认'**
+  String get downloadDirectoryReset;
+
+  /// No description provided for @downloadDirectoryUpdated.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载目录已更新：{path}'**
+  String downloadDirectoryUpdated(String path);
+
+  /// No description provided for @downloadDirectoryResetSuccess.
+  ///
+  /// In zh, this message translates to:
+  /// **'已恢复默认下载目录'**
+  String get downloadDirectoryResetSuccess;
+
+  /// No description provided for @downloadProgressEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'当前没有下载任务'**
+  String get downloadProgressEmpty;
+
+  /// No description provided for @downloadProgressClearFinished.
+  ///
+  /// In zh, this message translates to:
+  /// **'清空已完成'**
+  String get downloadProgressClearFinished;
+
+  /// No description provided for @downloadProgressActiveSection.
+  ///
+  /// In zh, this message translates to:
+  /// **'进行中'**
+  String get downloadProgressActiveSection;
+
+  /// No description provided for @downloadProgressHistorySection.
+  ///
+  /// In zh, this message translates to:
+  /// **'历史记录'**
+  String get downloadProgressHistorySection;
+
+  /// No description provided for @downloadStatusQueued.
+  ///
+  /// In zh, this message translates to:
+  /// **'等待中'**
+  String get downloadStatusQueued;
+
+  /// No description provided for @downloadStatusRunning.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载中'**
+  String get downloadStatusRunning;
+
+  /// No description provided for @downloadStatusCompleted.
+  ///
+  /// In zh, this message translates to:
+  /// **'已完成'**
+  String get downloadStatusCompleted;
+
+  /// No description provided for @downloadStatusFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'失败'**
+  String get downloadStatusFailed;
 
   /// No description provided for @openDlsiteInBrowser.
   ///

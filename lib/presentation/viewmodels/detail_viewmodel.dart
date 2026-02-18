@@ -15,10 +15,11 @@ import 'package:asmrapp/core/audio/models/playback_context.dart';
 import 'package:asmrapp/widgets/detail/playlist_selection_dialog.dart';
 import 'package:asmrapp/data/models/mark_status.dart';
 import 'package:asmrapp/widgets/detail/mark_selection_dialog.dart';
+import 'package:asmrapp/core/download/download_directory_controller.dart';
+import 'package:asmrapp/core/download/download_progress_manager.dart';
 import 'package:dio/dio.dart';
 import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/common/extensions/mark_status_localizations.dart';
-import 'package:path_provider/path_provider.dart';
 
 enum PlaybackError {
   unsupportedType,
@@ -72,6 +73,8 @@ class DownloadBatchResult {
 class DetailViewModel extends ChangeNotifier {
   late final ApiService _apiService;
   late final IAudioPlayerService _audioService;
+  late final DownloadDirectoryController _downloadDirectoryController;
+  late final DownloadProgressManager _downloadProgressManager;
   final Work work;
 
   Files? _files;
@@ -109,6 +112,8 @@ class DetailViewModel extends ChangeNotifier {
   }) {
     _audioService = GetIt.I<IAudioPlayerService>();
     _apiService = GetIt.I<ApiService>();
+    _downloadDirectoryController = GetIt.I<DownloadDirectoryController>();
+    _downloadProgressManager = GetIt.I<DownloadProgressManager>();
     loadRecommendationsPreview();
   }
 
@@ -381,7 +386,9 @@ class DetailViewModel extends ChangeNotifier {
     var saveDirectoryPath = '';
 
     try {
-      final saveDirectory = await _resolveDownloadDirectory();
+      final rootDirectory =
+          await _downloadDirectoryController.resolveDownloadRootDirectory();
+      final saveDirectory = await _resolveWorkDirectory(rootDirectory);
       saveDirectoryPath = saveDirectory.path;
 
       for (final file in files) {
@@ -394,15 +401,31 @@ class DetailViewModel extends ChangeNotifier {
         final safeFileName = _sanitizeFileName(file.title);
         final savePath =
             await _createUniqueSavePath(saveDirectory, safeFileName);
+        final taskId = _downloadProgressManager.createTask(
+          workId: work.id,
+          workTitle: _resolveWorkTitle(),
+          fileName: safeFileName,
+          savePath: savePath,
+        );
 
         try {
+          _downloadProgressManager.markStarted(taskId);
           await _apiService.downloadFileToPath(
             downloadUrl,
             savePath,
             cancelToken: _cancelToken,
+            onReceiveProgress: (receivedBytes, totalBytes) {
+              _downloadProgressManager.updateProgress(
+                taskId,
+                receivedBytes,
+                totalBytes,
+              );
+            },
           );
+          _downloadProgressManager.markCompleted(taskId);
           successCount++;
         } catch (e) {
+          _downloadProgressManager.markFailed(taskId, e);
           failedCount++;
           AppLogger.error('下载文件失败: ${file.title}', e);
         }
@@ -421,47 +444,20 @@ class DetailViewModel extends ChangeNotifier {
     );
   }
 
-  Future<Directory> _resolveDownloadDirectory() async {
-    final candidateBaseDirectories = <Directory?>[];
-
-    try {
-      candidateBaseDirectories.add(await getDownloadsDirectory());
-    } catch (_) {
-      candidateBaseDirectories.add(null);
-    }
-    candidateBaseDirectories.add(await getApplicationDocumentsDirectory());
-
+  Future<Directory> _resolveWorkDirectory(Directory rootDirectory) async {
     final workFolderName = _sanitizeFileName(
       (work.sourceId?.trim().isNotEmpty ?? false)
           ? work.sourceId!
           : 'work_${work.id ?? 'unknown'}',
     );
 
-    for (final baseDirectory in candidateBaseDirectories) {
-      if (baseDirectory == null) continue;
-
-      try {
-        final rootDirectory = Directory(
-          '${baseDirectory.path}${Platform.pathSeparator}asmr_downloads',
-        );
-        if (!await rootDirectory.exists()) {
-          await rootDirectory.create(recursive: true);
-        }
-
-        final workDirectory = Directory(
-          '${rootDirectory.path}${Platform.pathSeparator}$workFolderName',
-        );
-        if (!await workDirectory.exists()) {
-          await workDirectory.create(recursive: true);
-        }
-
-        return workDirectory;
-      } catch (e) {
-        AppLogger.error('创建下载目录失败: ${baseDirectory.path}', e);
-      }
+    final workDirectory = Directory(
+      '${rootDirectory.path}${Platform.pathSeparator}$workFolderName',
+    );
+    if (!await workDirectory.exists()) {
+      await workDirectory.create(recursive: true);
     }
-
-    throw Exception('无法创建下载目录');
+    return workDirectory;
   }
 
   Future<String> _createUniqueSavePath(
@@ -490,6 +486,18 @@ class DetailViewModel extends ChangeNotifier {
       return 'file';
     }
     return normalized.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
+  }
+
+  String _resolveWorkTitle() {
+    final sourceId = work.sourceId?.trim();
+    if (sourceId != null && sourceId.isNotEmpty) {
+      return sourceId;
+    }
+    final title = work.title?.trim();
+    if (title != null && title.isNotEmpty) {
+      return title;
+    }
+    return 'work_${work.id ?? 'unknown'}';
   }
 
   void showMarkDialog(BuildContext context) {

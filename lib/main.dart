@@ -1,4 +1,6 @@
 import 'package:asmrapp/core/theme/app_theme.dart';
+import 'package:asmrapp/core/download/download_directory_controller.dart';
+import 'package:asmrapp/core/download/download_progress_manager.dart';
 import 'package:asmrapp/core/theme/theme_controller.dart';
 import 'package:asmrapp/l10n/app_localizations.dart';
 import 'package:asmrapp/l10n/l10n.dart';
@@ -38,6 +40,12 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => getIt<ThemeController>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => getIt<DownloadDirectoryController>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => getIt<DownloadProgressManager>(),
         ),
       ],
       child: Consumer<ThemeController>(

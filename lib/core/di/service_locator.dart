@@ -20,6 +20,8 @@ import '../../core/platform/i_lyric_overlay_controller.dart';
 import '../../core/platform/lyric_overlay_controller.dart';
 import '../../core/platform/lyric_overlay_manager.dart';
 import '../../core/platform/wakelock_controller.dart';
+import '../download/download_directory_controller.dart';
+import '../download/download_progress_manager.dart';
 
 final getIt = GetIt.instance;
 
@@ -94,6 +96,14 @@ Future<void> setupServiceLocator() async {
 
   // 注册 WakeLockController
   getIt.registerLazySingleton(() => WakeLockController(prefs));
+
+  // 注册下载设置与进度
+  getIt.registerLazySingleton<DownloadDirectoryController>(
+    () => DownloadDirectoryController(prefs),
+  );
+  getIt.registerLazySingleton<DownloadProgressManager>(
+    () => DownloadProgressManager(),
+  );
 }
 
 Future<void> setupSubtitleServices() async {

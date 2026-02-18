@@ -17,9 +17,12 @@
   "themeDark": "深色模式",
   "navigationFavorites": "收藏",
   "navigationHome": "主页",
+  "navigationDownloadProgress": "下载进度",
   "navigationForYou": "为你推荐",
   "navigationPopularWorks": "热门作品",
   "navigationRecommend": "推荐",
+  "homeTabWorks": "作品",
+  "homeTabDownloads": "进度",
   "titleWithCount": "{title} ({count})",
   "@titleWithCount": {
     "placeholders": {
@@ -147,6 +150,29 @@
       }
     }
   },
+  "downloadDirectoryTitle": "下载文件夹",
+  "downloadDirectoryDescription": "可指定下载保存位置。未设置时使用默认下载目录。",
+  "downloadDirectoryDefaultValue": "未设置（使用默认目录）",
+  "downloadDirectoryPermissionHint": "必要时会请求存储权限。",
+  "downloadDirectoryPick": "选择文件夹",
+  "downloadDirectoryReset": "恢复默认",
+  "downloadDirectoryUpdated": "下载目录已更新：{path}",
+  "@downloadDirectoryUpdated": {
+    "placeholders": {
+      "path": {
+        "type": "String"
+      }
+    }
+  },
+  "downloadDirectoryResetSuccess": "已恢复默认下载目录",
+  "downloadProgressEmpty": "当前没有下载任务",
+  "downloadProgressClearFinished": "清空已完成",
+  "downloadProgressActiveSection": "进行中",
+  "downloadProgressHistorySection": "历史记录",
+  "downloadStatusQueued": "等待中",
+  "downloadStatusRunning": "下载中",
+  "downloadStatusCompleted": "已完成",
+  "downloadStatusFailed": "失败",
   "openDlsiteInBrowser": "在浏览器中打开DLsite",
   "markStatusTitle": "标记状态",
   "markStatusWantToListen": "想听",
