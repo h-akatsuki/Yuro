@@ -9,26 +9,15 @@ class PlaylistBuilder {
     }));
   }
 
-  static Future<void> updatePlaylist(
-    ConcatenatingAudioSource playlist,
-    List<AudioSource> sources,
-  ) async {
-    await playlist.clear();
-    await playlist.addAll(sources);
-  }
-
   static Future<void> setPlaylistSource({
     required AudioPlayer player,
-    required ConcatenatingAudioSource playlist,
     required List<Child> files,
     required int initialIndex,
     required Duration initialPosition,
   }) async {
     final sources = await buildAudioSources(files);
-    await updatePlaylist(playlist, sources);
-
-    await player.setAudioSource(
-      playlist,
+    await player.setAudioSources(
+      sources,
       initialIndex: initialIndex,
       initialPosition: initialPosition,
     );

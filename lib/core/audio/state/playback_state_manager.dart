@@ -20,6 +20,7 @@ class PlaybackStateManager {
 
   AudioTrackInfo? _currentTrack;
   PlaybackContext? _currentContext;
+  bool _listenersInitialized = false;
 
   final List<StreamSubscription> _subscriptions = [];
 
@@ -33,31 +34,45 @@ class PlaybackStateManager {
 
   // 初始化状态监听
   void initStateListeners() {
+    if (_listenersInitialized) {
+      return;
+    }
+    _listenersInitialized = true;
+
     // 监听播放器索引变化
-    _player.currentIndexStream.listen((index) {
-      if (index != null && _currentContext != null) {
-        final newFile = _currentContext!.playlist[index];
-        updateTrackAndContext(newFile, _currentContext!.work);
-      }
-    });
+    _subscriptions.add(
+      _player.currentIndexStream.listen((index) {
+        if (index != null && _currentContext != null) {
+          final newFile = _currentContext!.playlist[index];
+          updateTrackAndContext(newFile, _currentContext!.work);
+        }
+      }),
+    );
 
     // 直接监听 AudioPlayer 的原始流
-    _player.playerStateStream.listen((state) async {
-      final position = _player.position;
-      final duration = _player.duration;
+    _subscriptions.add(
+      _player.playerStateStream.listen((state) async {
+        final position = _player.position;
+        final duration = _player.duration;
 
-      // 转换并发送到 EventHub
-      _eventHub.emit(PlaybackStateEvent(state, position, duration));
+        // 转换并发送到 EventHub
+        _eventHub.emit(PlaybackStateEvent(state, position, duration));
 
-      if (state.processingState == ProcessingState.completed) {
-        _onPlaybackCompleted();
-      }
-      saveState();
-    });
+        if (state.processingState == ProcessingState.completed) {
+          _onPlaybackCompleted();
+        }
+        saveState();
+      }),
+    );
 
-    _player.positionStream.listen((position) {
-      _eventHub.emit(PlaybackProgressEvent(position, _player.bufferedPosition));
-    });
+    _subscriptions.add(
+      _player.positionStream.listen((position) {
+        _eventHub
+            .emit(PlaybackProgressEvent(position, _player.bufferedPosition));
+      }),
+    );
+
+    _setupEventListeners();
   }
 
   // 状态更新方法
@@ -154,5 +169,6 @@ class PlaybackStateManager {
       subscription.cancel();
     }
     _subscriptions.clear();
+    _listenersInitialized = false;
   }
 }

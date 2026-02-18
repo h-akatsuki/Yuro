@@ -94,6 +94,7 @@ class AudioCacheManager {
 
   /// 创建缓存音频源
   static AudioSource _createCachingSource(String url, File cacheFile) {
+    // ignore: experimental_member_use
     return LockCachingAudioSource(Uri.parse(url), cacheFile: cacheFile);
   }
 

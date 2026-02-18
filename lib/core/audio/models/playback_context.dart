@@ -176,10 +176,4 @@ class PlaybackContext {
             file.mediaDownloadUrl != null && file.type?.toLowerCase() != 'vtt')
         .toList();
   }
-
-  // 工具方法：获取文件名（不含扩展名）
-  String? _getBaseName(String? filename) {
-    if (filename == null) return null;
-    return filename.replaceAll(RegExp(r'\.[^.]+$'), '');
-  }
 }

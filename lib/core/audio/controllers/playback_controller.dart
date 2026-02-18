@@ -10,15 +10,12 @@ import 'package:asmrapp/data/models/works/work.dart';
 class PlaybackController {
   final AudioPlayer _player;
   final PlaybackStateManager _stateManager;
-  final ConcatenatingAudioSource _playlist;
 
   PlaybackController({
     required AudioPlayer player,
     required PlaybackStateManager stateManager,
-    required ConcatenatingAudioSource playlist,
   })  : _player = player,
-        _stateManager = stateManager,
-        _playlist = playlist;
+        _stateManager = stateManager;
 
   // 基础播放控制
   Future<void> play() => _player.play();
@@ -118,7 +115,6 @@ class PlaybackController {
       try {
         await PlaylistBuilder.setPlaylistSource(
           player: _player,
-          playlist: _playlist,
           files: context.playlist,
           initialIndex: context.currentIndex,
           initialPosition: initialPosition ?? Duration.zero,
