@@ -6,42 +6,41 @@ class WorkRow extends StatelessWidget {
   final List<Work> works;
   final void Function(Work work)? onWorkTap;
   final double spacing;
+  final int columnsCount;
 
   const WorkRow({
     super.key,
     required this.works,
     this.onWorkTap,
     this.spacing = 8.0,
+    this.columnsCount = 2,
   });
 
   @override
   Widget build(BuildContext context) {
+    final children = <Widget>[];
+
+    for (var i = 0; i < columnsCount; i++) {
+      if (i > 0) {
+        children.add(SizedBox(width: spacing));
+      }
+
+      children.add(
+        Expanded(
+          child: i < works.length
+              ? WorkCard(
+                  work: works[i],
+                  onTap: onWorkTap != null ? () => onWorkTap!(works[i]) : null,
+                )
+              : const SizedBox.shrink(),
+        ),
+      );
+    }
+
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // 第一个卡片
-          Expanded(
-            child: works.isNotEmpty
-                ? WorkCard(
-                    work: works[0],
-                    onTap:
-                        onWorkTap != null ? () => onWorkTap!(works[0]) : null,
-                  )
-                : const SizedBox.shrink(),
-          ),
-          SizedBox(width: spacing),
-          // 第二个卡片或占位符
-          Expanded(
-            child: works.length > 1
-                ? WorkCard(
-                    work: works[1],
-                    onTap:
-                        onWorkTap != null ? () => onWorkTap!(works[1]) : null,
-                  )
-                : const SizedBox.shrink(), // 空占位符，保持两列布局
-          ),
-        ],
+        children: children,
       ),
     );
   }

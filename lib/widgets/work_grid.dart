@@ -33,6 +33,7 @@ class WorkGrid extends StatelessWidget {
               works: rows[index],
               onWorkTap: onWorkTap,
               spacing: columnSpacing,
+              columnsCount: columnsCount,
             ),
           );
         },
