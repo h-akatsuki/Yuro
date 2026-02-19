@@ -146,12 +146,19 @@ class DetailScreen extends StatelessWidget {
     }
 
     if (viewModel.canPreviewFile(file)) {
+      final imageFiles = _resolveImageFilesForPreview(viewModel, file);
+      final initialImageIndex = imageFiles == null
+          ? null
+          : _findImageIndexForPreview(imageFiles, file);
+
       if (!context.mounted) return;
       await showDialog<void>(
         context: context,
         builder: (dialogContext) => FilePreviewDialog(
           file: file,
           loadTextPreview: viewModel.loadTextPreview,
+          imageFiles: imageFiles,
+          initialImageIndex: initialImageIndex,
         ),
       );
       return;
@@ -257,6 +264,57 @@ class DetailScreen extends StatelessWidget {
       }
     }
     return context.l10n.playFailed(error.toString());
+  }
+
+  List<Child>? _resolveImageFilesForPreview(
+    DetailViewModel viewModel,
+    Child file,
+  ) {
+    if (!FilePreviewUtils.isImage(file)) {
+      return null;
+    }
+
+    final rootChildren = viewModel.files?.children;
+    if (rootChildren == null || rootChildren.isEmpty) {
+      return [file];
+    }
+
+    final imageFiles = _collectImageFilesFromTree(rootChildren);
+    if (imageFiles.isEmpty) {
+      return [file];
+    }
+
+    return imageFiles;
+  }
+
+  List<Child> _collectImageFilesFromTree(List<Child> nodes) {
+    final imageFiles = <Child>[];
+
+    for (final node in nodes) {
+      if (node.type == 'folder') {
+        final children = node.children;
+        if (children != null && children.isNotEmpty) {
+          imageFiles.addAll(_collectImageFilesFromTree(children));
+        }
+        continue;
+      }
+
+      if (FilePreviewUtils.isImage(node)) {
+        imageFiles.add(node);
+      }
+    }
+
+    return imageFiles;
+  }
+
+  int _findImageIndexForPreview(List<Child> imageFiles, Child targetFile) {
+    final identityIndex =
+        imageFiles.indexWhere((imageFile) => identical(imageFile, targetFile));
+    if (identityIndex >= 0) {
+      return identityIndex;
+    }
+
+    return imageFiles.indexOf(targetFile);
   }
 
   void _openWorkDetail(BuildContext context, Work targetWork) {
