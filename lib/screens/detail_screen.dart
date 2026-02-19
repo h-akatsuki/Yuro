@@ -1,3 +1,4 @@
+import 'package:asmrapp/common/utils/work_localizations.dart';
 import 'package:asmrapp/common/utils/file_preview_utils.dart';
 import 'package:asmrapp/core/download/download_request_item.dart';
 import 'package:asmrapp/data/models/files/child.dart';
@@ -32,6 +33,8 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final rjCode = _extractRjCode();
+    final localizedTitle = work.localizedTitle(Localizations.localeOf(context));
+    final appBarTitle = _buildAppBarTitle(rjCode, localizedTitle);
 
     return ChangeNotifierProvider(
       create: (_) => DetailViewModel(
@@ -39,7 +42,7 @@ class DetailScreen extends StatelessWidget {
       )..loadFiles(),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(work.sourceId ?? ''),
+          title: Text(appBarTitle),
           actions: [
             if (rjCode != null)
               IconButton(
@@ -121,6 +124,20 @@ class DetailScreen extends StatelessWidget {
         bottomNavigationBar: const MiniPlayer(),
       ),
     );
+  }
+
+  String _buildAppBarTitle(String? rjCode, String title) {
+    final normalizedTitle = title.trim();
+    if (rjCode == null || rjCode.isEmpty) {
+      return normalizedTitle;
+    }
+    if (normalizedTitle.isEmpty) {
+      return rjCode;
+    }
+    if (normalizedTitle.toUpperCase() == rjCode.toUpperCase()) {
+      return rjCode;
+    }
+    return '$rjCode - $normalizedTitle';
   }
 
   Future<void> _handleFileTap(
