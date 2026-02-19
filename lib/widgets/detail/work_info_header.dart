@@ -1,4 +1,5 @@
 import 'package:asmrapp/data/models/works/work.dart';
+import 'package:asmrapp/common/utils/work_localizations.dart';
 import 'package:asmrapp/utils/logger.dart';
 import 'package:asmrapp/widgets/common/tag_chip.dart';
 import 'package:asmrapp/widgets/detail/work_stats_info.dart';
@@ -26,11 +27,15 @@ class WorkInfoHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    final localizedTitle = work.localizedTitle(locale);
+    final circleName = work.localizedCircleName();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          work.title ?? '',
+          localizedTitle,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
@@ -40,12 +45,12 @@ class WorkInfoHeader extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
-            if (work.circle?.name != null)
+            if (circleName.isNotEmpty)
               TagChip(
-                text: work.circle?.name ?? '',
+                text: circleName,
                 backgroundColor: Colors.orange.withValues(alpha: 0.2),
                 textColor: Colors.orange[700],
-                onTap: () => _onTagTap(context, work.circle?.name ?? ''),
+                onTap: () => _onTagTap(context, circleName),
               ),
             ...?work.vas?.map(
               (va) => TagChip(

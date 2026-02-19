@@ -1,4 +1,5 @@
 import 'package:asmrapp/core/audio/models/playback_context.dart';
+import 'package:asmrapp/common/utils/work_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:marquee/marquee.dart';
 import 'package:asmrapp/l10n/l10n.dart';
@@ -13,6 +14,9 @@ class PlayerWorkInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = Localizations.localeOf(context);
+    final workTitle = this.context?.work.localizedTitle(locale) ?? '';
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
@@ -22,7 +26,9 @@ class PlayerWorkInfo extends StatelessWidget {
           SizedBox(
             height: Theme.of(context).textTheme.titleMedium!.fontSize! * 1.5,
             child: Marquee(
-              text: this.context?.work.title ?? context.l10n.unknownWorkTitle,
+              text: workTitle.isNotEmpty
+                  ? workTitle
+                  : context.l10n.unknownWorkTitle,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
