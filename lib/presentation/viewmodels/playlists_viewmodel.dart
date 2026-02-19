@@ -2,16 +2,19 @@ import 'package:asmrapp/data/models/my_lists/my_playlists/pagination.dart';
 import 'package:asmrapp/data/models/my_lists/my_playlists/playlist.dart';
 import 'package:asmrapp/data/models/works/work.dart';
 import 'package:asmrapp/data/services/api_service.dart';
+import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:asmrapp/utils/logger.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get_it/get_it.dart';
 
 class PlaylistsViewModel extends ChangeNotifier {
   final ApiService _apiService = GetIt.I<ApiService>();
+  final AuthViewModel _authViewModel;
 
   List<Playlist>? _playlists;
   bool _isLoading = false;
   String? _error;
+  bool _loginRequired = false;
   Pagination? _pagination;
   int _currentPage = 1;
 
@@ -27,6 +30,7 @@ class PlaylistsViewModel extends ChangeNotifier {
   List<Playlist> get playlists => _playlists ?? [];
   bool get isLoading => _isLoading;
   String? get error => _error;
+  bool get loginRequired => _loginRequired;
   int get currentPage => _currentPage;
   int? get totalPages =>
       _pagination?.totalCount != null && _pagination?.pageSize != null
@@ -42,7 +46,7 @@ class PlaylistsViewModel extends ChangeNotifier {
           ? (_worksPagination!.totalCount! / _worksPagination!.pageSize!).ceil()
           : null;
 
-  PlaylistsViewModel() {
+  PlaylistsViewModel(this._authViewModel) {
     loadPlaylists();
   }
 
@@ -51,8 +55,19 @@ class PlaylistsViewModel extends ChangeNotifier {
     if (_isLoading) return;
     if (page < 1 || (totalPages != null && page > totalPages!)) return;
 
+    if (!_authViewModel.isLoggedIn) {
+      _playlists = [];
+      _pagination = null;
+      _currentPage = 1;
+      _loginRequired = true;
+      _error = null;
+      notifyListeners();
+      return;
+    }
+
     _isLoading = true;
     _error = null;
+    _loginRequired = false;
     notifyListeners();
 
     try {
@@ -63,6 +78,7 @@ class PlaylistsViewModel extends ChangeNotifier {
       AppLogger.info('第$page页播放列表加载成功: ${_playlists?.length ?? 0}个播放列表');
     } catch (e) {
       AppLogger.error('加载播放列表失败', e);
+      _loginRequired = false;
       _error = e.toString();
     } finally {
       _isLoading = false;

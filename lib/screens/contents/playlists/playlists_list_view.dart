@@ -18,21 +18,27 @@ class PlaylistsListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<PlaylistsViewModel>(
       builder: (context, viewModel, child) {
+        final errorMessage = viewModel.loginRequired
+            ? context.l10n.pleaseLogin
+            : viewModel.error;
+
         if (viewModel.isLoading && viewModel.playlists.isEmpty) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        if (viewModel.error != null && viewModel.playlists.isEmpty) {
+        if (errorMessage != null && viewModel.playlists.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(viewModel.error!),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: viewModel.refresh,
-                  child: Text(context.l10n.retry),
-                ),
+                Text(errorMessage),
+                if (!viewModel.loginRequired) ...[
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: viewModel.refresh,
+                    child: Text(context.l10n.retry),
+                  ),
+                ],
               ],
             ),
           );

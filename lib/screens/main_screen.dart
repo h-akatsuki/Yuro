@@ -56,12 +56,11 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
     // 初始化所有 ViewModel
     // 注意初始化顺序，如果有依赖关系需要先初始化依赖项
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
     _homeViewModel = HomeViewModel();
     _popularViewModel = PopularViewModel();
-    _recommendViewModel = RecommendViewModel(
-      Provider.of<AuthViewModel>(context, listen: false),
-    );
-    _playlistsViewModel = PlaylistsViewModel();
+    _recommendViewModel = RecommendViewModel(authViewModel);
+    _playlistsViewModel = PlaylistsViewModel(authViewModel);
   }
 
   void _onPageChanged(int index) {
