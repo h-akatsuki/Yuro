@@ -52,16 +52,12 @@ class _DownloadFileSelectionDialogState
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ),
-                if (hasDownloadableFiles &&
-                    _selectedPaths.length < _downloadableFiles.length)
+                if (hasDownloadableFiles)
                   TextButton(
-                    onPressed: () {
-                      setState(() {
-                        _selectedPaths
-                          ..clear()
-                          ..addAll(_downloadableFiles.keys);
-                      });
-                    },
+                    onPressed:
+                        _selectedPaths.length == _downloadableFiles.length
+                            ? null
+                            : _selectAllFiles,
                     child: Text(l10n.downloadSelectAll),
                   ),
                 if (_selectedPaths.isNotEmpty)
@@ -388,6 +384,14 @@ class _DownloadFileSelectionDialogState
       } else {
         _selectedPaths.removeAll(descendants);
       }
+    });
+  }
+
+  void _selectAllFiles() {
+    setState(() {
+      _selectedPaths
+        ..clear()
+        ..addAll(_downloadableFiles.keys);
     });
   }
 
