@@ -361,6 +361,69 @@ class AppLocalizationsZh extends AppLocalizations {
   String get downloadDirectoryResetSuccess => '已恢复默认下载目录';
 
   @override
+  String get bulkSaveTooltip => '批量保存';
+
+  @override
+  String get bulkSaveLikesTitle => '批量保存喜欢的作品';
+
+  @override
+  String bulkSavePlaylistTitle(String name) {
+    return '批量保存$name';
+  }
+
+  @override
+  String get bulkSaveDescription => '按作品代码比较，只保存缺少的作品和文件。';
+
+  @override
+  String get bulkSaveDirectoryLabel => '批量保存位置';
+
+  @override
+  String get bulkSaveDirectoryUnset => '尚未选择文件夹';
+
+  @override
+  String get bulkSaveChooseDirectory => '选择文件夹';
+
+  @override
+  String get bulkSaveStart => '开始保存';
+
+  @override
+  String get bulkSaveRunning => '正在批量保存';
+
+  @override
+  String get bulkSaveCancel => '停止保存';
+
+  @override
+  String get bulkSaveDirectoryRequired => '请先选择批量保存位置';
+
+  @override
+  String bulkSaveProgress(int processed, int total) {
+    return '$processed / $total 个作品';
+  }
+
+  @override
+  String bulkSaveCurrentWork(String code) {
+    return '正在处理：$code';
+  }
+
+  @override
+  String bulkSaveCompleted(int saved, int skipped, int failed) {
+    return '已保存 $saved 个、无需更新 $skipped 个、失败 $failed 个';
+  }
+
+  @override
+  String bulkSaveReuseSummary(int reused, int downloaded) {
+    return '复用了 $reused 个现有文件，下载了 $downloaded 个文件。';
+  }
+
+  @override
+  String get bulkSaveCancelled => '已停止批量保存。未完成的作品将在下次继续使用。';
+
+  @override
+  String bulkSaveFailed(String error) {
+    return '批量保存失败：$error';
+  }
+
+  @override
   String get downloadProgressEmpty => '还没有下载任务';
 
   @override

@@ -1,5 +1,6 @@
 import 'package:asmrapp/core/download/download_directory_controller.dart';
 import 'package:asmrapp/core/download/download_progress_manager.dart';
+import 'package:asmrapp/core/download/bulk_save_controller.dart';
 import 'package:asmrapp/core/locale/locale_controller.dart';
 import 'package:asmrapp/core/platform/mouse_back_button_listener.dart';
 import 'package:asmrapp/core/theme/app_theme.dart';
@@ -53,6 +54,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider(
           create: (_) => getIt<DownloadProgressManager>(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => getIt<BulkSaveController>(),
         ),
       ],
       child: Consumer2<ThemeController, LocaleController>(

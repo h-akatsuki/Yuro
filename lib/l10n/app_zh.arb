@@ -207,6 +207,57 @@
     }
   },
   "downloadDirectoryResetSuccess": "已恢复默认下载目录",
+  "bulkSaveTooltip": "批量保存",
+  "bulkSaveLikesTitle": "批量保存喜欢的作品",
+  "bulkSavePlaylistTitle": "批量保存{name}",
+  "@bulkSavePlaylistTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "bulkSaveDescription": "按作品代码比较，只保存缺少的作品和文件。",
+  "bulkSaveDirectoryLabel": "批量保存位置",
+  "bulkSaveDirectoryUnset": "尚未选择文件夹",
+  "bulkSaveChooseDirectory": "选择文件夹",
+  "bulkSaveStart": "开始保存",
+  "bulkSaveRunning": "正在批量保存",
+  "bulkSaveCancel": "停止保存",
+  "bulkSaveDirectoryRequired": "请先选择批量保存位置",
+  "bulkSaveProgress": "{processed} / {total} 个作品",
+  "@bulkSaveProgress": {
+    "placeholders": {
+      "processed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "bulkSaveCurrentWork": "正在处理：{code}",
+  "@bulkSaveCurrentWork": {
+    "placeholders": {
+      "code": {"type": "String"}
+    }
+  },
+  "bulkSaveCompleted": "已保存 {saved} 个、无需更新 {skipped} 个、失败 {failed} 个",
+  "@bulkSaveCompleted": {
+    "placeholders": {
+      "saved": {"type": "int"},
+      "skipped": {"type": "int"},
+      "failed": {"type": "int"}
+    }
+  },
+  "bulkSaveReuseSummary": "复用了 {reused} 个现有文件，下载了 {downloaded} 个文件。",
+  "@bulkSaveReuseSummary": {
+    "placeholders": {
+      "reused": {"type": "int"},
+      "downloaded": {"type": "int"}
+    }
+  },
+  "bulkSaveCancelled": "已停止批量保存。未完成的作品将在下次继续使用。",
+  "bulkSaveFailed": "批量保存失败：{error}",
+  "@bulkSaveFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
   "downloadProgressEmpty": "还没有下载任务",
   "downloadProgressEmptyDescription": "在作品页面选择文件后，可在这里查看下载进度。",
   "downloadProgressClearFinished": "清空已完成",

@@ -362,6 +362,69 @@ class AppLocalizationsJa extends AppLocalizations {
   String get downloadDirectoryResetSuccess => '保存先を既定に戻しました';
 
   @override
+  String get bulkSaveTooltip => '一括保存';
+
+  @override
+  String get bulkSaveLikesTitle => 'お気に入りを一括保存';
+
+  @override
+  String bulkSavePlaylistTitle(String name) {
+    return '$nameを一括保存';
+  }
+
+  @override
+  String get bulkSaveDescription => '作品コードで差分を判定し、不足している作品・ファイルだけを保存します。';
+
+  @override
+  String get bulkSaveDirectoryLabel => '一括保存先';
+
+  @override
+  String get bulkSaveDirectoryUnset => 'フォルダが選択されていません';
+
+  @override
+  String get bulkSaveChooseDirectory => 'フォルダを選択';
+
+  @override
+  String get bulkSaveStart => '保存を開始';
+
+  @override
+  String get bulkSaveRunning => '一括保存中';
+
+  @override
+  String get bulkSaveCancel => '保存を中断';
+
+  @override
+  String get bulkSaveDirectoryRequired => '先に一括保存先を選択してください';
+
+  @override
+  String bulkSaveProgress(int processed, int total) {
+    return '$processed / $total 作品';
+  }
+
+  @override
+  String bulkSaveCurrentWork(String code) {
+    return '処理中: $code';
+  }
+
+  @override
+  String bulkSaveCompleted(int saved, int skipped, int failed) {
+    return '保存 $saved作品・更新不要 $skipped作品・失敗 $failed作品';
+  }
+
+  @override
+  String bulkSaveReuseSummary(int reused, int downloaded) {
+    return '既存ファイルを$reused件再利用し、$downloaded件を取得しました。';
+  }
+
+  @override
+  String get bulkSaveCancelled => '一括保存を中断しました。未完了の作品は次回再利用されます。';
+
+  @override
+  String bulkSaveFailed(String error) {
+    return '一括保存に失敗しました: $error';
+  }
+
+  @override
   String get downloadProgressEmpty => 'ダウンロードはまだありません';
 
   @override

@@ -363,6 +363,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get downloadDirectoryResetSuccess => 'Save location reset to default';
 
   @override
+  String get bulkSaveTooltip => 'Bulk save';
+
+  @override
+  String get bulkSaveLikesTitle => 'Bulk save likes';
+
+  @override
+  String bulkSavePlaylistTitle(String name) {
+    return 'Bulk save $name';
+  }
+
+  @override
+  String get bulkSaveDescription =>
+      'Compares works by code and saves only missing works and files.';
+
+  @override
+  String get bulkSaveDirectoryLabel => 'Bulk save location';
+
+  @override
+  String get bulkSaveDirectoryUnset => 'No folder selected';
+
+  @override
+  String get bulkSaveChooseDirectory => 'Choose folder';
+
+  @override
+  String get bulkSaveStart => 'Start saving';
+
+  @override
+  String get bulkSaveRunning => 'Bulk save in progress';
+
+  @override
+  String get bulkSaveCancel => 'Stop saving';
+
+  @override
+  String get bulkSaveDirectoryRequired => 'Choose a bulk save location first';
+
+  @override
+  String bulkSaveProgress(int processed, int total) {
+    return '$processed / $total works';
+  }
+
+  @override
+  String bulkSaveCurrentWork(String code) {
+    return 'Processing: $code';
+  }
+
+  @override
+  String bulkSaveCompleted(int saved, int skipped, int failed) {
+    return 'Saved $saved, unchanged $skipped, failed $failed';
+  }
+
+  @override
+  String bulkSaveReuseSummary(int reused, int downloaded) {
+    return 'Reused $reused existing files and downloaded $downloaded files.';
+  }
+
+  @override
+  String get bulkSaveCancelled =>
+      'Bulk save stopped. Incomplete works will be reused next time.';
+
+  @override
+  String bulkSaveFailed(String error) {
+    return 'Bulk save failed: $error';
+  }
+
+  @override
   String get downloadProgressEmpty => 'No downloads yet';
 
   @override

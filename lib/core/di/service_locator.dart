@@ -23,6 +23,7 @@ import '../../core/platform/lyric_overlay_manager.dart';
 import '../../core/platform/wakelock_controller.dart';
 import '../download/download_directory_controller.dart';
 import '../download/download_progress_manager.dart';
+import '../download/bulk_save_controller.dart';
 import '../../data/services/dlsite_service.dart';
 
 final getIt = GetIt.instance;
@@ -111,6 +112,12 @@ Future<void> setupServiceLocator() async {
   );
   getIt.registerLazySingleton<DownloadProgressManager>(
     () => DownloadProgressManager(),
+  );
+  getIt.registerLazySingleton<BulkSaveController>(
+    () => BulkSaveController(
+      apiService: getIt<ApiService>(),
+      directoryController: getIt<DownloadDirectoryController>(),
+    ),
   );
 }
 

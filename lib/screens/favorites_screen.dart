@@ -6,6 +6,8 @@ import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
 import 'package:asmrapp/widgets/pagination_controls.dart';
 import 'package:asmrapp/widgets/work_grid_view.dart';
 import 'package:asmrapp/l10n/l10n.dart';
+import 'package:asmrapp/core/download/bulk_save_controller.dart';
+import 'package:asmrapp/widgets/download/bulk_save_dialog.dart';
 
 class FavoritesScreen extends StatefulWidget {
   const FavoritesScreen({super.key});
@@ -51,7 +53,22 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
         appBar: AppBar(
           leading: BackButton(onPressed: () => Navigator.maybePop(context)),
           title: Text(context.l10n.favoritesTitle),
-          actions: const [DrawerButton()],
+          actions: [
+            Consumer<BulkSaveController>(
+              builder: (context, controller, _) => IconButton(
+                key: const ValueKey('favorites-bulk-save'),
+                onPressed: () => showBulkSaveDialog(context),
+                tooltip: context.l10n.bulkSaveTooltip,
+                icon: controller.isRunning
+                    ? const SizedBox.square(
+                        dimension: 20,
+                        child: CircularProgressIndicator(strokeWidth: 2),
+                      )
+                    : const Icon(Icons.save_alt_rounded),
+              ),
+            ),
+            const DrawerButton(),
+          ],
         ),
         drawer: const DrawerMenu(),
         body: Consumer<FavoritesViewModel>(

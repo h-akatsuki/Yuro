@@ -748,6 +748,108 @@ abstract class AppLocalizations {
   /// **'已恢复默认下载目录'**
   String get downloadDirectoryResetSuccess;
 
+  /// No description provided for @bulkSaveTooltip.
+  ///
+  /// In zh, this message translates to:
+  /// **'批量保存'**
+  String get bulkSaveTooltip;
+
+  /// No description provided for @bulkSaveLikesTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'批量保存喜欢的作品'**
+  String get bulkSaveLikesTitle;
+
+  /// No description provided for @bulkSavePlaylistTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'批量保存{name}'**
+  String bulkSavePlaylistTitle(String name);
+
+  /// No description provided for @bulkSaveDescription.
+  ///
+  /// In zh, this message translates to:
+  /// **'按作品代码比较，只保存缺少的作品和文件。'**
+  String get bulkSaveDescription;
+
+  /// No description provided for @bulkSaveDirectoryLabel.
+  ///
+  /// In zh, this message translates to:
+  /// **'批量保存位置'**
+  String get bulkSaveDirectoryLabel;
+
+  /// No description provided for @bulkSaveDirectoryUnset.
+  ///
+  /// In zh, this message translates to:
+  /// **'尚未选择文件夹'**
+  String get bulkSaveDirectoryUnset;
+
+  /// No description provided for @bulkSaveChooseDirectory.
+  ///
+  /// In zh, this message translates to:
+  /// **'选择文件夹'**
+  String get bulkSaveChooseDirectory;
+
+  /// No description provided for @bulkSaveStart.
+  ///
+  /// In zh, this message translates to:
+  /// **'开始保存'**
+  String get bulkSaveStart;
+
+  /// No description provided for @bulkSaveRunning.
+  ///
+  /// In zh, this message translates to:
+  /// **'正在批量保存'**
+  String get bulkSaveRunning;
+
+  /// No description provided for @bulkSaveCancel.
+  ///
+  /// In zh, this message translates to:
+  /// **'停止保存'**
+  String get bulkSaveCancel;
+
+  /// No description provided for @bulkSaveDirectoryRequired.
+  ///
+  /// In zh, this message translates to:
+  /// **'请先选择批量保存位置'**
+  String get bulkSaveDirectoryRequired;
+
+  /// No description provided for @bulkSaveProgress.
+  ///
+  /// In zh, this message translates to:
+  /// **'{processed} / {total} 个作品'**
+  String bulkSaveProgress(int processed, int total);
+
+  /// No description provided for @bulkSaveCurrentWork.
+  ///
+  /// In zh, this message translates to:
+  /// **'正在处理：{code}'**
+  String bulkSaveCurrentWork(String code);
+
+  /// No description provided for @bulkSaveCompleted.
+  ///
+  /// In zh, this message translates to:
+  /// **'已保存 {saved} 个、无需更新 {skipped} 个、失败 {failed} 个'**
+  String bulkSaveCompleted(int saved, int skipped, int failed);
+
+  /// No description provided for @bulkSaveReuseSummary.
+  ///
+  /// In zh, this message translates to:
+  /// **'复用了 {reused} 个现有文件，下载了 {downloaded} 个文件。'**
+  String bulkSaveReuseSummary(int reused, int downloaded);
+
+  /// No description provided for @bulkSaveCancelled.
+  ///
+  /// In zh, this message translates to:
+  /// **'已停止批量保存。未完成的作品将在下次继续使用。'**
+  String get bulkSaveCancelled;
+
+  /// No description provided for @bulkSaveFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'批量保存失败：{error}'**
+  String bulkSaveFailed(String error);
+
   /// No description provided for @downloadProgressEmpty.
   ///
   /// In zh, this message translates to:

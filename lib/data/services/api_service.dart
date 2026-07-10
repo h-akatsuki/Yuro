@@ -52,6 +52,7 @@ class ApiService {
 
       throw Exception('获取文件列表失败: ${response.statusCode}');
     } on DioException catch (e) {
+      if (CancelToken.isCancel(e)) rethrow;
       AppLogger.error('网络请求失败', e, e.stackTrace);
       throw Exception('网络请求失败: ${e.message}');
     } catch (e, stackTrace) {
@@ -184,13 +185,22 @@ class ApiService {
   }
 
   /// 获取收藏列表
-  Future<WorksResponse> getFavorites({int page = 1}) async {
+  Future<WorksResponse> getFavorites({
+    int page = 1,
+    int? pageSize,
+    CancelToken? cancelToken,
+  }) async {
     try {
-      final response = await _dio.get('/review', queryParameters: {
-        'page': page,
-        'order': 'updated_at',
-        'sort': 'desc',
-      });
+      final response = await _dio.get(
+        '/review',
+        queryParameters: {
+          'page': page,
+          'order': 'updated_at',
+          'sort': 'desc',
+          'pageSize': ?pageSize,
+        },
+        cancelToken: cancelToken,
+      );
 
       if (response.statusCode == 200) {
         final List<dynamic> works = response.data['works'] ?? [];
@@ -204,12 +214,28 @@ class ApiService {
 
       throw Exception('获取收藏列表失败: ${response.statusCode}');
     } on DioException catch (e) {
+      if (CancelToken.isCancel(e)) rethrow;
       AppLogger.error('网络请求失败', e, e.stackTrace);
       throw Exception('网络请求失败: ${e.message}');
     } catch (e, stackTrace) {
       AppLogger.error('解析数据失败', e, stackTrace);
       throw Exception('解析数据失败: $e');
     }
+  }
+
+  Future<void> downloadFile(
+    String url,
+    String savePath, {
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+  }) async {
+    await _dio.download(
+      url,
+      savePath,
+      cancelToken: cancelToken,
+      onReceiveProgress: onReceiveProgress,
+      deleteOnError: true,
+    );
   }
 
   /// 获取推荐作品
@@ -524,6 +550,7 @@ class ApiService {
     required String playlistId,
     int page = 1,
     int pageSize = 12,
+    CancelToken? cancelToken,
   }) async {
     try {
       final response = await _dio.get(
@@ -533,6 +560,7 @@ class ApiService {
           'page': page,
           'pageSize': pageSize,
         },
+        cancelToken: cancelToken,
       );
 
       if (response.statusCode == 200) {
@@ -547,6 +575,7 @@ class ApiService {
 
       throw Exception('获取播放列表作品失败: ${response.statusCode}');
     } on DioException catch (e) {
+      if (CancelToken.isCancel(e)) rethrow;
       AppLogger.error('网络请求失败', e, e.stackTrace);
       throw Exception('网络请求失败: ${e.message}');
     } catch (e, stackTrace) {

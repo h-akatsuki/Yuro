@@ -207,6 +207,57 @@
     }
   },
   "downloadDirectoryResetSuccess": "Save location reset to default",
+  "bulkSaveTooltip": "Bulk save",
+  "bulkSaveLikesTitle": "Bulk save likes",
+  "bulkSavePlaylistTitle": "Bulk save {name}",
+  "@bulkSavePlaylistTitle": {
+    "placeholders": {
+      "name": {"type": "String"}
+    }
+  },
+  "bulkSaveDescription": "Compares works by code and saves only missing works and files.",
+  "bulkSaveDirectoryLabel": "Bulk save location",
+  "bulkSaveDirectoryUnset": "No folder selected",
+  "bulkSaveChooseDirectory": "Choose folder",
+  "bulkSaveStart": "Start saving",
+  "bulkSaveRunning": "Bulk save in progress",
+  "bulkSaveCancel": "Stop saving",
+  "bulkSaveDirectoryRequired": "Choose a bulk save location first",
+  "bulkSaveProgress": "{processed} / {total} works",
+  "@bulkSaveProgress": {
+    "placeholders": {
+      "processed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "bulkSaveCurrentWork": "Processing: {code}",
+  "@bulkSaveCurrentWork": {
+    "placeholders": {
+      "code": {"type": "String"}
+    }
+  },
+  "bulkSaveCompleted": "Saved {saved}, unchanged {skipped}, failed {failed}",
+  "@bulkSaveCompleted": {
+    "placeholders": {
+      "saved": {"type": "int"},
+      "skipped": {"type": "int"},
+      "failed": {"type": "int"}
+    }
+  },
+  "bulkSaveReuseSummary": "Reused {reused} existing files and downloaded {downloaded} files.",
+  "@bulkSaveReuseSummary": {
+    "placeholders": {
+      "reused": {"type": "int"},
+      "downloaded": {"type": "int"}
+    }
+  },
+  "bulkSaveCancelled": "Bulk save stopped. Incomplete works will be reused next time.",
+  "bulkSaveFailed": "Bulk save failed: {error}",
+  "@bulkSaveFailed": {
+    "placeholders": {
+      "error": {"type": "String"}
+    }
+  },
   "downloadProgressEmpty": "No downloads yet",
   "downloadProgressEmptyDescription": "Choose files from a work page to track their progress here.",
   "downloadProgressClearFinished": "Clear Completed",

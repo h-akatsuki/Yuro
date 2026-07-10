@@ -8,17 +8,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class DownloadDirectoryController extends ChangeNotifier {
   static const String _customDirectoryKey = 'download_custom_directory';
+  static const String _bulkSaveDirectoryKey = 'bulk_save_directory';
 
   final SharedPreferences _prefs;
 
   DownloadDirectoryController(this._prefs) {
     _customDirectoryPath = _prefs.getString(_customDirectoryKey);
+    _bulkSaveDirectoryPath = _prefs.getString(_bulkSaveDirectoryKey);
   }
 
   String? _customDirectoryPath;
+  String? _bulkSaveDirectoryPath;
   String? _lastError;
 
   String? get customDirectoryPath => _customDirectoryPath;
+  String? get bulkSaveDirectoryPath => _bulkSaveDirectoryPath;
   bool get hasCustomDirectory =>
       _customDirectoryPath != null && _customDirectoryPath!.isNotEmpty;
   bool get usesSharedDownloadsDestination =>
@@ -87,6 +91,55 @@ class DownloadDirectoryController extends ChangeNotifier {
     _lastError = null;
     await _prefs.remove(_customDirectoryKey);
     notifyListeners();
+  }
+
+  Future<void> setBulkSaveDirectoryPath(String path) async {
+    final trimmed = path.trim();
+    if (trimmed.isEmpty) {
+      throw Exception('一括保存先のパスが空です');
+    }
+
+    final directory = Directory(trimmed);
+    await _ensureDirectoryExists(directory);
+    var writable = await _checkWritable(directory);
+    if (!writable) {
+      final granted = await ensureWritePermissionIfNeeded();
+      if (granted) {
+        if (!await directory.exists()) {
+          await directory.create(recursive: true);
+        }
+        writable = await _checkWritable(directory);
+      }
+    }
+    if (!writable) {
+      throw Exception('一括保存先に書き込めません');
+    }
+
+    _bulkSaveDirectoryPath = directory.path;
+    _lastError = null;
+    await _prefs.setString(_bulkSaveDirectoryKey, directory.path);
+    notifyListeners();
+  }
+
+  Future<Directory> resolveBulkSaveRootDirectory() async {
+    final path = _bulkSaveDirectoryPath?.trim();
+    if (path == null || path.isEmpty) {
+      throw StateError('一括保存先が選択されていません');
+    }
+
+    final directory = Directory(path);
+    await _ensureDirectoryExists(directory);
+    var writable = await _checkWritable(directory);
+    if (!writable) {
+      final granted = await ensureWritePermissionIfNeeded();
+      if (granted) {
+        writable = await _checkWritable(directory);
+      }
+    }
+    if (!writable) {
+      throw Exception('一括保存先に書き込めません');
+    }
+    return directory;
   }
 
   Future<Directory> resolveDownloadRootDirectory() async {
