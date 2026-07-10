@@ -6,17 +6,16 @@ part of 'files.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$FilesImpl _$$FilesImplFromJson(Map<String, dynamic> json) => _$FilesImpl(
-      type: json['type'] as String?,
-      title: json['title'] as String?,
-      children: (json['children'] as List<dynamic>?)
-          ?.map((e) => Child.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
+_Files _$FilesFromJson(Map<String, dynamic> json) => _Files(
+  type: json['type'] as String?,
+  title: json['title'] as String?,
+  children: (json['children'] as List<dynamic>?)
+      ?.map((e) => Child.fromJson(e as Map<String, dynamic>))
+      .toList(),
+);
 
-Map<String, dynamic> _$$FilesImplToJson(_$FilesImpl instance) =>
-    <String, dynamic>{
-      'type': instance.type,
-      'title': instance.title,
-      'children': instance.children,
-    };
+Map<String, dynamic> _$FilesToJson(_Files instance) => <String, dynamic>{
+  'type': instance.type,
+  'title': instance.title,
+  'children': instance.children,
+};

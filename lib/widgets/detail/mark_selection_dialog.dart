@@ -23,18 +23,15 @@ class MarkSelectionDialog extends StatelessWidget {
       backgroundColor: isDark ? const Color(0xFF2C2C2C) : Colors.white,
       title: Text(
         context.l10n.markStatusTitle,
-        style: TextStyle(
-          color: isDark ? Colors.white70 : Colors.black87,
-        ),
+        style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
       ),
       content: RadioGroup<MarkStatus>(
         groupValue: currentStatus,
-        onChanged: (MarkStatus? value) {
-          if (loading || value == null) {
-            return;
+        onChanged: (value) {
+          if (!loading && value != null) {
+            onMarkSelected(value);
+            Navigator.of(context).pop();
           }
-          onMarkSelected(value);
-          Navigator.of(context).pop();
         },
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -61,8 +58,8 @@ class MarkSelectionDialog extends StatelessWidget {
                   color: loading
                       ? (isDark ? Colors.white38 : Colors.black38)
                       : (isSelected
-                          ? (isDark ? Colors.white : Colors.black87)
-                          : (isDark ? Colors.white70 : Colors.black54)),
+                            ? (isDark ? Colors.white : Colors.black87)
+                            : (isDark ? Colors.white70 : Colors.black54)),
                 ),
               ),
               onTap: loading
@@ -78,9 +75,7 @@ class MarkSelectionDialog extends StatelessWidget {
           }).toList(),
         ),
       ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     );
   }
 }

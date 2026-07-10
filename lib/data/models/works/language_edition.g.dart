@@ -6,9 +6,8 @@ part of 'language_edition.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$LanguageEditionImpl _$$LanguageEditionImplFromJson(
-        Map<String, dynamic> json) =>
-    _$LanguageEditionImpl(
+_LanguageEdition _$LanguageEditionFromJson(Map<String, dynamic> json) =>
+    _LanguageEdition(
       lang: json['lang'] as String?,
       label: json['label'] as String?,
       workno: json['workno'] as String?,
@@ -17,8 +16,7 @@ _$LanguageEditionImpl _$$LanguageEditionImplFromJson(
       displayOrder: (json['display_order'] as num?)?.toInt(),
     );
 
-Map<String, dynamic> _$$LanguageEditionImplToJson(
-        _$LanguageEditionImpl instance) =>
+Map<String, dynamic> _$LanguageEditionToJson(_LanguageEdition instance) =>
     <String, dynamic>{
       'lang': instance.lang,
       'label': instance.label,

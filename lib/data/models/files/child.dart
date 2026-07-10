@@ -6,7 +6,7 @@ part 'child.freezed.dart';
 part 'child.g.dart';
 
 @freezed
-class Child with _$Child {
+abstract class Child with _$Child {
   factory Child({
     String? type,
     String? title,

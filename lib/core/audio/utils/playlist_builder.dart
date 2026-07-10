@@ -4,19 +4,21 @@ import 'package:asmrapp/core/audio/cache/audio_cache_manager.dart';
 
 class PlaylistBuilder {
   static Future<List<AudioSource>> buildAudioSources(List<Child> files) async {
-    return await Future.wait(files.map((file) async {
-      return AudioCacheManager.createAudioSource(file.mediaDownloadUrl!);
-    }));
+    return await Future.wait(
+      files.map((file) async {
+        return AudioCacheManager.createAudioSource(file.mediaDownloadUrl!);
+      }),
+    );
   }
 
-  static Future<void> setPlaylistSource({
+  static Future<Duration?> setPlaylistSource({
     required AudioPlayer player,
     required List<Child> files,
     required int initialIndex,
     required Duration initialPosition,
   }) async {
     final sources = await buildAudioSources(files);
-    await player.setAudioSources(
+    return player.setAudioSources(
       sources,
       initialIndex: initialIndex,
       initialPosition: initialPosition,

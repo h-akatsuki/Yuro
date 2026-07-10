@@ -7,6 +7,16 @@ import 'package:asmrapp/data/models/works/work.dart';
 import 'package:asmrapp/utils/logger.dart';
 
 class PlaybackContext {
+  static const _supportedExtensions = {
+    'mp3',
+    'wav',
+    'm4a',
+    'aac',
+    'flac',
+    'ogg',
+    'opus',
+  };
+
   final Work work;
   final Files files;
   final Child currentFile;
@@ -16,10 +26,7 @@ class PlaybackContext {
 
   void validate() {
     if (playlist.isEmpty) {
-      throw AudioError(
-        AudioErrorType.state,
-        '无效的播放列表状态：播放列表为空',
-      );
+      throw AudioError(AudioErrorType.state, '无效的播放列表状态：播放列表为空');
     }
 
     if (currentIndex < 0 || currentIndex >= playlist.length) {
@@ -30,10 +37,12 @@ class PlaybackContext {
     }
 
     if (!playlist.contains(currentFile)) {
-      throw AudioError(
-        AudioErrorType.state,
-        '当前文件不在播放列表中',
-      );
+      throw AudioError(AudioErrorType.state, '当前文件不在播放列表中');
+    }
+
+    if (currentFile.mediaDownloadUrl == null ||
+        currentFile.mediaDownloadUrl!.isEmpty) {
+      throw AudioError(AudioErrorType.state, '当前文件没有可用的播放地址');
     }
   }
 
@@ -55,8 +64,7 @@ class PlaybackContext {
     PlayMode playMode = PlayMode.sequence,
   }) {
     final playlist = _getPlaylistFromSameDirectory(currentFile, files);
-    final currentIndex =
-        playlist.indexWhere((file) => file.title == currentFile.title);
+    final currentIndex = playlist.indexOf(currentFile);
 
     return PlaybackContext._(
       work: work,
@@ -70,7 +78,9 @@ class PlaybackContext {
 
   // 获取同级文件列表
   static List<Child> _getPlaylistFromSameDirectory(
-      Child currentFile, Files files) {
+    Child currentFile,
+    Files files,
+  ) {
     // AppLogger.debug('开始获取播放列表...');
     // AppLogger.debug('当前文件: ${currentFile.title}');
     // AppLogger.debug('当前文件类型: ${currentFile.type}');
@@ -79,7 +89,7 @@ class PlaybackContext {
     final extension = currentFile.title?.split('.').last.toLowerCase();
     // AppLogger.debug('当前文件扩展名: $extension');
 
-    if (extension != 'mp3' && extension != 'wav') {
+    if (!_supportedExtensions.contains(extension)) {
       AppLogger.debug('不支持的文件类型: $extension');
       return [];
     }
@@ -89,8 +99,11 @@ class PlaybackContext {
 
     // 过滤出相同扩展名的文件
     final playlist = siblings
-        .where((file) =>
-            file.title?.toLowerCase().endsWith('.$extension') ?? false)
+        .where(
+          (file) =>
+              (file.title?.toLowerCase().endsWith('.$extension') ?? false) &&
+              file.mediaDownloadUrl?.isNotEmpty == true,
+        )
         .toList();
 
     // AppLogger.debug('找到 ${playlist.length} 个可播放文件:');
@@ -172,8 +185,11 @@ class PlaybackContext {
   List<Child> getPlayableFiles() {
     if (files.children == null) return [];
     return files.children!
-        .where((file) =>
-            file.mediaDownloadUrl != null && file.type?.toLowerCase() != 'vtt')
+        .where(
+          (file) =>
+              file.mediaDownloadUrl != null &&
+              file.type?.toLowerCase() != 'vtt',
+        )
         .toList();
   }
 }

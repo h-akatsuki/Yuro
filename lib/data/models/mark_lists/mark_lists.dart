@@ -7,11 +7,9 @@ part 'mark_lists.freezed.dart';
 part 'mark_lists.g.dart';
 
 @freezed
-class MarkLists with _$MarkLists {
-  factory MarkLists({
-    List<Playlist>? playlists,
-    Pagination? pagination,
-  }) = _MarkLists;
+abstract class MarkLists with _$MarkLists {
+  factory MarkLists({List<Playlist>? playlists, Pagination? pagination}) =
+      _MarkLists;
 
   factory MarkLists.fromJson(Map<String, dynamic> json) =>
       _$MarkListsFromJson(json);

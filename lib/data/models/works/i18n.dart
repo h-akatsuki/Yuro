@@ -8,7 +8,7 @@ part 'i18n.freezed.dart';
 part 'i18n.g.dart';
 
 @freezed
-class I18n with _$I18n {
+abstract class I18n with _$I18n {
   factory I18n({
     @JsonKey(name: 'en-us') EnUs? enUs,
     @JsonKey(name: 'ja-jp') JaJp? jaJp,

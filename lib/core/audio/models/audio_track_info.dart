@@ -12,4 +12,14 @@ class AudioTrackInfo {
     required this.url,
     this.duration,
   });
+
+  AudioTrackInfo copyWithDuration(Duration? duration) {
+    return AudioTrackInfo(
+      title: title,
+      artist: artist,
+      coverUrl: coverUrl,
+      url: url,
+      duration: duration,
+    );
+  }
 }

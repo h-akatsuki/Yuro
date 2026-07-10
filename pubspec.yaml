@@ -19,7 +19,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.2.3
 
 environment:
-  sdk: ">=3.2.3 <4.0.0"
+  sdk: ^3.12.2
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -34,42 +34,42 @@ dependencies:
     sdk: flutter
   intl: ^0.20.2
   freezed_annotation: ^3.1.0
-  json_annotation: ^4.9.0
+  json_annotation: ^4.12.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  provider: ^6.1.1
-  dio: ^5.4.0
-  cached_network_image: ^3.3.0
-  logger: ^2.5.0
+  cupertino_icons: ^1.0.9
+  provider: ^6.1.5+1
+  dio: ^5.10.0
+  cached_network_image: ^3.4.1
+  logger: ^2.7.0
   shimmer: ^3.0.0
-  just_audio: ^0.10.5
+  just_audio: ^0.10.6
   just_audio_media_kit: ^2.1.0
   media_kit_libs_linux: ^1.2.0
   media_kit_libs_windows_audio: ^1.0.9
-  audio_session: ^0.2.2
-  get_it: ^9.2.0
-  audio_service: ^0.18.12
+  audio_session: ^0.2.4
+  get_it: ^9.2.1
+  audio_service: ^0.18.19
   rxdart: ^0.28.0
-  path_provider: ^2.1.5
-  crypto: ^3.0.6
-  shared_preferences: ^2.2.2
+  path_provider: ^2.1.6
+  crypto: ^3.0.7
+  shared_preferences: ^2.5.5
   flutter_cache_manager: ^3.4.1
-  permission_handler: ^12.0.1
+  permission_handler: ^12.0.3
   file_selector: ^1.0.3
   scrollable_positioned_list: ^0.3.8
   marquee: ^2.3.0
-  wakelock_plus: ^1.2.8
+  wakelock_plus: ^1.6.1
   url_launcher: ^6.3.2
   background_downloader: ^9.5.2
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  build_runner: ^2.4.7
+  build_runner: ^2.15.1
   freezed: ^3.2.5
-  json_serializable: ^6.7.1
+  json_serializable: ^6.14.0
   flutter_launcher_icons: ^0.14.4
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -121,5 +121,8 @@ flutter:
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
 
-dependency_overrides:
-  path: ^1.9.0 # 强制使用更高版本的 path 包
+flutter_launcher_icons:
+  android: "ic_launcher"
+  ios: true
+  image_path: "assets/icon/icon.png"
+  min_sdk_android: 24

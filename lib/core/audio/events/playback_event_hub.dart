@@ -6,25 +6,32 @@ class PlaybackEventHub {
   final _eventSubject = PublishSubject<PlaybackEvent>();
 
   // 分类后的特定事件流
-  late final Stream<PlaybackStateEvent> playbackState =
-      _eventSubject.whereType<PlaybackStateEvent>().distinct();
+  late final Stream<PlaybackStateEvent> playbackState = _eventSubject
+      .whereType<PlaybackStateEvent>()
+      .distinct();
 
-  late final Stream<TrackChangeEvent> trackChange =
-      _eventSubject.whereType<TrackChangeEvent>();
+  late final Stream<TrackChangeEvent> trackChange = _eventSubject
+      .whereType<TrackChangeEvent>();
 
-  late final Stream<PlaybackContextEvent> contextChange =
-      _eventSubject.whereType<PlaybackContextEvent>();
+  late final Stream<PlaybackContextEvent> contextChange = _eventSubject
+      .whereType<PlaybackContextEvent>();
 
   late final Stream<PlaybackProgressEvent> playbackProgress = _eventSubject
       .whereType<PlaybackProgressEvent>()
-      .distinct((prev, next) => prev.position == next.position);
+      .distinct(
+        (prev, next) =>
+            prev.revision == next.revision &&
+            prev.position == next.position &&
+            prev.bufferedPosition == next.bufferedPosition &&
+            prev.duration == next.duration,
+      );
 
-  late final Stream<PlaybackErrorEvent> errors =
-      _eventSubject.whereType<PlaybackErrorEvent>();
+  late final Stream<PlaybackErrorEvent> errors = _eventSubject
+      .whereType<PlaybackErrorEvent>();
 
   // 添加新的事件流
-  late final Stream<InitialStateEvent> initialState =
-      _eventSubject.whereType<InitialStateEvent>();
+  late final Stream<InitialStateEvent> initialState = _eventSubject
+      .whereType<InitialStateEvent>();
 
   late final Stream<RequestInitialStateEvent> requestInitialState =
       _eventSubject.whereType<RequestInitialStateEvent>();

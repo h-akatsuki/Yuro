@@ -6,14 +6,13 @@ part of 'pagination.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PaginationImpl _$$PaginationImplFromJson(Map<String, dynamic> json) =>
-    _$PaginationImpl(
-      currentPage: (json['currentPage'] as num?)?.toInt(),
-      pageSize: (json['pageSize'] as num?)?.toInt(),
-      totalCount: (json['totalCount'] as num?)?.toInt(),
-    );
+_Pagination _$PaginationFromJson(Map<String, dynamic> json) => _Pagination(
+  currentPage: (json['currentPage'] as num?)?.toInt(),
+  pageSize: (json['pageSize'] as num?)?.toInt(),
+  totalCount: (json['totalCount'] as num?)?.toInt(),
+);
 
-Map<String, dynamic> _$$PaginationImplToJson(_$PaginationImpl instance) =>
+Map<String, dynamic> _$PaginationToJson(_Pagination instance) =>
     <String, dynamic>{
       'currentPage': instance.currentPage,
       'pageSize': instance.pageSize,

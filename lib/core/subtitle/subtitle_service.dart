@@ -9,6 +9,7 @@ import 'package:asmrapp/core/subtitle/managers/subtitle_state_manager.dart';
 class SubtitleService implements ISubtitleService {
   final _subtitleLoader = GetIt.I<SubtitleLoader>();
   final _stateManager = SubtitleStateManager();
+  int _loadGeneration = 0;
 
   @override
   Stream<SubtitleList?> get subtitleStream => _stateManager.subtitleStream;
@@ -22,13 +23,16 @@ class SubtitleService implements ISubtitleService {
 
   @override
   Future<void> loadSubtitle(String url) async {
+    final generation = ++_loadGeneration;
     try {
-      clearSubtitle();
+      _stateManager.clear();
       final subtitleList = await _subtitleLoader.loadSubtitleContent(url);
+      if (generation != _loadGeneration) return;
       _stateManager.setSubtitleList(subtitleList);
     } catch (e) {
+      if (generation != _loadGeneration) return;
       AppLogger.debug('字幕加载失败: $e');
-      clearSubtitle();
+      _stateManager.clear();
       rethrow;
     }
   }
@@ -40,6 +44,7 @@ class SubtitleService implements ISubtitleService {
 
   @override
   void dispose() {
+    _loadGeneration++;
     _stateManager.dispose();
   }
 
@@ -48,6 +53,7 @@ class SubtitleService implements ISubtitleService {
 
   @override
   void clearSubtitle() {
+    _loadGeneration++;
     _stateManager.clear();
   }
 
