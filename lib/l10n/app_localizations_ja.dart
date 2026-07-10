@@ -78,7 +78,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get navigationHome => 'ホーム';
 
   @override
-  String get navigationDownloadProgress => 'ダウンロード進捗';
+  String get navigationDownloadProgress => 'ダウンロード';
 
   @override
   String get navigationForYou => 'あなた向け';
@@ -93,7 +93,7 @@ class AppLocalizationsJa extends AppLocalizations {
   String get homeTabWorks => '作品';
 
   @override
-  String get homeTabDownloads => '進捗';
+  String get homeTabDownloads => 'ダウンロード';
 
   @override
   String titleWithCount(String title, int count) {
@@ -280,7 +280,44 @@ class AppLocalizationsJa extends AppLocalizations {
   String get downloadClearSelection => '選択解除';
 
   @override
+  String downloadSelectionSummary(int count, String size) {
+    return '$count件・$size';
+  }
+
+  @override
+  String downloadFileCount(int count) {
+    return '$count件';
+  }
+
+  @override
+  String get downloadFilterAll => 'すべて';
+
+  @override
+  String get downloadFilterAudio => '音声';
+
+  @override
+  String get downloadFilterImages => '画像';
+
+  @override
+  String get downloadFilterOther => 'その他';
+
+  @override
+  String downloadActionWithCount(int count) {
+    return '$count件をダウンロード';
+  }
+
+  @override
   String get downloadNoFilesSelected => 'ダウンロードするファイルを選択してください';
+
+  @override
+  String downloadQueued(int count) {
+    return '$count件をダウンロードに追加しました';
+  }
+
+  @override
+  String downloadQueuePartial(int queuedCount, int failedCount) {
+    return '$queuedCount件を追加、$failedCount件は追加できませんでした';
+  }
 
   @override
   String downloadSuccess(int count, String path) {
@@ -325,7 +362,11 @@ class AppLocalizationsJa extends AppLocalizations {
   String get downloadDirectoryResetSuccess => '保存先を既定に戻しました';
 
   @override
-  String get downloadProgressEmpty => '進行中のダウンロードはありません';
+  String get downloadProgressEmpty => 'ダウンロードはまだありません';
+
+  @override
+  String get downloadProgressEmptyDescription =>
+      '作品ページからファイルを選ぶと、ここで進捗を確認できます。';
 
   @override
   String get downloadProgressClearFinished => '完了履歴をクリア';
@@ -337,16 +378,42 @@ class AppLocalizationsJa extends AppLocalizations {
   String get downloadProgressHistorySection => '履歴';
 
   @override
+  String downloadActiveCount(int count) {
+    return '$count件のダウンロード';
+  }
+
+  @override
   String get downloadStatusQueued => '待機中';
 
   @override
   String get downloadStatusRunning => 'ダウンロード中';
 
   @override
+  String get downloadStatusWaitingToRetry => '再試行待ち';
+
+  @override
+  String get downloadStatusPaused => '一時停止';
+
+  @override
   String get downloadStatusCompleted => '完了';
 
   @override
   String get downloadStatusFailed => '失敗';
+
+  @override
+  String get downloadStatusCanceled => 'キャンセル済み';
+
+  @override
+  String get downloadPause => '一時停止';
+
+  @override
+  String get downloadResume => '再開';
+
+  @override
+  String get downloadRetry => '再試行';
+
+  @override
+  String get downloadCancelTask => 'ダウンロードをキャンセル';
 
   @override
   String get openDlsiteInBrowser => 'DLsiteをブラウザで開く';

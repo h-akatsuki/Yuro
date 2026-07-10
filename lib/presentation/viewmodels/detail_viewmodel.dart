@@ -19,34 +19,20 @@ import 'package:asmrapp/data/models/mark_status.dart';
 import 'package:asmrapp/widgets/detail/mark_selection_dialog.dart';
 import 'package:asmrapp/core/download/download_directory_controller.dart';
 import 'package:asmrapp/core/download/download_progress_manager.dart';
-import 'package:background_downloader/background_downloader.dart';
 import 'package:dio/dio.dart';
 import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/common/extensions/mark_status_localizations.dart';
 
-enum PlaybackError {
-  unsupportedType,
-  missingUrl,
-  filesNotLoaded,
-  failed,
-}
+enum PlaybackError { unsupportedType, missingUrl, filesNotLoaded, failed }
 
-enum FilePreviewError {
-  unsupportedType,
-  missingUrl,
-  failed,
-}
+enum FilePreviewError { unsupportedType, missingUrl, failed }
 
 class PlaybackException implements Exception {
   final PlaybackError error;
   final String? detail;
   final Object? originalError;
 
-  const PlaybackException(
-    this.error, {
-    this.detail,
-    this.originalError,
-  });
+  const PlaybackException(this.error, {this.detail, this.originalError});
 }
 
 class FilePreviewException implements Exception {
@@ -54,20 +40,16 @@ class FilePreviewException implements Exception {
   final String? detail;
   final Object? originalError;
 
-  const FilePreviewException(
-    this.error, {
-    this.detail,
-    this.originalError,
-  });
+  const FilePreviewException(this.error, {this.detail, this.originalError});
 }
 
 class DownloadBatchResult {
-  final int successCount;
+  final int queuedCount;
   final int failedCount;
   final String saveDirectoryPath;
 
   const DownloadBatchResult({
-    required this.successCount,
+    required this.queuedCount,
     required this.failedCount,
     required this.saveDirectoryPath,
   });
@@ -79,7 +61,6 @@ class DetailViewModel extends ChangeNotifier {
   late final DownloadDirectoryController _downloadDirectoryController;
   late final DownloadProgressManager _downloadProgressManager;
   late final AuthRepository _authRepository;
-  late final FileDownloader _fileDownloader;
   final Work work;
 
   Files? _files;
@@ -116,15 +97,12 @@ class DetailViewModel extends ChangeNotifier {
   // 添加取消标记
   final _cancelToken = CancelToken();
 
-  DetailViewModel({
-    required this.work,
-  }) {
+  DetailViewModel({required this.work}) {
     _audioService = GetIt.I<IAudioPlayerService>();
     _apiService = GetIt.I<ApiService>();
     _downloadDirectoryController = GetIt.I<DownloadDirectoryController>();
     _downloadProgressManager = GetIt.I<DownloadProgressManager>();
     _authRepository = GetIt.I<AuthRepository>();
-    _fileDownloader = FileDownloader();
     _currentRating = _normalizeRating(work.userRating);
     loadRecommendationsPreview();
   }
@@ -135,6 +113,7 @@ class DetailViewModel extends ChangeNotifier {
     if (children == null || children.isEmpty) return const <Child>[];
     return List<Child>.unmodifiable(_collectImageFiles(children));
   }
+
   bool get isLoading => _isLoading;
   String? get error => _error;
   List<Work> get recommendedWorks => _recommendedWorks;
@@ -161,10 +140,11 @@ class DetailViewModel extends ChangeNotifier {
   bool get loadingPlaylists => _loadingPlaylists;
   String? get playlistsError => _playlistsError;
   List<Playlist>? get playlists => _playlists;
-  int? get playlistsTotalPages => _playlistsPagination?.totalCount != null &&
+  int? get playlistsTotalPages =>
+      _playlistsPagination?.totalCount != null &&
           _playlistsPagination?.pageSize != null
       ? (_playlistsPagination!.totalCount! / _playlistsPagination!.pageSize!)
-          .ceil()
+            .ceil()
       : null;
 
   Future<void> loadRecommendationsPreview() async {
@@ -182,7 +162,8 @@ class DetailViewModel extends ChangeNotifier {
       _recommendedWorks = response.works
           .where((recommendedWork) => recommendedWork.id != work.id)
           .toList();
-      _hasRecommendations = (response.pagination.totalCount ?? 0) > 0 ||
+      _hasRecommendations =
+          (response.pagination.totalCount ?? 0) > 0 ||
           _recommendedWorks.isNotEmpty;
     } catch (e) {
       AppLogger.error('检查相关推荐失败', e);
@@ -341,9 +322,7 @@ class DetailViewModel extends ChangeNotifier {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text(
-                      context.l10n.operationFailed(e.toString()),
-                    ),
+                    content: Text(context.l10n.operationFailed(e.toString())),
                   ),
                 );
               }
@@ -432,17 +411,18 @@ class DetailViewModel extends ChangeNotifier {
     _downloadingFiles = true;
     notifyListeners();
 
-    var successCount = 0;
+    var queuedCount = 0;
     var failedCount = 0;
     var saveDirectoryPath = '';
 
     try {
-      await _fileDownloader.ready;
-      final rootDirectory =
-          await _downloadDirectoryController.resolveDownloadRootDirectory();
+      final rootDirectory = await _downloadDirectoryController
+          .resolveDownloadRootDirectory();
       final saveDirectory = await _resolveWorkDirectory(rootDirectory);
       saveDirectoryPath = saveDirectory.path;
       final downloadHeaders = await _buildDownloadHeaders();
+      final reservedPaths = _downloadProgressManager.reservedSavePaths;
+      final queueRequests = <DownloadQueueRequest>[];
 
       for (final requestItem in files) {
         final file = requestItem.file;
@@ -452,65 +432,52 @@ class DetailViewModel extends ChangeNotifier {
           continue;
         }
 
-        final targetDirectory = await _resolveTargetDirectory(
-          saveDirectory,
-          requestItem.relativeDirectories,
-        );
-        final safeFileName = _sanitizeFileName(file.title);
-        final savePath =
-            await _createUniqueSavePath(targetDirectory, safeFileName);
-        final taskId = _downloadProgressManager.createTask(
-          workId: work.id,
-          workTitle: _resolveWorkTitle(),
-          fileName: safeFileName,
-          savePath: savePath,
-        );
-
         try {
-          _downloadProgressManager.markStarted(taskId);
-          final expectedBytes = (file.size ?? 0) > 0 ? file.size! : 0;
-          final statusUpdate = await _fileDownloader.download(
-            DownloadTask(
-              taskId: taskId,
-              url: downloadUrl,
-              filename: _fileNameFromPath(savePath),
-              directory: targetDirectory.path,
-              baseDirectory: BaseDirectory.root,
-              headers: downloadHeaders,
-              updates: Updates.statusAndProgress,
-            ),
-            onProgress: (progress) {
-              if (expectedBytes > 0) {
-                final receivedBytes =
-                    (expectedBytes * progress.clamp(0.0, 1.0)).round();
-                _downloadProgressManager.updateProgress(
-                  taskId,
-                  receivedBytes,
-                  expectedBytes,
-                );
-                return;
-              }
-              _downloadProgressManager.updateProgress(taskId, 0, 0);
-            },
+          final targetDirectory = await _resolveTargetDirectory(
+            saveDirectory,
+            requestItem.relativeDirectories,
           );
-
-          if (statusUpdate.status == TaskStatus.complete) {
-            _downloadProgressManager.markCompleted(taskId);
-            successCount++;
-            continue;
-          }
-
-          final errorMessage = statusUpdate.exception?.description ??
-              '下载状态异常: ${statusUpdate.status.name}';
-          _downloadProgressManager.markFailed(taskId, errorMessage);
-          failedCount++;
-          AppLogger.error('下载文件失败: ${file.title}', errorMessage);
+          final safeFileName = _sanitizeFileName(file.title);
+          final safeRelativeDirectories = requestItem.relativeDirectories
+              .map(
+                (segment) => _sanitizePathSegment(segment, fallback: 'folder'),
+              )
+              .where((segment) => segment.isNotEmpty)
+              .toList(growable: false);
+          final savePath = await _createUniqueSavePath(
+            targetDirectory,
+            safeFileName,
+            reservedPaths: reservedPaths,
+          );
+          reservedPaths.add(savePath);
+          queueRequests.add(
+            DownloadQueueRequest(
+              workId: work.id,
+              workTitle: _resolveWorkTitle(),
+              fileName: safeFileName,
+              savePath: savePath,
+              url: downloadUrl,
+              headers: downloadHeaders,
+              expectedBytes: (file.size ?? 0) > 0 ? file.size! : 0,
+              sharedDirectory:
+                  _downloadDirectoryController.usesSharedDownloadsDestination
+                  ? <String>[
+                      'asmr_downloads',
+                      _resolveWorkFolderName(),
+                      ...safeRelativeDirectories,
+                    ].join('/')
+                  : null,
+            ),
+          );
         } catch (e) {
-          _downloadProgressManager.markFailed(taskId, e);
           failedCount++;
-          AppLogger.error('下载文件失败: ${file.title}', e);
+          AppLogger.error('ダウンロード準備に失敗: ${file.title}', e);
         }
       }
+
+      final results = await _downloadProgressManager.enqueueAll(queueRequests);
+      queuedCount += results.where((enqueued) => enqueued).length;
+      failedCount += results.where((enqueued) => !enqueued).length;
     } finally {
       _downloadingFiles = false;
       if (!_disposed) {
@@ -519,7 +486,7 @@ class DetailViewModel extends ChangeNotifier {
     }
 
     return DownloadBatchResult(
-      successCount: successCount,
+      queuedCount: queuedCount,
       failedCount: failedCount,
       saveDirectoryPath: saveDirectoryPath,
     );
@@ -535,11 +502,7 @@ class DetailViewModel extends ChangeNotifier {
   }
 
   Future<Directory> _resolveWorkDirectory(Directory rootDirectory) async {
-    final workFolderName = _sanitizeFileName(
-      (work.sourceId?.trim().isNotEmpty ?? false)
-          ? work.sourceId!
-          : 'work_${work.id ?? 'unknown'}',
-    );
+    final workFolderName = _resolveWorkFolderName();
 
     final workDirectory = Directory(
       '${rootDirectory.path}${Platform.pathSeparator}$workFolderName',
@@ -548,6 +511,14 @@ class DetailViewModel extends ChangeNotifier {
       await workDirectory.create(recursive: true);
     }
     return workDirectory;
+  }
+
+  String _resolveWorkFolderName() {
+    return _sanitizeFileName(
+      (work.sourceId?.trim().isNotEmpty ?? false)
+          ? work.sourceId!
+          : 'work_${work.id ?? 'unknown'}',
+    );
   }
 
   Future<Directory> _resolveTargetDirectory(
@@ -579,59 +550,88 @@ class DetailViewModel extends ChangeNotifier {
 
   Future<String> _createUniqueSavePath(
     Directory directory,
-    String fileName,
-  ) async {
+    String fileName, {
+    required Set<String> reservedPaths,
+  }) async {
     final dotIndex = fileName.lastIndexOf('.');
     final baseName = dotIndex > 0 ? fileName.substring(0, dotIndex) : fileName;
     final extension = dotIndex > 0 ? fileName.substring(dotIndex) : '';
 
     var candidateName = fileName;
     var counter = 1;
-    while (await File(
-      '${directory.path}${Platform.pathSeparator}$candidateName',
-    ).exists()) {
+    while (true) {
+      final candidatePath =
+          '${directory.path}${Platform.pathSeparator}$candidateName';
+      if (!reservedPaths.contains(candidatePath) &&
+          !await File(candidatePath).exists()) {
+        return candidatePath;
+      }
       candidateName = '$baseName ($counter)$extension';
       counter++;
     }
-
-    return '${directory.path}${Platform.pathSeparator}$candidateName';
   }
 
   String _sanitizeFileName(String? original) {
     return _sanitizePathSegment(original, fallback: 'file');
   }
 
-  String _fileNameFromPath(String fullPath) {
-    final segments = fullPath.split(RegExp(r'[\\/]'));
-    if (segments.isEmpty || segments.last.isEmpty) {
-      return 'file';
-    }
-    return segments.last;
-  }
-
-  String _sanitizePathSegment(
-    String? original, {
-    required String fallback,
-  }) {
+  String _sanitizePathSegment(String? original, {required String fallback}) {
     final normalized = (original ?? '').trim();
     if (normalized.isEmpty) {
       return fallback;
     }
-    final sanitized = normalized.replaceAll(RegExp(r'[\\/:*?"<>|]'), '_');
-    if (sanitized == '.' || sanitized == '..') {
+    var sanitized = normalized
+        .replaceAll(RegExp(r'[\x00-\x1F\\/:*?"<>|]'), '_')
+        .replaceFirst(RegExp(r'[. ]+$'), '');
+    if (sanitized.isEmpty || sanitized == '.' || sanitized == '..') {
       return fallback;
+    }
+    final baseName = sanitized.split('.').first.toUpperCase();
+    const reservedWindowsNames = <String>{
+      'CON',
+      'PRN',
+      'AUX',
+      'NUL',
+      'COM1',
+      'COM2',
+      'COM3',
+      'COM4',
+      'COM5',
+      'COM6',
+      'COM7',
+      'COM8',
+      'COM9',
+      'LPT1',
+      'LPT2',
+      'LPT3',
+      'LPT4',
+      'LPT5',
+      'LPT6',
+      'LPT7',
+      'LPT8',
+      'LPT9',
+    };
+    if (reservedWindowsNames.contains(baseName)) {
+      sanitized = '_$sanitized';
+    }
+    if (sanitized.length > 180) {
+      final dotIndex = sanitized.lastIndexOf('.');
+      final extension = dotIndex > 0 && sanitized.length - dotIndex <= 16
+          ? sanitized.substring(dotIndex)
+          : '';
+      sanitized = '${sanitized.substring(0, 180 - extension.length)}$extension';
     }
     return sanitized;
   }
 
   String _resolveWorkTitle() {
-    final sourceId = work.sourceId?.trim();
-    if (sourceId != null && sourceId.isNotEmpty) {
-      return sourceId;
-    }
     final title = work.title?.trim();
     if (title != null && title.isNotEmpty) {
       return title;
+    }
+    final sourceId = work.sourceId?.trim();
+    if (sourceId != null && sourceId.isNotEmpty) {
+      return sourceId;
     }
     return 'work_${work.id ?? 'unknown'}';
   }
@@ -649,8 +649,9 @@ class DetailViewModel extends ChangeNotifier {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                    context.l10n
-                        .markUpdated(status.localizedLabel(context.l10n)),
+                    context.l10n.markUpdated(
+                      status.localizedLabel(context.l10n),
+                    ),
                   ),
                   duration: const Duration(seconds: 2),
                   behavior: SnackBarBehavior.floating,
@@ -660,9 +661,7 @@ class DetailViewModel extends ChangeNotifier {
           } catch (e) {
             if (context.mounted) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(context.l10n.markFailed(e.toString())),
-                ),
+                SnackBar(content: Text(context.l10n.markFailed(e.toString()))),
               );
             }
           }
@@ -686,8 +685,8 @@ class DetailViewModel extends ChangeNotifier {
                 onPressed: _loadingRating
                     ? null
                     : () => setState(() {
-                          selectedRating = value;
-                        }),
+                        selectedRating = value;
+                      }),
                 icon: Icon(
                   value <= selectedRating ? Icons.star : Icons.star_border,
                   color: Colors.amber,

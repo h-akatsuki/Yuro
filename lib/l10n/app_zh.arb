@@ -23,12 +23,12 @@
   "themeDark": "深色模式",
   "navigationFavorites": "收藏",
   "navigationHome": "主页",
-  "navigationDownloadProgress": "下载进度",
+  "navigationDownloadProgress": "下载",
   "navigationForYou": "为你推荐",
   "navigationPopularWorks": "热门作品",
   "navigationRecommend": "推荐",
   "homeTabWorks": "作品",
-  "homeTabDownloads": "进度",
+  "homeTabDownloads": "下载",
   "titleWithCount": "{title} ({count})",
   "@titleWithCount": {
     "placeholders": {
@@ -125,7 +125,43 @@
   },
   "downloadSelectAll": "全选",
   "downloadClearSelection": "清空选择",
+  "downloadSelectionSummary": "{count} 个 · {size}",
+  "@downloadSelectionSummary": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "size": {"type": "String"}
+    }
+  },
+  "downloadFileCount": "{count} 个文件",
+  "@downloadFileCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "downloadFilterAll": "全部",
+  "downloadFilterAudio": "音频",
+  "downloadFilterImages": "图片",
+  "downloadFilterOther": "其他",
+  "downloadActionWithCount": "下载 {count} 个文件",
+  "@downloadActionWithCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "downloadNoFilesSelected": "请选择要下载的文件",
+  "downloadQueued": "已添加 {count} 个下载任务",
+  "@downloadQueued": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "downloadQueuePartial": "已添加 {queuedCount} 个，{failedCount} 个无法加入队列",
+  "@downloadQueuePartial": {
+    "placeholders": {
+      "queuedCount": {"type": "int"},
+      "failedCount": {"type": "int"}
+    }
+  },
   "downloadSuccess": "已下载 {count} 个文件: {path}",
   "@downloadSuccess": {
     "placeholders": {
@@ -171,14 +207,28 @@
     }
   },
   "downloadDirectoryResetSuccess": "已恢复默认下载目录",
-  "downloadProgressEmpty": "当前没有下载任务",
+  "downloadProgressEmpty": "还没有下载任务",
+  "downloadProgressEmptyDescription": "在作品页面选择文件后，可在这里查看下载进度。",
   "downloadProgressClearFinished": "清空已完成",
   "downloadProgressActiveSection": "进行中",
   "downloadProgressHistorySection": "历史记录",
+  "downloadActiveCount": "{count} 个下载任务",
+  "@downloadActiveCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "downloadStatusQueued": "等待中",
   "downloadStatusRunning": "下载中",
+  "downloadStatusWaitingToRetry": "等待重试",
+  "downloadStatusPaused": "已暂停",
   "downloadStatusCompleted": "已完成",
   "downloadStatusFailed": "失败",
+  "downloadStatusCanceled": "已取消",
+  "downloadPause": "暂停",
+  "downloadResume": "继续",
+  "downloadRetry": "重试",
+  "downloadCancelTask": "取消下载",
   "openDlsiteInBrowser": "在浏览器中打开DLsite",
   "openDlsiteDetails": "显示DLsite作品信息",
   "dlsiteDetailsTitle": "DLsite作品信息",

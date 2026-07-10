@@ -21,6 +21,8 @@ class DownloadDirectoryController extends ChangeNotifier {
   String? get customDirectoryPath => _customDirectoryPath;
   bool get hasCustomDirectory =>
       _customDirectoryPath != null && _customDirectoryPath!.isNotEmpty;
+  bool get usesSharedDownloadsDestination =>
+      Platform.isAndroid && !hasCustomDirectory;
   String? get lastError => _lastError;
 
   Future<bool> ensureWritePermissionIfNeeded() async {
@@ -111,6 +113,24 @@ class DownloadDirectoryController extends ChangeNotifier {
 
       _lastError = null;
       return custom;
+    }
+
+    // Android 10+ restricts direct writes to the public Downloads directory.
+    // Download into the app sandbox first; the queue manager publishes the
+    // completed file to shared Downloads through MediaStore.
+    if (usesSharedDownloadsDestination) {
+      final documentsDirectory = await getApplicationDocumentsDirectory();
+      final rootDirectory = Directory(
+        '${documentsDirectory.path}${Platform.pathSeparator}asmr_downloads',
+      );
+      await _ensureDirectoryExists(rootDirectory);
+      if (!await _checkWritable(rootDirectory)) {
+        _lastError = 'アプリのダウンロード領域に書き込めません';
+        notifyListeners();
+        throw Exception(_lastError);
+      }
+      _lastError = null;
+      return rootDirectory;
     }
 
     final candidateBaseDirectories = <Directory?>[];

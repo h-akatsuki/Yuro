@@ -28,7 +28,7 @@
   "navigationPopularWorks": "Popular Works",
   "navigationRecommend": "Recommendations",
   "homeTabWorks": "Works",
-  "homeTabDownloads": "Progress",
+  "homeTabDownloads": "Downloads",
   "titleWithCount": "{title} ({count})",
   "@titleWithCount": {
     "placeholders": {
@@ -125,7 +125,43 @@
   },
   "downloadSelectAll": "Select All",
   "downloadClearSelection": "Clear Selection",
+  "downloadSelectionSummary": "{count} files · {size}",
+  "@downloadSelectionSummary": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "size": {"type": "String"}
+    }
+  },
+  "downloadFileCount": "{count} files",
+  "@downloadFileCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "downloadFilterAll": "All",
+  "downloadFilterAudio": "Audio",
+  "downloadFilterImages": "Images",
+  "downloadFilterOther": "Other",
+  "downloadActionWithCount": "Download {count}",
+  "@downloadActionWithCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "downloadNoFilesSelected": "Please select files to download",
+  "downloadQueued": "Added {count} files to downloads",
+  "@downloadQueued": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "downloadQueuePartial": "Added {queuedCount}; {failedCount} could not be queued",
+  "@downloadQueuePartial": {
+    "placeholders": {
+      "queuedCount": {"type": "int"},
+      "failedCount": {"type": "int"}
+    }
+  },
   "downloadSuccess": "Downloaded {count} files: {path}",
   "@downloadSuccess": {
     "placeholders": {
@@ -171,14 +207,28 @@
     }
   },
   "downloadDirectoryResetSuccess": "Save location reset to default",
-  "downloadProgressEmpty": "No active downloads",
+  "downloadProgressEmpty": "No downloads yet",
+  "downloadProgressEmptyDescription": "Choose files from a work page to track their progress here.",
   "downloadProgressClearFinished": "Clear Completed",
   "downloadProgressActiveSection": "Active",
   "downloadProgressHistorySection": "History",
+  "downloadActiveCount": "{count} downloads",
+  "@downloadActiveCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "downloadStatusQueued": "Queued",
   "downloadStatusRunning": "Downloading",
+  "downloadStatusWaitingToRetry": "Waiting to retry",
+  "downloadStatusPaused": "Paused",
   "downloadStatusCompleted": "Completed",
   "downloadStatusFailed": "Failed",
+  "downloadStatusCanceled": "Canceled",
+  "downloadPause": "Pause",
+  "downloadResume": "Resume",
+  "downloadRetry": "Retry",
+  "downloadCancelTask": "Cancel download",
   "openDlsiteInBrowser": "Open DLsite in Browser",
   "openDlsiteDetails": "Show DLsite work information",
   "dlsiteDetailsTitle": "DLsite Work Information",

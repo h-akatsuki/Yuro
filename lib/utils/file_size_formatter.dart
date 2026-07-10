@@ -1,11 +1,16 @@
 class FileSizeFormatter {
   static String format(int? size) {
     if (size == null) return '';
-    const kb = 1024;
-    const mb = kb * 1024;
-    if (size > mb) {
-      return '${(size / mb).toStringAsFixed(2)} MB';
+    final bytes = size < 0 ? 0 : size;
+    const units = <String>['B', 'KB', 'MB', 'GB', 'TB'];
+    var value = bytes.toDouble();
+    var unitIndex = 0;
+    while (value >= 1024 && unitIndex < units.length - 1) {
+      value /= 1024;
+      unitIndex++;
     }
-    return '${(size / kb).toStringAsFixed(2)} KB';
+    if (unitIndex == 0) return '$bytes B';
+    final decimals = value >= 100 ? 0 : (value >= 10 ? 1 : 2);
+    return '${value.toStringAsFixed(decimals)} ${units[unitIndex]}';
   }
 }

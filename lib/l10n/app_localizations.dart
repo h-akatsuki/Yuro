@@ -241,7 +241,7 @@ abstract class AppLocalizations {
   /// No description provided for @navigationDownloadProgress.
   ///
   /// In zh, this message translates to:
-  /// **'下载进度'**
+  /// **'下载'**
   String get navigationDownloadProgress;
 
   /// No description provided for @navigationForYou.
@@ -271,7 +271,7 @@ abstract class AppLocalizations {
   /// No description provided for @homeTabDownloads.
   ///
   /// In zh, this message translates to:
-  /// **'进度'**
+  /// **'下载'**
   String get homeTabDownloads;
 
   /// No description provided for @titleWithCount.
@@ -622,11 +622,65 @@ abstract class AppLocalizations {
   /// **'清空选择'**
   String get downloadClearSelection;
 
+  /// No description provided for @downloadSelectionSummary.
+  ///
+  /// In zh, this message translates to:
+  /// **'{count} 个 · {size}'**
+  String downloadSelectionSummary(int count, String size);
+
+  /// No description provided for @downloadFileCount.
+  ///
+  /// In zh, this message translates to:
+  /// **'{count} 个文件'**
+  String downloadFileCount(int count);
+
+  /// No description provided for @downloadFilterAll.
+  ///
+  /// In zh, this message translates to:
+  /// **'全部'**
+  String get downloadFilterAll;
+
+  /// No description provided for @downloadFilterAudio.
+  ///
+  /// In zh, this message translates to:
+  /// **'音频'**
+  String get downloadFilterAudio;
+
+  /// No description provided for @downloadFilterImages.
+  ///
+  /// In zh, this message translates to:
+  /// **'图片'**
+  String get downloadFilterImages;
+
+  /// No description provided for @downloadFilterOther.
+  ///
+  /// In zh, this message translates to:
+  /// **'其他'**
+  String get downloadFilterOther;
+
+  /// No description provided for @downloadActionWithCount.
+  ///
+  /// In zh, this message translates to:
+  /// **'下载 {count} 个文件'**
+  String downloadActionWithCount(int count);
+
   /// No description provided for @downloadNoFilesSelected.
   ///
   /// In zh, this message translates to:
   /// **'请选择要下载的文件'**
   String get downloadNoFilesSelected;
+
+  /// No description provided for @downloadQueued.
+  ///
+  /// In zh, this message translates to:
+  /// **'已添加 {count} 个下载任务'**
+  String downloadQueued(int count);
+
+  /// No description provided for @downloadQueuePartial.
+  ///
+  /// In zh, this message translates to:
+  /// **'已添加 {queuedCount} 个，{failedCount} 个无法加入队列'**
+  String downloadQueuePartial(int queuedCount, int failedCount);
 
   /// No description provided for @downloadSuccess.
   ///
@@ -697,8 +751,14 @@ abstract class AppLocalizations {
   /// No description provided for @downloadProgressEmpty.
   ///
   /// In zh, this message translates to:
-  /// **'当前没有下载任务'**
+  /// **'还没有下载任务'**
   String get downloadProgressEmpty;
+
+  /// No description provided for @downloadProgressEmptyDescription.
+  ///
+  /// In zh, this message translates to:
+  /// **'在作品页面选择文件后，可在这里查看下载进度。'**
+  String get downloadProgressEmptyDescription;
 
   /// No description provided for @downloadProgressClearFinished.
   ///
@@ -718,6 +778,12 @@ abstract class AppLocalizations {
   /// **'历史记录'**
   String get downloadProgressHistorySection;
 
+  /// No description provided for @downloadActiveCount.
+  ///
+  /// In zh, this message translates to:
+  /// **'{count} 个下载任务'**
+  String downloadActiveCount(int count);
+
   /// No description provided for @downloadStatusQueued.
   ///
   /// In zh, this message translates to:
@@ -730,6 +796,18 @@ abstract class AppLocalizations {
   /// **'下载中'**
   String get downloadStatusRunning;
 
+  /// No description provided for @downloadStatusWaitingToRetry.
+  ///
+  /// In zh, this message translates to:
+  /// **'等待重试'**
+  String get downloadStatusWaitingToRetry;
+
+  /// No description provided for @downloadStatusPaused.
+  ///
+  /// In zh, this message translates to:
+  /// **'已暂停'**
+  String get downloadStatusPaused;
+
   /// No description provided for @downloadStatusCompleted.
   ///
   /// In zh, this message translates to:
@@ -741,6 +819,36 @@ abstract class AppLocalizations {
   /// In zh, this message translates to:
   /// **'失败'**
   String get downloadStatusFailed;
+
+  /// No description provided for @downloadStatusCanceled.
+  ///
+  /// In zh, this message translates to:
+  /// **'已取消'**
+  String get downloadStatusCanceled;
+
+  /// No description provided for @downloadPause.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂停'**
+  String get downloadPause;
+
+  /// No description provided for @downloadResume.
+  ///
+  /// In zh, this message translates to:
+  /// **'继续'**
+  String get downloadResume;
+
+  /// No description provided for @downloadRetry.
+  ///
+  /// In zh, this message translates to:
+  /// **'重试'**
+  String get downloadRetry;
+
+  /// No description provided for @downloadCancelTask.
+  ///
+  /// In zh, this message translates to:
+  /// **'取消下载'**
+  String get downloadCancelTask;
 
   /// No description provided for @openDlsiteInBrowser.
   ///

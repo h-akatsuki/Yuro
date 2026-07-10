@@ -93,7 +93,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeTabWorks => 'Works';
 
   @override
-  String get homeTabDownloads => 'Progress';
+  String get homeTabDownloads => 'Downloads';
 
   @override
   String titleWithCount(String title, int count) {
@@ -280,7 +280,44 @@ class AppLocalizationsEn extends AppLocalizations {
   String get downloadClearSelection => 'Clear Selection';
 
   @override
+  String downloadSelectionSummary(int count, String size) {
+    return '$count files · $size';
+  }
+
+  @override
+  String downloadFileCount(int count) {
+    return '$count files';
+  }
+
+  @override
+  String get downloadFilterAll => 'All';
+
+  @override
+  String get downloadFilterAudio => 'Audio';
+
+  @override
+  String get downloadFilterImages => 'Images';
+
+  @override
+  String get downloadFilterOther => 'Other';
+
+  @override
+  String downloadActionWithCount(int count) {
+    return 'Download $count';
+  }
+
+  @override
   String get downloadNoFilesSelected => 'Please select files to download';
+
+  @override
+  String downloadQueued(int count) {
+    return 'Added $count files to downloads';
+  }
+
+  @override
+  String downloadQueuePartial(int queuedCount, int failedCount) {
+    return 'Added $queuedCount; $failedCount could not be queued';
+  }
 
   @override
   String downloadSuccess(int count, String path) {
@@ -326,7 +363,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get downloadDirectoryResetSuccess => 'Save location reset to default';
 
   @override
-  String get downloadProgressEmpty => 'No active downloads';
+  String get downloadProgressEmpty => 'No downloads yet';
+
+  @override
+  String get downloadProgressEmptyDescription =>
+      'Choose files from a work page to track their progress here.';
 
   @override
   String get downloadProgressClearFinished => 'Clear Completed';
@@ -338,16 +379,42 @@ class AppLocalizationsEn extends AppLocalizations {
   String get downloadProgressHistorySection => 'History';
 
   @override
+  String downloadActiveCount(int count) {
+    return '$count downloads';
+  }
+
+  @override
   String get downloadStatusQueued => 'Queued';
 
   @override
   String get downloadStatusRunning => 'Downloading';
 
   @override
+  String get downloadStatusWaitingToRetry => 'Waiting to retry';
+
+  @override
+  String get downloadStatusPaused => 'Paused';
+
+  @override
   String get downloadStatusCompleted => 'Completed';
 
   @override
   String get downloadStatusFailed => 'Failed';
+
+  @override
+  String get downloadStatusCanceled => 'Canceled';
+
+  @override
+  String get downloadPause => 'Pause';
+
+  @override
+  String get downloadResume => 'Resume';
+
+  @override
+  String get downloadRetry => 'Retry';
+
+  @override
+  String get downloadCancelTask => 'Cancel download';
 
   @override
   String get openDlsiteInBrowser => 'Open DLsite in Browser';

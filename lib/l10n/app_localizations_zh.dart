@@ -78,7 +78,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get navigationHome => '主页';
 
   @override
-  String get navigationDownloadProgress => '下载进度';
+  String get navigationDownloadProgress => '下载';
 
   @override
   String get navigationForYou => '为你推荐';
@@ -93,7 +93,7 @@ class AppLocalizationsZh extends AppLocalizations {
   String get homeTabWorks => '作品';
 
   @override
-  String get homeTabDownloads => '进度';
+  String get homeTabDownloads => '下载';
 
   @override
   String titleWithCount(String title, int count) {
@@ -280,7 +280,44 @@ class AppLocalizationsZh extends AppLocalizations {
   String get downloadClearSelection => '清空选择';
 
   @override
+  String downloadSelectionSummary(int count, String size) {
+    return '$count 个 · $size';
+  }
+
+  @override
+  String downloadFileCount(int count) {
+    return '$count 个文件';
+  }
+
+  @override
+  String get downloadFilterAll => '全部';
+
+  @override
+  String get downloadFilterAudio => '音频';
+
+  @override
+  String get downloadFilterImages => '图片';
+
+  @override
+  String get downloadFilterOther => '其他';
+
+  @override
+  String downloadActionWithCount(int count) {
+    return '下载 $count 个文件';
+  }
+
+  @override
   String get downloadNoFilesSelected => '请选择要下载的文件';
+
+  @override
+  String downloadQueued(int count) {
+    return '已添加 $count 个下载任务';
+  }
+
+  @override
+  String downloadQueuePartial(int queuedCount, int failedCount) {
+    return '已添加 $queuedCount 个，$failedCount 个无法加入队列';
+  }
 
   @override
   String downloadSuccess(int count, String path) {
@@ -324,7 +361,10 @@ class AppLocalizationsZh extends AppLocalizations {
   String get downloadDirectoryResetSuccess => '已恢复默认下载目录';
 
   @override
-  String get downloadProgressEmpty => '当前没有下载任务';
+  String get downloadProgressEmpty => '还没有下载任务';
+
+  @override
+  String get downloadProgressEmptyDescription => '在作品页面选择文件后，可在这里查看下载进度。';
 
   @override
   String get downloadProgressClearFinished => '清空已完成';
@@ -336,16 +376,42 @@ class AppLocalizationsZh extends AppLocalizations {
   String get downloadProgressHistorySection => '历史记录';
 
   @override
+  String downloadActiveCount(int count) {
+    return '$count 个下载任务';
+  }
+
+  @override
   String get downloadStatusQueued => '等待中';
 
   @override
   String get downloadStatusRunning => '下载中';
 
   @override
+  String get downloadStatusWaitingToRetry => '等待重试';
+
+  @override
+  String get downloadStatusPaused => '已暂停';
+
+  @override
   String get downloadStatusCompleted => '已完成';
 
   @override
   String get downloadStatusFailed => '失败';
+
+  @override
+  String get downloadStatusCanceled => '已取消';
+
+  @override
+  String get downloadPause => '暂停';
+
+  @override
+  String get downloadResume => '继续';
+
+  @override
+  String get downloadRetry => '重试';
+
+  @override
+  String get downloadCancelTask => '取消下载';
 
   @override
   String get openDlsiteInBrowser => '在浏览器中打开DLsite';

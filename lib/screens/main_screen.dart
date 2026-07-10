@@ -1,4 +1,5 @@
 import 'package:asmrapp/l10n/l10n.dart';
+import 'package:asmrapp/core/download/download_progress_manager.dart';
 import 'package:asmrapp/presentation/viewmodels/auth_viewmodel.dart';
 import 'package:asmrapp/presentation/viewmodels/home_viewmodel.dart';
 import 'package:asmrapp/presentation/viewmodels/playlists_viewmodel.dart';
@@ -106,10 +107,10 @@ class _MainScreenState extends State<MainScreen> {
           final totalCount = _currentIndex == 1
               ? homeViewModel.pagination?.totalCount
               : _currentIndex == 2
-                  ? context.watch<RecommendViewModel>().pagination?.totalCount
-                  : _currentIndex == 3
-                      ? context.watch<PopularViewModel>().pagination?.totalCount
-                      : null;
+              ? context.watch<RecommendViewModel>().pagination?.totalCount
+              : _currentIndex == 3
+              ? context.watch<PopularViewModel>().pagination?.totalCount
+              : null;
 
           final titles = [
             context.l10n.navigationFavorites,
@@ -144,17 +145,18 @@ class _MainScreenState extends State<MainScreen> {
                       }
                     },
                   ),
-                IconButton(
-                  icon: const Icon(Icons.search),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SearchScreen(),
-                      ),
-                    );
-                  },
-                ),
+                if (_currentIndex != 4)
+                  IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SearchScreen(),
+                        ),
+                      );
+                    },
+                  ),
               ],
             ),
             drawer: const DrawerMenu(),
@@ -197,8 +199,10 @@ class _MainScreenState extends State<MainScreen> {
                       label: context.l10n.navigationPopularWorks,
                     ),
                     NavigationDestination(
-                      icon: const Icon(Icons.download_outlined),
-                      selectedIcon: const Icon(Icons.download),
+                      icon: const _DownloadNavigationIcon(selected: false),
+                      selectedIcon: const _DownloadNavigationIcon(
+                        selected: true,
+                      ),
                       label: context.l10n.navigationDownloadProgress,
                     ),
                   ],
@@ -207,6 +211,26 @@ class _MainScreenState extends State<MainScreen> {
             ),
           );
         },
+      ),
+    );
+  }
+}
+
+class _DownloadNavigationIcon extends StatelessWidget {
+  final bool selected;
+
+  const _DownloadNavigationIcon({required this.selected});
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<DownloadProgressManager, int>(
+      selector: (_, manager) => manager.activeTasks.length,
+      builder: (context, count, _) => Badge(
+        isLabelVisible: count > 0,
+        label: Text(count > 99 ? '99+' : '$count'),
+        child: Icon(
+          selected ? Icons.download_rounded : Icons.download_outlined,
+        ),
       ),
     );
   }

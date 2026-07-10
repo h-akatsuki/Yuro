@@ -1,8 +1,11 @@
 enum DownloadTaskStatus {
   queued,
   running,
+  waitingToRetry,
+  paused,
   completed,
   failed,
+  canceled,
 }
 
 class DownloadTask {
@@ -18,6 +21,8 @@ class DownloadTask {
   final DateTime? startedAt;
   final DateTime? finishedAt;
   final String? errorMessage;
+  final double networkSpeed;
+  final Duration? timeRemaining;
 
   const DownloadTask({
     required this.id,
@@ -32,6 +37,8 @@ class DownloadTask {
     this.startedAt,
     this.finishedAt,
     this.errorMessage,
+    this.networkSpeed = 0,
+    this.timeRemaining,
   });
 
   double get progress {
@@ -50,34 +57,46 @@ class DownloadTask {
 
   bool get isActive =>
       status == DownloadTaskStatus.queued ||
-      status == DownloadTaskStatus.running;
+      status == DownloadTaskStatus.running ||
+      status == DownloadTaskStatus.waitingToRetry ||
+      status == DownloadTaskStatus.paused;
 
   bool get isFinished =>
       status == DownloadTaskStatus.completed ||
-      status == DownloadTaskStatus.failed;
+      status == DownloadTaskStatus.failed ||
+      status == DownloadTaskStatus.canceled;
 
   DownloadTask copyWith({
     int? receivedBytes,
     int? totalBytes,
     DownloadTaskStatus? status,
+    String? savePath,
     DateTime? startedAt,
     DateTime? finishedAt,
     String? errorMessage,
+    double? networkSpeed,
+    Duration? timeRemaining,
     bool clearError = false,
+    bool clearFinishedAt = false,
+    bool clearTimeRemaining = false,
   }) {
     return DownloadTask(
       id: id,
       workId: workId,
       workTitle: workTitle,
       fileName: fileName,
-      savePath: savePath,
+      savePath: savePath ?? this.savePath,
       receivedBytes: receivedBytes ?? this.receivedBytes,
       totalBytes: totalBytes ?? this.totalBytes,
       status: status ?? this.status,
       createdAt: createdAt,
       startedAt: startedAt ?? this.startedAt,
-      finishedAt: finishedAt ?? this.finishedAt,
+      finishedAt: clearFinishedAt ? null : (finishedAt ?? this.finishedAt),
       errorMessage: clearError ? null : (errorMessage ?? this.errorMessage),
+      networkSpeed: networkSpeed ?? this.networkSpeed,
+      timeRemaining: clearTimeRemaining
+          ? null
+          : (timeRemaining ?? this.timeRemaining),
     );
   }
 }

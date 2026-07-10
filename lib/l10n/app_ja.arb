@@ -23,12 +23,12 @@
   "themeDark": "ダークモード",
   "navigationFavorites": "お気に入り",
   "navigationHome": "ホーム",
-  "navigationDownloadProgress": "ダウンロード進捗",
+  "navigationDownloadProgress": "ダウンロード",
   "navigationForYou": "あなた向け",
   "navigationPopularWorks": "人気作品",
   "navigationRecommend": "おすすめ",
   "homeTabWorks": "作品",
-  "homeTabDownloads": "進捗",
+  "homeTabDownloads": "ダウンロード",
   "titleWithCount": "{title} ({count})",
   "@titleWithCount": {
     "placeholders": {
@@ -125,7 +125,43 @@
   },
   "downloadSelectAll": "すべて選択",
   "downloadClearSelection": "選択解除",
+  "downloadSelectionSummary": "{count}件・{size}",
+  "@downloadSelectionSummary": {
+    "placeholders": {
+      "count": {"type": "int"},
+      "size": {"type": "String"}
+    }
+  },
+  "downloadFileCount": "{count}件",
+  "@downloadFileCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "downloadFilterAll": "すべて",
+  "downloadFilterAudio": "音声",
+  "downloadFilterImages": "画像",
+  "downloadFilterOther": "その他",
+  "downloadActionWithCount": "{count}件をダウンロード",
+  "@downloadActionWithCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "downloadNoFilesSelected": "ダウンロードするファイルを選択してください",
+  "downloadQueued": "{count}件をダウンロードに追加しました",
+  "@downloadQueued": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
+  "downloadQueuePartial": "{queuedCount}件を追加、{failedCount}件は追加できませんでした",
+  "@downloadQueuePartial": {
+    "placeholders": {
+      "queuedCount": {"type": "int"},
+      "failedCount": {"type": "int"}
+    }
+  },
   "downloadSuccess": "{count}件のダウンロードが完了しました: {path}",
   "@downloadSuccess": {
     "placeholders": {
@@ -171,14 +207,28 @@
     }
   },
   "downloadDirectoryResetSuccess": "保存先を既定に戻しました",
-  "downloadProgressEmpty": "進行中のダウンロードはありません",
+  "downloadProgressEmpty": "ダウンロードはまだありません",
+  "downloadProgressEmptyDescription": "作品ページからファイルを選ぶと、ここで進捗を確認できます。",
   "downloadProgressClearFinished": "完了履歴をクリア",
   "downloadProgressActiveSection": "進行中",
   "downloadProgressHistorySection": "履歴",
+  "downloadActiveCount": "{count}件のダウンロード",
+  "@downloadActiveCount": {
+    "placeholders": {
+      "count": {"type": "int"}
+    }
+  },
   "downloadStatusQueued": "待機中",
   "downloadStatusRunning": "ダウンロード中",
+  "downloadStatusWaitingToRetry": "再試行待ち",
+  "downloadStatusPaused": "一時停止",
   "downloadStatusCompleted": "完了",
   "downloadStatusFailed": "失敗",
+  "downloadStatusCanceled": "キャンセル済み",
+  "downloadPause": "一時停止",
+  "downloadResume": "再開",
+  "downloadRetry": "再試行",
+  "downloadCancelTask": "ダウンロードをキャンセル",
   "openDlsiteInBrowser": "DLsiteをブラウザで開く",
   "openDlsiteDetails": "DLsite作品情報を表示",
   "dlsiteDetailsTitle": "DLsite作品情報",

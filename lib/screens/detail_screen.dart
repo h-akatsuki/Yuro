@@ -24,11 +24,7 @@ class DetailScreen extends StatelessWidget {
   final bool fromPlayer;
   static final RegExp _rjCodePattern = RegExp(r'(RJ\d+)', caseSensitive: false);
 
-  const DetailScreen({
-    super.key,
-    required this.work,
-    this.fromPlayer = false,
-  });
+  const DetailScreen({super.key, required this.work, this.fromPlayer = false});
 
   @override
   Widget build(BuildContext context) {
@@ -37,9 +33,7 @@ class DetailScreen extends StatelessWidget {
     final appBarTitle = _buildAppBarTitle(rjCode, localizedTitle);
 
     return ChangeNotifierProvider(
-      create: (_) => DetailViewModel(
-        work: work,
-      )..loadFiles(),
+      create: (_) => DetailViewModel(work: work)..loadFiles(),
       child: Scaffold(
         appBar: AppBar(
           title: Text(appBarTitle),
@@ -96,7 +90,8 @@ class DetailScreen extends StatelessWidget {
                       child: Text(
                         viewModel.error!,
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.error),
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                       ),
                     );
                   }
@@ -157,11 +152,7 @@ class DetailScreen extends StatelessWidget {
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                _playbackErrorMessage(context, e),
-              ),
-            ),
+            SnackBar(content: Text(_playbackErrorMessage(context, e))),
           );
         }
       }
@@ -203,18 +194,29 @@ class DetailScreen extends StatelessWidget {
   ) async {
     final files = viewModel.files?.children;
     if (files == null || files.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.playFilesNotLoaded)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(context.l10n.playFilesNotLoaded)));
       return;
     }
 
-    final selectedFiles = await showDialog<List<DownloadRequestItem>>(
-      context: context,
-      builder: (dialogContext) => DownloadFileSelectionDialog(
-        rootFiles: files,
-      ),
-    );
+    final compactLayout = MediaQuery.sizeOf(context).width < 600;
+    final selectedFiles = compactLayout
+        ? await showModalBottomSheet<List<DownloadRequestItem>>(
+            context: context,
+            isScrollControlled: true,
+            useSafeArea: true,
+            backgroundColor: Colors.transparent,
+            builder: (sheetContext) => DownloadFileSelectionDialog(
+              rootFiles: files,
+              isBottomSheet: true,
+            ),
+          )
+        : await showDialog<List<DownloadRequestItem>>(
+            context: context,
+            builder: (dialogContext) =>
+                DownloadFileSelectionDialog(rootFiles: files),
+          );
 
     if (selectedFiles == null) return;
     if (selectedFiles.isEmpty) {
@@ -238,26 +240,21 @@ class DetailScreen extends StatelessWidget {
 
     if (!context.mounted) return;
 
-    if (result.successCount > 0 && result.failedCount == 0) {
+    if (result.queuedCount > 0 && result.failedCount == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            context.l10n.downloadSuccess(
-              result.successCount,
-              result.saveDirectoryPath,
-            ),
-          ),
+          content: Text(context.l10n.downloadQueued(result.queuedCount)),
         ),
       );
       return;
     }
 
-    if (result.successCount > 0 && result.failedCount > 0) {
+    if (result.queuedCount > 0 && result.failedCount > 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            context.l10n.downloadPartial(
-              result.successCount,
+            context.l10n.downloadQueuePartial(
+              result.queuedCount,
               result.failedCount,
             ),
           ),
@@ -306,8 +303,9 @@ class DetailScreen extends StatelessWidget {
   }
 
   int _findImageIndexForPreview(List<Child> imageFiles, Child targetFile) {
-    final identityIndex =
-        imageFiles.indexWhere((imageFile) => identical(imageFile, targetFile));
+    final identityIndex = imageFiles.indexWhere(
+      (imageFile) => identical(imageFile, targetFile),
+    );
     if (identityIndex >= 0) {
       return identityIndex;
     }
@@ -318,9 +316,7 @@ class DetailScreen extends StatelessWidget {
   void _openWorkDetail(BuildContext context, Work targetWork) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => DetailScreen(work: targetWork),
-      ),
+      MaterialPageRoute(builder: (context) => DetailScreen(work: targetWork)),
     );
   }
 
@@ -333,8 +329,10 @@ class DetailScreen extends StatelessWidget {
           const begin = Offset(1.0, 0.0);
           const end = Offset.zero;
           const curve = Curves.easeInOut;
-          final tween =
-              Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+          final tween = Tween(
+            begin: begin,
+            end: end,
+          ).chain(CurveTween(curve: curve));
           return SlideTransition(
             position: animation.drive(tween),
             child: child,
