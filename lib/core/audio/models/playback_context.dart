@@ -16,10 +16,7 @@ class PlaybackContext {
 
   void validate() {
     if (playlist.isEmpty) {
-      throw AudioError(
-        AudioErrorType.state,
-        '无效的播放列表状态：播放列表为空',
-      );
+      throw AudioError(AudioErrorType.state, '无效的播放列表状态：播放列表为空');
     }
 
     if (currentIndex < 0 || currentIndex >= playlist.length) {
@@ -30,10 +27,7 @@ class PlaybackContext {
     }
 
     if (!playlist.contains(currentFile)) {
-      throw AudioError(
-        AudioErrorType.state,
-        '当前文件不在播放列表中',
-      );
+      throw AudioError(AudioErrorType.state, '当前文件不在播放列表中');
     }
   }
 
@@ -55,8 +49,9 @@ class PlaybackContext {
     PlayMode playMode = PlayMode.sequence,
   }) {
     final playlist = _getPlaylistFromSameDirectory(currentFile, files);
-    final currentIndex =
-        playlist.indexWhere((file) => file.title == currentFile.title);
+    final currentIndex = playlist.indexWhere(
+      (file) => file.title == currentFile.title,
+    );
 
     return PlaybackContext._(
       work: work,
@@ -70,7 +65,9 @@ class PlaybackContext {
 
   // 获取同级文件列表
   static List<Child> _getPlaylistFromSameDirectory(
-      Child currentFile, Files files) {
+    Child currentFile,
+    Files files,
+  ) {
     // AppLogger.debug('开始获取播放列表...');
     // AppLogger.debug('当前文件: ${currentFile.title}');
     // AppLogger.debug('当前文件类型: ${currentFile.type}');
@@ -89,8 +86,9 @@ class PlaybackContext {
 
     // 过滤出相同扩展名的文件
     final playlist = siblings
-        .where((file) =>
-            file.title?.toLowerCase().endsWith('.$extension') ?? false)
+        .where(
+          (file) => file.title?.toLowerCase().endsWith('.$extension') ?? false,
+        )
         .toList();
 
     // AppLogger.debug('找到 ${playlist.length} 个可播放文件:');
@@ -172,14 +170,11 @@ class PlaybackContext {
   List<Child> getPlayableFiles() {
     if (files.children == null) return [];
     return files.children!
-        .where((file) =>
-            file.mediaDownloadUrl != null && file.type?.toLowerCase() != 'vtt')
+        .where(
+          (file) =>
+              file.mediaDownloadUrl != null &&
+              file.type?.toLowerCase() != 'vtt',
+        )
         .toList();
-  }
-
-  // 工具方法：获取文件名（不含扩展名）
-  String? _getBaseName(String? filename) {
-    if (filename == null) return null;
-    return filename.replaceAll(RegExp(r'\.[^.]+$'), '');
   }
 }

@@ -94,6 +94,9 @@ class AudioCacheManager {
 
   /// 创建缓存音频源
   static AudioSource _createCachingSource(String url, File cacheFile) {
+    // LockCachingAudioSource is the just_audio API that supports a custom
+    // cache file. Its experimental annotation is expected here.
+    // ignore: experimental_member_use
     return LockCachingAudioSource(Uri.parse(url), cacheFile: cacheFile);
   }
 

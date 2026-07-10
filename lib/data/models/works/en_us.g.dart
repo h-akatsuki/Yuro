@@ -6,13 +6,12 @@ part of 'en_us.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$EnUsImpl _$$EnUsImplFromJson(Map<String, dynamic> json) => _$EnUsImpl(
-      name: json['name'] as String?,
-      history: json['history'] as List<dynamic>?,
-    );
+_EnUs _$EnUsFromJson(Map<String, dynamic> json) => _EnUs(
+  name: json['name'] as String?,
+  history: json['history'] as List<dynamic>?,
+);
 
-Map<String, dynamic> _$$EnUsImplToJson(_$EnUsImpl instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-      'history': instance.history,
-    };
+Map<String, dynamic> _$EnUsToJson(_EnUs instance) => <String, dynamic>{
+  'name': instance.name,
+  'history': instance.history,
+};

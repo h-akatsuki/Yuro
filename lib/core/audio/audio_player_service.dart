@@ -15,7 +15,6 @@ import './events/playback_event_hub.dart';
 class AudioPlayerService implements IAudioPlayerService {
   late final AudioPlayer _player;
   late final AudioNotificationService _notificationService;
-  late final ConcatenatingAudioSource _playlist;
   late final PlaybackStateManager _stateManager;
   late final PlaybackController _playbackController;
   final PlaybackEventHub _eventHub;
@@ -24,8 +23,8 @@ class AudioPlayerService implements IAudioPlayerService {
   AudioPlayerService._internal({
     required PlaybackEventHub eventHub,
     required IPlaybackStateRepository stateRepository,
-  })  : _eventHub = eventHub,
-        _stateRepository = stateRepository {
+  }) : _eventHub = eventHub,
+       _stateRepository = stateRepository {
     _init();
   }
 
@@ -45,12 +44,7 @@ class AudioPlayerService implements IAudioPlayerService {
   Future<void> _init() async {
     try {
       _player = AudioPlayer();
-      _notificationService = AudioNotificationService(
-        _player,
-        _eventHub,
-      );
-      _playlist = ConcatenatingAudioSource(children: []);
-
+      _notificationService = AudioNotificationService(_player, _eventHub);
       _stateManager = PlaybackStateManager(
         player: _player,
         stateRepository: _stateRepository,
@@ -60,7 +54,6 @@ class AudioPlayerService implements IAudioPlayerService {
       _playbackController = PlaybackController(
         player: _player,
         stateManager: _stateManager,
-        playlist: _playlist,
       );
 
       final session = await AudioSession.instance;
@@ -70,17 +63,8 @@ class AudioPlayerService implements IAudioPlayerService {
       _stateManager.initStateListeners();
       await restorePlaybackState();
     } catch (e, stack) {
-      AudioErrorHandler.handleError(
-        AudioErrorType.init,
-        '音频播放器初始化',
-        e,
-        stack,
-      );
-      AudioErrorHandler.throwError(
-        AudioErrorType.init,
-        '音频播放器初始化',
-        e,
-      );
+      AudioErrorHandler.handleError(AudioErrorType.init, '音频播放器初始化', e, stack);
+      AudioErrorHandler.throwError(AudioErrorType.init, '音频播放器初始化', e);
     }
   }
 
@@ -138,7 +122,8 @@ class AudioPlayerService implements IAudioPlayerService {
 
       AppLogger.debug('已加载保存的状态: workId=${state.work.id}');
       AppLogger.debug(
-          '播放列表信息: 长度=${state.playlist.length}, 索引=${state.currentIndex}');
+        '播放列表信息: 长度=${state.playlist.length}, 索引=${state.currentIndex}',
+      );
 
       if (state.playlist.isEmpty) {
         AppLogger.debug('保存的播放列表为空，跳过恢复');
@@ -162,12 +147,7 @@ class AudioPlayerService implements IAudioPlayerService {
         AppLogger.error('设置播放上下文失败，跳过状态恢复', e);
       }
     } catch (e, stack) {
-      AudioErrorHandler.handleError(
-        AudioErrorType.init,
-        '恢复播放状态',
-        e,
-        stack,
-      );
+      AudioErrorHandler.handleError(AudioErrorType.init, '恢复播放状态', e, stack);
       rethrow;
     }
   }

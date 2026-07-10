@@ -27,12 +27,14 @@ class PlaybackStateManager {
     required AudioPlayer player,
     required PlaybackEventHub eventHub,
     required IPlaybackStateRepository stateRepository,
-  })  : _player = player,
-        _eventHub = eventHub,
-        _stateRepository = stateRepository;
+  }) : _player = player,
+       _eventHub = eventHub,
+       _stateRepository = stateRepository;
 
   // 初始化状态监听
   void initStateListeners() {
+    _setupEventListeners();
+
     // 监听播放器索引变化
     _player.currentIndexStream.listen((index) {
       if (index != null && _currentContext != null) {
@@ -70,8 +72,13 @@ class PlaybackStateManager {
 
   void updateTrackInfo(AudioTrackInfo track) {
     _currentTrack = track;
-    _eventHub.emit(TrackChangeEvent(
-        track, _currentContext!.currentFile, _currentContext!.work));
+    _eventHub.emit(
+      TrackChangeEvent(
+        track,
+        _currentContext!.currentFile,
+        _currentContext!.work,
+      ),
+    );
   }
 
   void updateTrackAndContext(Child file, Work work) {
@@ -117,12 +124,7 @@ class PlaybackStateManager {
 
       await _stateRepository.saveState(state);
     } catch (e, stack) {
-      AudioErrorHandler.handleError(
-        AudioErrorType.state,
-        '保存播放状态',
-        e,
-        stack,
-      );
+      AudioErrorHandler.handleError(AudioErrorType.state, '保存播放状态', e, stack);
     }
   }
 
@@ -130,12 +132,7 @@ class PlaybackStateManager {
     try {
       return await _stateRepository.loadState();
     } catch (e, stack) {
-      AudioErrorHandler.handleError(
-        AudioErrorType.state,
-        '加载播放状态',
-        e,
-        stack,
-      );
+      AudioErrorHandler.handleError(AudioErrorType.state, '加载播放状态', e, stack);
       return null;
     }
   }

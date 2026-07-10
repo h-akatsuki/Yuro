@@ -10,7 +10,7 @@ part 'work.freezed.dart';
 part 'work.g.dart';
 
 @freezed
-class Work with _$Work {
+abstract class Work with _$Work {
   factory Work({
     int? id,
     String? title,

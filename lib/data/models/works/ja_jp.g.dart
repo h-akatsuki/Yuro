@@ -6,11 +6,9 @@ part of 'ja_jp.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$JaJpImpl _$$JaJpImplFromJson(Map<String, dynamic> json) => _$JaJpImpl(
-      name: json['name'] as String?,
-    );
+_JaJp _$JaJpFromJson(Map<String, dynamic> json) =>
+    _JaJp(name: json['name'] as String?);
 
-Map<String, dynamic> _$$JaJpImplToJson(_$JaJpImpl instance) =>
-    <String, dynamic>{
-      'name': instance.name,
-    };
+Map<String, dynamic> _$JaJpToJson(_JaJp instance) => <String, dynamic>{
+  'name': instance.name,
+};

@@ -4,7 +4,7 @@ part 'translation_bonus_lang.freezed.dart';
 part 'translation_bonus_lang.g.dart';
 
 @freezed
-class TranslationBonusLang with _$TranslationBonusLang {
+abstract class TranslationBonusLang with _$TranslationBonusLang {
   factory TranslationBonusLang({
     int? price,
     String? status,

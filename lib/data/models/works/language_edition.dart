@@ -4,7 +4,7 @@ part 'language_edition.freezed.dart';
 part 'language_edition.g.dart';
 
 @freezed
-class LanguageEdition with _$LanguageEdition {
+abstract class LanguageEdition with _$LanguageEdition {
   factory LanguageEdition({
     String? lang,
     String? label,

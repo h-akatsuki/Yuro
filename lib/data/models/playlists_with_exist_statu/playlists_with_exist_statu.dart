@@ -7,7 +7,7 @@ part 'playlists_with_exist_statu.freezed.dart';
 part 'playlists_with_exist_statu.g.dart';
 
 @freezed
-class PlaylistsWithExistStatu with _$PlaylistsWithExistStatu {
+abstract class PlaylistsWithExistStatu with _$PlaylistsWithExistStatu {
   factory PlaylistsWithExistStatu({
     List<Playlist>? playlists,
     Pagination? pagination,

@@ -22,19 +22,19 @@ on:
         type: boolean
 
 env:
-  FLUTTER_VERSION: "3.27.0"
+  FLUTTER_VERSION: "3.44.5"
 
 jobs:
   build-windows:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: stable
@@ -52,11 +52,11 @@ jobs:
         run: |
           $zipPath = Join-Path $env:RUNNER_TEMP "windows-release.zip"
           if (Test-Path $zipPath) { Remove-Item $zipPath }
-          Compress-Archive -Path "build/windows/runner/Release/*" -DestinationPath $zipPath
+          Compress-Archive -Path "build/windows/x64/runner/Release/*" -DestinationPath $zipPath
           echo "WINDOWS_ZIP=$zipPath" >> $env:GITHUB_ENV
 
       - name: Upload Windows artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: windows-build
           path: ${{ env.WINDOWS_ZIP }}
@@ -75,13 +75,13 @@ jobs:
           fi
 
       - name: Download artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           name: windows-build
           path: dist
 
       - name: Create Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3.0.1
         with:
           tag_name: ${{ inputs.tag }}
           name: ${{ inputs.tag }}

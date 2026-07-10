@@ -6,17 +6,16 @@ part of 'mark_lists.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$MarkListsImpl _$$MarkListsImplFromJson(Map<String, dynamic> json) =>
-    _$MarkListsImpl(
-      playlists: (json['playlists'] as List<dynamic>?)
-          ?.map((e) => Playlist.fromJson(e as Map<String, dynamic>))
-          .toList(),
-      pagination: json['pagination'] == null
-          ? null
-          : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
-    );
+_MarkLists _$MarkListsFromJson(Map<String, dynamic> json) => _MarkLists(
+  playlists: (json['playlists'] as List<dynamic>?)
+      ?.map((e) => Playlist.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  pagination: json['pagination'] == null
+      ? null
+      : Pagination.fromJson(json['pagination'] as Map<String, dynamic>),
+);
 
-Map<String, dynamic> _$$MarkListsImplToJson(_$MarkListsImpl instance) =>
+Map<String, dynamic> _$MarkListsToJson(_MarkLists instance) =>
     <String, dynamic>{
       'playlists': instance.playlists,
       'pagination': instance.pagination,

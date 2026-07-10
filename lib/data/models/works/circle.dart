@@ -4,7 +4,7 @@ part 'circle.freezed.dart';
 part 'circle.g.dart';
 
 @freezed
-class Circle with _$Circle {
+abstract class Circle with _$Circle {
   factory Circle({
     int? id,
     String? name,

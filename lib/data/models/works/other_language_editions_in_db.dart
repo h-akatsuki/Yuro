@@ -4,7 +4,7 @@ part 'other_language_editions_in_db.freezed.dart';
 part 'other_language_editions_in_db.g.dart';
 
 @freezed
-class OtherLanguageEditionsInDb with _$OtherLanguageEditionsInDb {
+abstract class OtherLanguageEditionsInDb with _$OtherLanguageEditionsInDb {
   factory OtherLanguageEditionsInDb({
     int? id,
     String? lang,

@@ -7,11 +7,9 @@ part 'my_playlists.freezed.dart';
 part 'my_playlists.g.dart';
 
 @freezed
-class MyPlaylists with _$MyPlaylists {
-  factory MyPlaylists({
-    List<Playlist>? playlists,
-    Pagination? pagination,
-  }) = _MyPlaylists;
+abstract class MyPlaylists with _$MyPlaylists {
+  factory MyPlaylists({List<Playlist>? playlists, Pagination? pagination}) =
+      _MyPlaylists;
 
   factory MyPlaylists.fromJson(Map<String, dynamic> json) =>
       _$MyPlaylistsFromJson(json);

@@ -45,10 +45,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
               end: Offset.zero,
             ).animate(animation),
             child: ScaleTransition(
-              scale: Tween<double>(
-                begin: 0.95,
-                end: 1.0,
-              ).animate(animation),
+              scale: Tween<double>(begin: 0.95, end: 1.0).animate(animation),
               child: child,
             ),
           ),
@@ -57,10 +54,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
       layoutBuilder: (currentChild, previousChildren) {
         return Stack(
           alignment: Alignment.center,
-          children: <Widget>[
-            ...previousChildren,
-            if (currentChild != null) currentChild,
-          ],
+          children: <Widget>[...previousChildren, ?currentChild],
         );
       },
       child: _showLyrics
@@ -105,12 +99,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
                               child: Text(
                                 _viewModel.currentTrackInfo?.title ??
                                     context.l10n.noPlaying,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(
-                                      fontWeight: FontWeight.w600,
-                                    ),
+                                style: Theme.of(context).textTheme.titleLarge
+                                    ?.copyWith(fontWeight: FontWeight.w600),
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -119,9 +109,7 @@ class _PlayerScreenState extends State<PlayerScreen> {
                           if (_viewModel.currentTrackInfo?.artist != null)
                             Text(
                               _viewModel.currentTrackInfo!.artist,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyLarge
+                              style: Theme.of(context).textTheme.bodyLarge
                                   ?.copyWith(
                                     color: Theme.of(context)
                                         .colorScheme
@@ -163,10 +151,8 @@ class _PlayerScreenState extends State<PlayerScreen> {
               if (currentWork != null) {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => DetailScreen(
-                      work: currentWork,
-                      fromPlayer: true,
-                    ),
+                    builder: (context) =>
+                        DetailScreen(work: currentWork, fromPlayer: true),
                   ),
                 );
               }

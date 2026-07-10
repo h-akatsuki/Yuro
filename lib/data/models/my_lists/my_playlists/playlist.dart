@@ -4,7 +4,7 @@ part 'playlist.freezed.dart';
 part 'playlist.g.dart';
 
 @freezed
-class Playlist with _$Playlist {
+abstract class Playlist with _$Playlist {
   factory Playlist({
     String? id,
     @JsonKey(name: 'user_name') String? userName,

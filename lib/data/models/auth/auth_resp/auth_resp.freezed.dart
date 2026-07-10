@@ -1,5 +1,5 @@
-// coverage:ignore-file
 // GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
@@ -9,190 +9,296 @@ part of 'auth_resp.dart';
 // FreezedGenerator
 // **************************************************************************
 
+// dart format off
 T _$identity<T>(T value) => value;
-
-final _privateConstructorUsedError = UnsupportedError(
-    'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
-
-AuthResp _$AuthRespFromJson(Map<String, dynamic> json) {
-  return _AuthResp.fromJson(json);
-}
 
 /// @nodoc
 mixin _$AuthResp {
-  User? get user => throw _privateConstructorUsedError;
-  String? get token => throw _privateConstructorUsedError;
+
+ User? get user; String? get token;
+/// Create a copy of AuthResp
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$AuthRespCopyWith<AuthResp> get copyWith => _$AuthRespCopyWithImpl<AuthResp>(this as AuthResp, _$identity);
 
   /// Serializes this AuthResp to a JSON map.
-  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  Map<String, dynamic> toJson();
 
-  /// Create a copy of AuthResp
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  $AuthRespCopyWith<AuthResp> get copyWith =>
-      throw _privateConstructorUsedError;
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is AuthResp&&(identical(other.user, user) || other.user == user)&&(identical(other.token, token) || other.token == token));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,user,token);
+
+@override
+String toString() {
+  return 'AuthResp(user: $user, token: $token)';
+}
+
+
 }
 
 /// @nodoc
-abstract class $AuthRespCopyWith<$Res> {
-  factory $AuthRespCopyWith(AuthResp value, $Res Function(AuthResp) then) =
-      _$AuthRespCopyWithImpl<$Res, AuthResp>;
-  @useResult
-  $Res call({User? user, String? token});
+abstract mixin class $AuthRespCopyWith<$Res>  {
+  factory $AuthRespCopyWith(AuthResp value, $Res Function(AuthResp) _then) = _$AuthRespCopyWithImpl;
+@useResult
+$Res call({
+ User? user, String? token
+});
 
-  $UserCopyWith<$Res>? get user;
+
+$UserCopyWith<$Res>? get user;
+
 }
-
 /// @nodoc
-class _$AuthRespCopyWithImpl<$Res, $Val extends AuthResp>
+class _$AuthRespCopyWithImpl<$Res>
     implements $AuthRespCopyWith<$Res> {
-  _$AuthRespCopyWithImpl(this._value, this._then);
+  _$AuthRespCopyWithImpl(this._self, this._then);
 
-  // ignore: unused_field
-  final $Val _value;
-  // ignore: unused_field
-  final $Res Function($Val) _then;
+  final AuthResp _self;
+  final $Res Function(AuthResp) _then;
 
-  /// Create a copy of AuthResp
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? user = freezed,
-    Object? token = freezed,
-  }) {
-    return _then(_value.copyWith(
-      user: freezed == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as User?,
-      token: freezed == token
-          ? _value.token
-          : token // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ) as $Val);
+/// Create a copy of AuthResp
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? user = freezed,Object? token = freezed,}) {
+  return _then(_self.copyWith(
+user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+as User?,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+/// Create a copy of AuthResp
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserCopyWith<$Res>? get user {
+    if (_self.user == null) {
+    return null;
   }
 
-  /// Create a copy of AuthResp
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $UserCopyWith<$Res>? get user {
-    if (_value.user == null) {
-      return null;
-    }
-
-    return $UserCopyWith<$Res>(_value.user!, (value) {
-      return _then(_value.copyWith(user: value) as $Val);
-    });
-  }
+  return $UserCopyWith<$Res>(_self.user!, (value) {
+    return _then(_self.copyWith(user: value));
+  });
+}
 }
 
-/// @nodoc
-abstract class _$$AuthRespImplCopyWith<$Res>
-    implements $AuthRespCopyWith<$Res> {
-  factory _$$AuthRespImplCopyWith(
-          _$AuthRespImpl value, $Res Function(_$AuthRespImpl) then) =
-      __$$AuthRespImplCopyWithImpl<$Res>;
-  @override
-  @useResult
-  $Res call({User? user, String? token});
 
-  @override
-  $UserCopyWith<$Res>? get user;
+/// Adds pattern-matching-related methods to [AuthResp].
+extension AuthRespPatterns on AuthResp {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _AuthResp value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _AuthResp() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _AuthResp value)  $default,){
+final _that = this;
+switch (_that) {
+case _AuthResp():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _AuthResp value)?  $default,){
+final _that = this;
+switch (_that) {
+case _AuthResp() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( User? user,  String? token)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _AuthResp() when $default != null:
+return $default(_that.user,_that.token);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( User? user,  String? token)  $default,) {final _that = this;
+switch (_that) {
+case _AuthResp():
+return $default(_that.user,_that.token);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( User? user,  String? token)?  $default,) {final _that = this;
+switch (_that) {
+case _AuthResp() when $default != null:
+return $default(_that.user,_that.token);case _:
+  return null;
+
+}
 }
 
-/// @nodoc
-class __$$AuthRespImplCopyWithImpl<$Res>
-    extends _$AuthRespCopyWithImpl<$Res, _$AuthRespImpl>
-    implements _$$AuthRespImplCopyWith<$Res> {
-  __$$AuthRespImplCopyWithImpl(
-      _$AuthRespImpl _value, $Res Function(_$AuthRespImpl) _then)
-      : super(_value, _then);
-
-  /// Create a copy of AuthResp
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? user = freezed,
-    Object? token = freezed,
-  }) {
-    return _then(_$AuthRespImpl(
-      user: freezed == user
-          ? _value.user
-          : user // ignore: cast_nullable_to_non_nullable
-              as User?,
-      token: freezed == token
-          ? _value.token
-          : token // ignore: cast_nullable_to_non_nullable
-              as String?,
-    ));
-  }
 }
 
 /// @nodoc
 @JsonSerializable()
-class _$AuthRespImpl implements _AuthResp {
-  _$AuthRespImpl({this.user, this.token});
 
-  factory _$AuthRespImpl.fromJson(Map<String, dynamic> json) =>
-      _$$AuthRespImplFromJson(json);
+class _AuthResp implements AuthResp {
+   _AuthResp({this.user, this.token});
+  factory _AuthResp.fromJson(Map<String, dynamic> json) => _$AuthRespFromJson(json);
 
-  @override
-  final User? user;
-  @override
-  final String? token;
+@override final  User? user;
+@override final  String? token;
 
-  @override
-  String toString() {
-    return 'AuthResp(user: $user, token: $token)';
-  }
+/// Create a copy of AuthResp
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$AuthRespCopyWith<_AuthResp> get copyWith => __$AuthRespCopyWithImpl<_AuthResp>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$AuthRespImpl &&
-            (identical(other.user, user) || other.user == user) &&
-            (identical(other.token, token) || other.token == token));
-  }
-
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  int get hashCode => Object.hash(runtimeType, user, token);
-
-  /// Create a copy of AuthResp
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @override
-  @pragma('vm:prefer-inline')
-  _$$AuthRespImplCopyWith<_$AuthRespImpl> get copyWith =>
-      __$$AuthRespImplCopyWithImpl<_$AuthRespImpl>(this, _$identity);
-
-  @override
-  Map<String, dynamic> toJson() {
-    return _$$AuthRespImplToJson(
-      this,
-    );
-  }
+@override
+Map<String, dynamic> toJson() {
+  return _$AuthRespToJson(this, );
 }
 
-abstract class _AuthResp implements AuthResp {
-  factory _AuthResp({final User? user, final String? token}) = _$AuthRespImpl;
-
-  factory _AuthResp.fromJson(Map<String, dynamic> json) =
-      _$AuthRespImpl.fromJson;
-
-  @override
-  User? get user;
-  @override
-  String? get token;
-
-  /// Create a copy of AuthResp
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$AuthRespImplCopyWith<_$AuthRespImpl> get copyWith =>
-      throw _privateConstructorUsedError;
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AuthResp&&(identical(other.user, user) || other.user == user)&&(identical(other.token, token) || other.token == token));
 }
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,user,token);
+
+@override
+String toString() {
+  return 'AuthResp(user: $user, token: $token)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$AuthRespCopyWith<$Res> implements $AuthRespCopyWith<$Res> {
+  factory _$AuthRespCopyWith(_AuthResp value, $Res Function(_AuthResp) _then) = __$AuthRespCopyWithImpl;
+@override @useResult
+$Res call({
+ User? user, String? token
+});
+
+
+@override $UserCopyWith<$Res>? get user;
+
+}
+/// @nodoc
+class __$AuthRespCopyWithImpl<$Res>
+    implements _$AuthRespCopyWith<$Res> {
+  __$AuthRespCopyWithImpl(this._self, this._then);
+
+  final _AuthResp _self;
+  final $Res Function(_AuthResp) _then;
+
+/// Create a copy of AuthResp
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? user = freezed,Object? token = freezed,}) {
+  return _then(_AuthResp(
+user: freezed == user ? _self.user : user // ignore: cast_nullable_to_non_nullable
+as User?,token: freezed == token ? _self.token : token // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+/// Create a copy of AuthResp
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$UserCopyWith<$Res>? get user {
+    if (_self.user == null) {
+    return null;
+  }
+
+  return $UserCopyWith<$Res>(_self.user!, (value) {
+    return _then(_self.copyWith(user: value));
+  });
+}
+}
+
+// dart format on

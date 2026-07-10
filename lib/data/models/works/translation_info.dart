@@ -5,7 +5,7 @@ part 'translation_info.freezed.dart';
 part 'translation_info.g.dart';
 
 @freezed
-class TranslationInfo with _$TranslationInfo {
+abstract class TranslationInfo with _$TranslationInfo {
   factory TranslationInfo({
     String? lang,
     @JsonKey(name: 'is_child') bool? isChild,
@@ -31,15 +31,18 @@ class TranslationInfo with _$TranslationInfo {
 }
 
 Map<String, TranslationBonusLang>? _translationBonusLangsFromJson(
-    dynamic json) {
+  dynamic json,
+) {
   if (json == null) return null;
   if (json is List && json.isEmpty) return {};
 
   if (json is Map<String, dynamic>) {
-    return json.map((key, value) => MapEntry(
-          key,
-          TranslationBonusLang.fromJson(value as Map<String, dynamic>),
-        ));
+    return json.map(
+      (key, value) => MapEntry(
+        key,
+        TranslationBonusLang.fromJson(value as Map<String, dynamic>),
+      ),
+    );
   }
 
   return {};

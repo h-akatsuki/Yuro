@@ -23,62 +23,59 @@ class MarkSelectionDialog extends StatelessWidget {
       backgroundColor: isDark ? const Color(0xFF2C2C2C) : Colors.white,
       title: Text(
         context.l10n.markStatusTitle,
-        style: TextStyle(
-          color: isDark ? Colors.white70 : Colors.black87,
+        style: TextStyle(color: isDark ? Colors.white70 : Colors.black87),
+      ),
+      content: RadioGroup<MarkStatus>(
+        groupValue: currentStatus,
+        onChanged: (value) {
+          if (!loading && value != null) {
+            onMarkSelected(value);
+            Navigator.of(context).pop();
+          }
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: MarkStatus.values.map((status) {
+            final isSelected = status == currentStatus;
+            return ListTile(
+              enabled: !loading,
+              leading: Radio<MarkStatus>(
+                value: status,
+                enabled: !loading,
+                fillColor: WidgetStateProperty.resolveWith((states) {
+                  if (states.contains(WidgetState.disabled)) {
+                    return isDark ? Colors.white24 : Colors.black26;
+                  }
+                  if (states.contains(WidgetState.selected)) {
+                    return isDark ? Colors.white70 : Colors.black87;
+                  }
+                  return isDark ? Colors.white38 : Colors.black45;
+                }),
+              ),
+              title: Text(
+                status.localizedLabel(context.l10n),
+                style: TextStyle(
+                  color: loading
+                      ? (isDark ? Colors.white38 : Colors.black38)
+                      : (isSelected
+                            ? (isDark ? Colors.white : Colors.black87)
+                            : (isDark ? Colors.white70 : Colors.black54)),
+                ),
+              ),
+              onTap: loading
+                  ? null
+                  : () {
+                      onMarkSelected(status);
+                      Navigator.of(context).pop();
+                    },
+              hoverColor: isDark
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : Colors.black.withValues(alpha: 0.05),
+            );
+          }).toList(),
         ),
       ),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: MarkStatus.values.map((status) {
-          final isSelected = status == currentStatus;
-          return ListTile(
-            enabled: !loading,
-            leading: Radio<MarkStatus>(
-              value: status,
-              groupValue: currentStatus,
-              onChanged: loading
-                  ? null
-                  : (MarkStatus? value) {
-                      if (value != null) {
-                        onMarkSelected(value);
-                        Navigator.of(context).pop();
-                      }
-                    },
-              fillColor: WidgetStateProperty.resolveWith((states) {
-                if (states.contains(WidgetState.disabled)) {
-                  return isDark ? Colors.white24 : Colors.black26;
-                }
-                if (states.contains(WidgetState.selected)) {
-                  return isDark ? Colors.white70 : Colors.black87;
-                }
-                return isDark ? Colors.white38 : Colors.black45;
-              }),
-            ),
-            title: Text(
-              status.localizedLabel(context.l10n),
-              style: TextStyle(
-                color: loading
-                    ? (isDark ? Colors.white38 : Colors.black38)
-                    : (isSelected
-                        ? (isDark ? Colors.white : Colors.black87)
-                        : (isDark ? Colors.white70 : Colors.black54)),
-              ),
-            ),
-            onTap: loading
-                ? null
-                : () {
-                    onMarkSelected(status);
-                    Navigator.of(context).pop();
-                  },
-            hoverColor: isDark
-                ? Colors.white.withValues(alpha: 0.05)
-                : Colors.black.withValues(alpha: 0.05),
-          );
-        }).toList(),
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
     );
   }
 }

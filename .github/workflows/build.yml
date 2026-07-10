@@ -10,25 +10,25 @@ on:
   workflow_dispatch:
 
 env:
-  FLUTTER_VERSION: '3.27.0'
+  FLUTTER_VERSION: '3.44.5'
 
 jobs:
   build-android:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0  # 获取完整的 git 历史
 
       - name: Setup Java
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v5.5.0
         with:
           distribution: 'zulu'
           java-version: '17'
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v2.23.0
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: 'stable'
@@ -53,7 +53,7 @@ jobs:
         run: flutter build appbundle --release
 
       - name: Upload Android artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: android-build
           path: |
@@ -64,14 +64,14 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0  # 获取完整的 git 历史
 
       - name: Setup Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v2.23.0
         with:
-          flutter-version: '3.27.0'
+          flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: 'stable'
 
       - name: Get dependencies
@@ -88,7 +88,7 @@ jobs:
           zip -qq -r -9 app-release.ipa Payload
 
       - name: Upload iOS artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: ios-build
           path: build/ios/iphoneos/app-release.ipa
@@ -98,12 +98,12 @@ jobs:
     needs: [ build-android, build-ios ]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7.0.0
         with:
           fetch-depth: 0  # 获取完整的 git 历史
 
       - name: Download artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8.0.1
         with:
           path: ./dist/
           merge-multiple: true
@@ -135,36 +135,36 @@ jobs:
 
       - name: Create Release
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v3.0.1
         with:
           prerelease: true
           draft: false
           body: |
             ## 🚧 Pre-release Version
-            
+
             ### 📋 Release Information
             **Version:** ${{ github.ref_name }}
             **Previous Version:** ${{ steps.previoustag.outputs.tag }}
             **Build Environment:** Flutter ${{ env.FLUTTER_VERSION }}
-            
+
             ### 📝 Changelog
             ${{ steps.commits.outputs.commits }}
-            
+
             ### 📦 Distribution
             | File | Description | Purpose |
             |------|-------------|----------|
             | `.apk` | Android Package | Direct installation for testing |
             | `.aab` | Android App Bundle | Google Play Store deployment |
-            
+
             ### 🔍 Additional Notes
             - This is a pre-release build intended for testing purposes
             - Features and functionality may not be fully stable
             - Not recommended for production use
-            
+
             ### 📱 Compatibility
-            - Minimum Android SDK: 21 (Android 5.0)
-            - Target Android SDK: 33 (Android 13)
-            
+            - Minimum Android SDK: 24 (Android 7.0)
+            - Target Android SDK: 36 (Android 16)
+
             > **Note:** Please report any issues or bugs through the GitHub issue tracker.
           files: |
             dist/flutter-apk/app-release.apk
@@ -175,7 +175,7 @@ jobs:
 
       - name: Upload artifacts if not release
         if: startsWith(github.ref, 'refs/tags/') == false
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: everything
           path: dist/

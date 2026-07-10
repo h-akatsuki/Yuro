@@ -6,8 +6,8 @@ part of 'playback_state.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$PlaybackStateImpl _$$PlaybackStateImplFromJson(Map<String, dynamic> json) =>
-    _$PlaybackStateImpl(
+_PlaybackState _$PlaybackStateFromJson(Map<String, dynamic> json) =>
+    _PlaybackState(
       work: Work.fromJson(json['work'] as Map<String, dynamic>),
       files: Files.fromJson(json['files'] as Map<String, dynamic>),
       currentFile: Child.fromJson(json['currentFile'] as Map<String, dynamic>),
@@ -20,7 +20,7 @@ _$PlaybackStateImpl _$$PlaybackStateImplFromJson(Map<String, dynamic> json) =>
       timestamp: json['timestamp'] as String,
     );
 
-Map<String, dynamic> _$$PlaybackStateImplToJson(_$PlaybackStateImpl instance) =>
+Map<String, dynamic> _$PlaybackStateToJson(_PlaybackState instance) =>
     <String, dynamic>{
       'work': instance.work,
       'files': instance.files,

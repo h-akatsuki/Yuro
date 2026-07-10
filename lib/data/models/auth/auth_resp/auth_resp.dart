@@ -6,11 +6,8 @@ part 'auth_resp.freezed.dart';
 part 'auth_resp.g.dart';
 
 @freezed
-class AuthResp with _$AuthResp {
-  factory AuthResp({
-    User? user,
-    String? token,
-  }) = _AuthResp;
+abstract class AuthResp with _$AuthResp {
+  factory AuthResp({User? user, String? token}) = _AuthResp;
 
   factory AuthResp.fromJson(Map<String, dynamic> json) =>
       _$AuthRespFromJson(json);

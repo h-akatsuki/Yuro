@@ -10,15 +10,11 @@ import 'package:asmrapp/data/models/works/work.dart';
 class PlaybackController {
   final AudioPlayer _player;
   final PlaybackStateManager _stateManager;
-  final ConcatenatingAudioSource _playlist;
-
   PlaybackController({
     required AudioPlayer player,
     required PlaybackStateManager stateManager,
-    required ConcatenatingAudioSource playlist,
-  })  : _player = player,
-        _stateManager = stateManager,
-        _playlist = playlist;
+  }) : _player = player,
+       _stateManager = stateManager;
 
   // 基础播放控制
   Future<void> play() => _player.play();
@@ -44,12 +40,7 @@ class PlaybackController {
       }
     } catch (e, stack) {
       AppLogger.error('切换下一曲失败', e, stack);
-      AudioErrorHandler.handleError(
-        AudioErrorType.playback,
-        '切换下一曲',
-        e,
-        stack,
-      );
+      AudioErrorHandler.handleError(AudioErrorType.playback, '切换下一曲', e, stack);
     }
   }
 
@@ -66,7 +57,9 @@ class PlaybackController {
         AppLogger.debug('获取到上一个文件: ${previousFile?.title}');
         if (previousFile != null) {
           _updateTrackAndContext(
-              previousFile, _stateManager.currentContext!.work);
+            previousFile,
+            _stateManager.currentContext!.work,
+          );
           AppLogger.debug('执行切换到上一曲');
           await _player.seekToPrevious();
         }
@@ -75,23 +68,22 @@ class PlaybackController {
       }
     } catch (e, stack) {
       AppLogger.error('切换上一曲失败', e, stack);
-      AudioErrorHandler.handleError(
-        AudioErrorType.playback,
-        '切换上一曲',
-        e,
-        stack,
-      );
+      AudioErrorHandler.handleError(AudioErrorType.playback, '切换上一曲', e, stack);
     }
   }
 
   // 播放上下文设置
-  Future<void> setPlaybackContext(PlaybackContext context,
-      {Duration? initialPosition}) async {
+  Future<void> setPlaybackContext(
+    PlaybackContext context, {
+    Duration? initialPosition,
+  }) async {
     try {
       AppLogger.debug(
-          '准备设置播放上下文: workId=${context.work.id}, file=${context.currentFile.title}');
+        '准备设置播放上下文: workId=${context.work.id}, file=${context.currentFile.title}',
+      );
       AppLogger.debug(
-          '播放列表状态: 长度=${context.playlist.length}, 当前索引=${context.currentIndex}');
+        '播放列表状态: 长度=${context.playlist.length}, 当前索引=${context.currentIndex}',
+      );
 
       // 验证上下文
       try {
@@ -118,7 +110,6 @@ class PlaybackController {
       try {
         await PlaylistBuilder.setPlaylistSource(
           player: _player,
-          playlist: _playlist,
           files: context.playlist,
           initialIndex: context.currentIndex,
           initialPosition: initialPosition ?? Duration.zero,
