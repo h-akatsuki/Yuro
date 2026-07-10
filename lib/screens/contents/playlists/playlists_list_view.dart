@@ -5,14 +5,13 @@ import 'package:asmrapp/data/models/my_lists/my_playlists/playlist.dart';
 import 'package:asmrapp/widgets/pagination_controls.dart';
 import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/common/utils/playlist_localizations.dart';
+import 'package:asmrapp/core/download/bulk_save_controller.dart';
+import 'package:asmrapp/widgets/download/bulk_save_dialog.dart';
 
 class PlaylistsListView extends StatelessWidget {
   final Function(Playlist) onPlaylistSelected;
 
-  const PlaylistsListView({
-    super.key,
-    required this.onPlaylistSelected,
-  });
+  const PlaylistsListView({super.key, required this.onPlaylistSelected});
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +47,29 @@ class PlaylistsListView extends StatelessWidget {
           onRefresh: viewModel.refresh,
           child: Column(
             children: [
+              if (viewModel.playlists.isNotEmpty)
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(12, 8, 12, 4),
+                    child: Consumer<BulkSaveController>(
+                      builder: (context, controller, _) => TextButton.icon(
+                        key: const ValueKey('all-playlists-bulk-save'),
+                        onPressed: () =>
+                            showBulkSaveDialog(context, allPlaylists: true),
+                        icon: controller.isRunning
+                            ? const SizedBox.square(
+                                dimension: 18,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.save_alt_rounded),
+                        label: Text(context.l10n.bulkSaveAllPlaylistsAction),
+                      ),
+                    ),
+                  ),
+                ),
               Expanded(
                 child: ListView.builder(
                   itemCount: viewModel.playlists.length,
@@ -59,8 +81,9 @@ class PlaylistsListView extends StatelessWidget {
                         localizedPlaylistName(playlist.name, context.l10n),
                       ),
                       subtitle: Text(
-                        context.l10n
-                            .playlistWorksCount(playlist.worksCount ?? 0),
+                        context.l10n.playlistWorksCount(
+                          playlist.worksCount ?? 0,
+                        ),
                       ),
                       onTap: () => onPlaylistSelected(playlist),
                     );

@@ -520,13 +520,17 @@ class ApiService {
   }
 
   /// 获取用户的播放列表
-  Future<MyPlaylists> getMyPlaylists({int page = 1}) async {
+  Future<MyPlaylists> getMyPlaylists({
+    int page = 1,
+    CancelToken? cancelToken,
+  }) async {
     try {
       final response = await _dio.get(
         '/playlist/get-playlists',
         queryParameters: {
           'page': page,
         },
+        cancelToken: cancelToken,
       );
 
       if (response.statusCode == 200) {
@@ -537,6 +541,7 @@ class ApiService {
 
       throw Exception('获取播放列表失败: ${response.statusCode}');
     } on DioException catch (e) {
+      if (CancelToken.isCancel(e)) rethrow;
       AppLogger.error('网络请求失败', e, e.stackTrace);
       throw Exception('网络请求失败: ${e.message}');
     } catch (e, stackTrace) {

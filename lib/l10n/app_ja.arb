@@ -209,6 +209,8 @@
   "downloadDirectoryResetSuccess": "保存先を既定に戻しました",
   "bulkSaveTooltip": "一括保存",
   "bulkSaveLikesTitle": "お気に入りを一括保存",
+  "bulkSaveAllPlaylistsAction": "すべてを保存",
+  "bulkSaveAllPlaylistsTitle": "すべてのプレイリストを一括保存",
   "bulkSavePlaylistTitle": "{name}を一括保存",
   "@bulkSavePlaylistTitle": {
     "placeholders": {

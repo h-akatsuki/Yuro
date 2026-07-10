@@ -369,6 +369,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bulkSaveLikesTitle => 'Bulk save likes';
 
   @override
+  String get bulkSaveAllPlaylistsAction => 'Save all';
+
+  @override
+  String get bulkSaveAllPlaylistsTitle => 'Bulk save all playlists';
+
+  @override
   String bulkSavePlaylistTitle(String name) {
     return 'Bulk save $name';
   }

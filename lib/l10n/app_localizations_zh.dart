@@ -367,6 +367,12 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bulkSaveLikesTitle => '批量保存喜欢的作品';
 
   @override
+  String get bulkSaveAllPlaylistsAction => '保存全部';
+
+  @override
+  String get bulkSaveAllPlaylistsTitle => '批量保存所有播放列表';
+
+  @override
   String bulkSavePlaylistTitle(String name) {
     return '批量保存$name';
   }

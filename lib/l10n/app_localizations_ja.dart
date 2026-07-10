@@ -368,6 +368,12 @@ class AppLocalizationsJa extends AppLocalizations {
   String get bulkSaveLikesTitle => 'お気に入りを一括保存';
 
   @override
+  String get bulkSaveAllPlaylistsAction => 'すべてを保存';
+
+  @override
+  String get bulkSaveAllPlaylistsTitle => 'すべてのプレイリストを一括保存';
+
+  @override
   String bulkSavePlaylistTitle(String name) {
     return '$nameを一括保存';
   }

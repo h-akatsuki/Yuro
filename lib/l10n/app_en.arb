@@ -209,6 +209,8 @@
   "downloadDirectoryResetSuccess": "Save location reset to default",
   "bulkSaveTooltip": "Bulk save",
   "bulkSaveLikesTitle": "Bulk save likes",
+  "bulkSaveAllPlaylistsAction": "Save all",
+  "bulkSaveAllPlaylistsTitle": "Bulk save all playlists",
   "bulkSavePlaylistTitle": "Bulk save {name}",
   "@bulkSavePlaylistTitle": {
     "placeholders": {

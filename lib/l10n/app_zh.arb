@@ -209,6 +209,8 @@
   "downloadDirectoryResetSuccess": "已恢复默认下载目录",
   "bulkSaveTooltip": "批量保存",
   "bulkSaveLikesTitle": "批量保存喜欢的作品",
+  "bulkSaveAllPlaylistsAction": "保存全部",
+  "bulkSaveAllPlaylistsTitle": "批量保存所有播放列表",
   "bulkSavePlaylistTitle": "批量保存{name}",
   "@bulkSavePlaylistTitle": {
     "placeholders": {

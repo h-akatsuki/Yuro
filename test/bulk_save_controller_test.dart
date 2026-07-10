@@ -4,6 +4,9 @@ import 'package:asmrapp/core/download/bulk_save_controller.dart';
 import 'package:asmrapp/core/download/download_directory_controller.dart';
 import 'package:asmrapp/data/models/files/child.dart';
 import 'package:asmrapp/data/models/files/files.dart';
+import 'package:asmrapp/data/models/my_lists/my_playlists/my_playlists.dart';
+import 'package:asmrapp/data/models/my_lists/my_playlists/pagination.dart'
+    as playlist_data;
 import 'package:asmrapp/data/models/my_lists/my_playlists/playlist.dart';
 import 'package:asmrapp/data/models/works/pagination.dart';
 import 'package:asmrapp/data/models/works/work.dart';
@@ -99,6 +102,37 @@ void main() {
     },
   );
 
+  test('all playlists are loaded across pages and saved together', () async {
+    final api = _FakeApiService();
+    final controller = BulkSaveController(
+      apiService: api,
+      directoryController: directoryController,
+    );
+
+    await controller.saveAllPlaylists(
+      locale: const Locale('ja'),
+      playlistNameFor: (playlist) => playlist.name ?? '',
+    );
+
+    expect(api.playlistPages, <int>[1, 2]);
+    expect(api.loadedPlaylistIds, <String>['playlist-1', 'playlist-2']);
+    expect(controller.state, BulkSaveRunState.completed);
+    expect(controller.result?.savedWorks, 2);
+    expect(controller.result?.reusedFiles, 2);
+    expect(controller.result?.downloadedFiles, 2);
+    expect(api.downloadCount, 2);
+    for (final name in <String>['First list', 'Second list']) {
+      expect(
+        await File(
+          '${temporaryRoot.path}${Platform.pathSeparator}playlists'
+          '${Platform.pathSeparator}$name${Platform.pathSeparator}'
+          'RJ123-Test title${Platform.pathSeparator}.yuro-complete.json',
+        ).exists(),
+        isTrue,
+      );
+    }
+  });
+
   test('a failed work stays partial and resumes its completed files', () async {
     final failingApi = _FakeApiService(failDownloadNumber: 2);
     final firstController = BulkSaveController(
@@ -137,10 +171,33 @@ void main() {
 class _FakeApiService extends ApiService {
   final int? failDownloadNumber;
   int downloadCount = 0;
+  final List<int> playlistPages = <int>[];
+  final List<String> loadedPlaylistIds = <String>[];
 
   _FakeApiService({this.failDownloadNumber});
 
   Work get _work => Work(id: 123, sourceId: 'RJ123', title: 'Test title');
+
+  @override
+  Future<MyPlaylists> getMyPlaylists({
+    int page = 1,
+    CancelToken? cancelToken,
+  }) async {
+    playlistPages.add(page);
+    return MyPlaylists(
+      playlists: <Playlist>[
+        Playlist(
+          id: 'playlist-$page',
+          name: page == 1 ? 'First list' : 'Second list',
+        ),
+      ],
+      pagination: playlist_data.Pagination(
+        page: page,
+        pageSize: 1,
+        totalCount: 2,
+      ),
+    );
+  }
 
   @override
   Future<WorksResponse> getFavorites({
@@ -161,6 +218,7 @@ class _FakeApiService extends ApiService {
     int pageSize = 12,
     CancelToken? cancelToken,
   }) async {
+    loadedPlaylistIds.add(playlistId);
     return WorksResponse(
       works: <Work>[_work],
       pagination: Pagination(currentPage: 1, pageSize: 100, totalCount: 1),

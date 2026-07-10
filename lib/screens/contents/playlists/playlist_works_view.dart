@@ -6,8 +6,6 @@ import 'package:asmrapp/widgets/work_grid/enhanced_work_grid_view.dart';
 import 'package:asmrapp/presentation/layouts/work_layout_strategy.dart';
 import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/common/utils/playlist_localizations.dart';
-import 'package:asmrapp/core/download/bulk_save_controller.dart';
-import 'package:asmrapp/widgets/download/bulk_save_dialog.dart';
 
 class PlaylistWorksView extends StatelessWidget {
   final Playlist playlist;
@@ -47,25 +45,6 @@ class PlaylistWorksView extends StatelessWidget {
                           playlistName,
                           style: Theme.of(context).textTheme.titleMedium,
                           overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      Consumer<BulkSaveController>(
-                        builder: (context, controller, _) => IconButton(
-                          key: const ValueKey('playlist-bulk-save'),
-                          onPressed: () => showBulkSaveDialog(
-                            context,
-                            playlist: playlist,
-                            playlistName: playlistName,
-                          ),
-                          tooltip: context.l10n.bulkSaveTooltip,
-                          icon: controller.isRunning
-                              ? const SizedBox.square(
-                                  dimension: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                  ),
-                                )
-                              : const Icon(Icons.save_alt_rounded),
                         ),
                       ),
                     ],

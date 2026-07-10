@@ -4,6 +4,7 @@ import 'package:asmrapp/core/download/bulk_save_controller.dart';
 import 'package:asmrapp/core/download/download_directory_controller.dart';
 import 'package:asmrapp/data/models/my_lists/my_playlists/playlist.dart';
 import 'package:asmrapp/l10n/l10n.dart';
+import 'package:asmrapp/common/utils/playlist_localizations.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,20 +13,30 @@ Future<void> showBulkSaveDialog(
   BuildContext context, {
   Playlist? playlist,
   String? playlistName,
+  bool allPlaylists = false,
 }) {
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
-    builder: (_) =>
-        BulkSaveDialog(playlist: playlist, playlistName: playlistName),
+    builder: (_) => BulkSaveDialog(
+      playlist: playlist,
+      playlistName: playlistName,
+      allPlaylists: allPlaylists,
+    ),
   );
 }
 
 class BulkSaveDialog extends StatefulWidget {
   final Playlist? playlist;
   final String? playlistName;
+  final bool allPlaylists;
 
-  const BulkSaveDialog({super.key, this.playlist, this.playlistName});
+  const BulkSaveDialog({
+    super.key,
+    this.playlist,
+    this.playlistName,
+    this.allPlaylists = false,
+  });
 
   @override
   State<BulkSaveDialog> createState() => _BulkSaveDialogState();
@@ -40,7 +51,9 @@ class _BulkSaveDialogState extends State<BulkSaveDialog> {
     final directoryController = context.watch<DownloadDirectoryController>();
     final path = directoryController.bulkSaveDirectoryPath;
     final l10n = context.l10n;
-    final title = widget.playlist == null
+    final title = widget.allPlaylists
+        ? l10n.bulkSaveAllPlaylistsTitle
+        : widget.playlist == null
         ? l10n.bulkSaveLikesTitle
         : l10n.bulkSavePlaylistTitle(widget.playlistName ?? '');
 
@@ -235,6 +248,17 @@ class _BulkSaveDialogState extends State<BulkSaveDialog> {
 
   void _start(BulkSaveController controller) {
     final locale = Localizations.localeOf(context);
+    if (widget.allPlaylists) {
+      final l10n = context.l10n;
+      unawaited(
+        controller.saveAllPlaylists(
+          locale: locale,
+          playlistNameFor: (playlist) =>
+              localizedPlaylistName(playlist.name, l10n),
+        ),
+      );
+      return;
+    }
     if (widget.playlist == null) {
       unawaited(controller.saveLikes(locale: locale));
       return;

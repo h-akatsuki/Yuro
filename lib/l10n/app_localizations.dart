@@ -760,6 +760,18 @@ abstract class AppLocalizations {
   /// **'批量保存喜欢的作品'**
   String get bulkSaveLikesTitle;
 
+  /// No description provided for @bulkSaveAllPlaylistsAction.
+  ///
+  /// In zh, this message translates to:
+  /// **'保存全部'**
+  String get bulkSaveAllPlaylistsAction;
+
+  /// No description provided for @bulkSaveAllPlaylistsTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'批量保存所有播放列表'**
+  String get bulkSaveAllPlaylistsTitle;
+
   /// No description provided for @bulkSavePlaylistTitle.
   ///
   /// In zh, this message translates to:
