@@ -351,6 +351,70 @@ class AppLocalizationsZh extends AppLocalizations {
   String get openDlsiteInBrowser => '在浏览器中打开DLsite';
 
   @override
+  String get openDlsiteDetails => '显示DLsite作品信息';
+
+  @override
+  String get dlsiteDetailsTitle => 'DLsite作品信息';
+
+  @override
+  String get dlsiteOpenOfficial => '在DLsite中查看';
+
+  @override
+  String get dlsiteSourceNotice => '信息获取自DLsite。价格等最新信息请以官方网站为准。';
+
+  @override
+  String get dlsiteLoadFailed => '无法获取DLsite作品信息';
+
+  @override
+  String get dlsiteWorkInfo => '作品信息';
+
+  @override
+  String get dlsiteDescription => '作品内容与简介';
+
+  @override
+  String get dlsiteRecommendations => '购买此作品的用户还购买了';
+
+  @override
+  String get dlsiteRelatedArticles => '相关汇总文章';
+
+  @override
+  String get dlsiteReviews => '用户评价与评论';
+
+  @override
+  String dlsiteReviewsCount(int count) {
+    return '共$count条';
+  }
+
+  @override
+  String get dlsiteNoContent => '暂无可显示的信息';
+
+  @override
+  String get dlsitePurchased => '已购买';
+
+  @override
+  String dlsiteHelpfulCount(int count) {
+    return '$count人认为有帮助';
+  }
+
+  @override
+  String get dlsiteContainsSpoilers => '包含剧透';
+
+  @override
+  String get dlsiteShowSpoiler => '显示评价';
+
+  @override
+  String get dlsiteShowMore => '显示全部';
+
+  @override
+  String get dlsiteShowLess => '收起';
+
+  @override
+  String get dlsiteBodyImage => '正文图片';
+
+  @override
+  String get dlsiteImageLoadFailed => '无法加载图片';
+
+  @override
   String get markStatusTitle => '标记状态';
 
   @override

@@ -748,6 +748,126 @@ abstract class AppLocalizations {
   /// **'在浏览器中打开DLsite'**
   String get openDlsiteInBrowser;
 
+  /// No description provided for @openDlsiteDetails.
+  ///
+  /// In zh, this message translates to:
+  /// **'显示DLsite作品信息'**
+  String get openDlsiteDetails;
+
+  /// No description provided for @dlsiteDetailsTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'DLsite作品信息'**
+  String get dlsiteDetailsTitle;
+
+  /// No description provided for @dlsiteOpenOfficial.
+  ///
+  /// In zh, this message translates to:
+  /// **'在DLsite中查看'**
+  String get dlsiteOpenOfficial;
+
+  /// No description provided for @dlsiteSourceNotice.
+  ///
+  /// In zh, this message translates to:
+  /// **'信息获取自DLsite。价格等最新信息请以官方网站为准。'**
+  String get dlsiteSourceNotice;
+
+  /// No description provided for @dlsiteLoadFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'无法获取DLsite作品信息'**
+  String get dlsiteLoadFailed;
+
+  /// No description provided for @dlsiteWorkInfo.
+  ///
+  /// In zh, this message translates to:
+  /// **'作品信息'**
+  String get dlsiteWorkInfo;
+
+  /// No description provided for @dlsiteDescription.
+  ///
+  /// In zh, this message translates to:
+  /// **'作品内容与简介'**
+  String get dlsiteDescription;
+
+  /// No description provided for @dlsiteRecommendations.
+  ///
+  /// In zh, this message translates to:
+  /// **'购买此作品的用户还购买了'**
+  String get dlsiteRecommendations;
+
+  /// No description provided for @dlsiteRelatedArticles.
+  ///
+  /// In zh, this message translates to:
+  /// **'相关汇总文章'**
+  String get dlsiteRelatedArticles;
+
+  /// No description provided for @dlsiteReviews.
+  ///
+  /// In zh, this message translates to:
+  /// **'用户评价与评论'**
+  String get dlsiteReviews;
+
+  /// No description provided for @dlsiteReviewsCount.
+  ///
+  /// In zh, this message translates to:
+  /// **'共{count}条'**
+  String dlsiteReviewsCount(int count);
+
+  /// No description provided for @dlsiteNoContent.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂无可显示的信息'**
+  String get dlsiteNoContent;
+
+  /// No description provided for @dlsitePurchased.
+  ///
+  /// In zh, this message translates to:
+  /// **'已购买'**
+  String get dlsitePurchased;
+
+  /// No description provided for @dlsiteHelpfulCount.
+  ///
+  /// In zh, this message translates to:
+  /// **'{count}人认为有帮助'**
+  String dlsiteHelpfulCount(int count);
+
+  /// No description provided for @dlsiteContainsSpoilers.
+  ///
+  /// In zh, this message translates to:
+  /// **'包含剧透'**
+  String get dlsiteContainsSpoilers;
+
+  /// No description provided for @dlsiteShowSpoiler.
+  ///
+  /// In zh, this message translates to:
+  /// **'显示评价'**
+  String get dlsiteShowSpoiler;
+
+  /// No description provided for @dlsiteShowMore.
+  ///
+  /// In zh, this message translates to:
+  /// **'显示全部'**
+  String get dlsiteShowMore;
+
+  /// No description provided for @dlsiteShowLess.
+  ///
+  /// In zh, this message translates to:
+  /// **'收起'**
+  String get dlsiteShowLess;
+
+  /// No description provided for @dlsiteBodyImage.
+  ///
+  /// In zh, this message translates to:
+  /// **'正文图片'**
+  String get dlsiteBodyImage;
+
+  /// No description provided for @dlsiteImageLoadFailed.
+  ///
+  /// In zh, this message translates to:
+  /// **'无法加载图片'**
+  String get dlsiteImageLoadFailed;
+
   /// No description provided for @markStatusTitle.
   ///
   /// In zh, this message translates to:

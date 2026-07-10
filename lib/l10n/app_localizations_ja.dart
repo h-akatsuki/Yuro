@@ -352,6 +352,70 @@ class AppLocalizationsJa extends AppLocalizations {
   String get openDlsiteInBrowser => 'DLsiteをブラウザで開く';
 
   @override
+  String get openDlsiteDetails => 'DLsite作品情報を表示';
+
+  @override
+  String get dlsiteDetailsTitle => 'DLsite作品情報';
+
+  @override
+  String get dlsiteOpenOfficial => 'DLsiteで見る';
+
+  @override
+  String get dlsiteSourceNotice => 'DLsiteから取得した情報です。価格などの最新情報は公式サイトで確認してください。';
+
+  @override
+  String get dlsiteLoadFailed => 'DLsiteの作品情報を取得できませんでした';
+
+  @override
+  String get dlsiteWorkInfo => '作品情報';
+
+  @override
+  String get dlsiteDescription => '作品内容・概要';
+
+  @override
+  String get dlsiteRecommendations => 'この作品を買った人はこんな作品も買っています';
+
+  @override
+  String get dlsiteRelatedArticles => '関連まとめ記事';
+
+  @override
+  String get dlsiteReviews => 'ユーザーレビュー・コメント';
+
+  @override
+  String dlsiteReviewsCount(int count) {
+    return '全$count件';
+  }
+
+  @override
+  String get dlsiteNoContent => '表示できる情報はありません';
+
+  @override
+  String get dlsitePurchased => '購入済み';
+
+  @override
+  String dlsiteHelpfulCount(int count) {
+    return '$count人が参考になった';
+  }
+
+  @override
+  String get dlsiteContainsSpoilers => 'ネタバレを含みます';
+
+  @override
+  String get dlsiteShowSpoiler => 'レビューを表示';
+
+  @override
+  String get dlsiteShowMore => 'すべて表示';
+
+  @override
+  String get dlsiteShowLess => '閉じる';
+
+  @override
+  String get dlsiteBodyImage => '本文画像';
+
+  @override
+  String get dlsiteImageLoadFailed => '画像を読み込めませんでした';
+
+  @override
   String get markStatusTitle => 'マーク状態';
 
   @override

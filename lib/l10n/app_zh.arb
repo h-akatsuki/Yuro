@@ -180,6 +180,40 @@
   "downloadStatusCompleted": "已完成",
   "downloadStatusFailed": "失败",
   "openDlsiteInBrowser": "在浏览器中打开DLsite",
+  "openDlsiteDetails": "显示DLsite作品信息",
+  "dlsiteDetailsTitle": "DLsite作品信息",
+  "dlsiteOpenOfficial": "在DLsite中查看",
+  "dlsiteSourceNotice": "信息获取自DLsite。价格等最新信息请以官方网站为准。",
+  "dlsiteLoadFailed": "无法获取DLsite作品信息",
+  "dlsiteWorkInfo": "作品信息",
+  "dlsiteDescription": "作品内容与简介",
+  "dlsiteRecommendations": "购买此作品的用户还购买了",
+  "dlsiteRelatedArticles": "相关汇总文章",
+  "dlsiteReviews": "用户评价与评论",
+  "dlsiteReviewsCount": "共{count}条",
+  "@dlsiteReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dlsiteNoContent": "暂无可显示的信息",
+  "dlsitePurchased": "已购买",
+  "dlsiteHelpfulCount": "{count}人认为有帮助",
+  "@dlsiteHelpfulCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dlsiteContainsSpoilers": "包含剧透",
+  "dlsiteShowSpoiler": "显示评价",
+  "dlsiteShowMore": "显示全部",
+  "dlsiteShowLess": "收起",
+  "dlsiteBodyImage": "正文图片",
+  "dlsiteImageLoadFailed": "无法加载图片",
   "markStatusTitle": "标记状态",
   "markStatusWantToListen": "想听",
   "markStatusListening": "在听",

@@ -6,6 +6,7 @@ import 'package:asmrapp/data/models/works/work.dart';
 import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/presentation/viewmodels/detail_viewmodel.dart';
 import 'package:asmrapp/screens/similar_works_screen.dart';
+import 'package:asmrapp/screens/dlsite_detail_screen.dart';
 import 'package:asmrapp/widgets/detail/file_preview_dialog.dart';
 import 'package:asmrapp/widgets/detail/download_file_selection_dialog.dart';
 import 'package:asmrapp/widgets/detail/related_works_section.dart';
@@ -17,7 +18,6 @@ import 'package:asmrapp/widgets/detail/work_info.dart';
 import 'package:asmrapp/widgets/mini_player/mini_player.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class DetailScreen extends StatelessWidget {
   final Work work;
@@ -46,9 +46,9 @@ class DetailScreen extends StatelessWidget {
           actions: [
             if (rjCode != null)
               IconButton(
-                tooltip: context.l10n.openDlsiteInBrowser,
-                icon: const Icon(Icons.open_in_new),
-                onPressed: () => _openDlsiteInBrowser(context, rjCode),
+                tooltip: context.l10n.openDlsiteDetails,
+                icon: const Icon(Icons.storefront_outlined),
+                onPressed: () => _openDlsiteDetails(context, rjCode),
               ),
           ],
         ),
@@ -363,17 +363,20 @@ class DetailScreen extends StatelessWidget {
     return null;
   }
 
-  Future<void> _openDlsiteInBrowser(BuildContext context, String rjCode) async {
-    final url = 'https://www.dlsite.com/maniax/work/=/product_id/$rjCode.html';
-    final opened = await launchUrl(
-      Uri.parse(url),
-      mode: LaunchMode.externalApplication,
+  void _openDlsiteDetails(BuildContext context, String rjCode) {
+    final sourceUrl = Uri.tryParse(work.sourceUrl ?? '');
+    final isDlsiteUrl =
+        sourceUrl != null &&
+        (sourceUrl.scheme == 'https' || sourceUrl.scheme == 'http') &&
+        (sourceUrl.host == 'dlsite.com' ||
+            sourceUrl.host.endsWith('.dlsite.com'));
+    final pageUrl = isDlsiteUrl
+        ? sourceUrl
+        : Uri.parse(
+            'https://www.dlsite.com/maniax/work/=/product_id/$rjCode.html',
+          );
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => DlsiteDetailScreen(pageUrl: pageUrl)),
     );
-
-    if (!opened && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(context.l10n.operationFailed(url))),
-      );
-    }
   }
 }

@@ -23,6 +23,7 @@ import '../../core/platform/lyric_overlay_manager.dart';
 import '../../core/platform/wakelock_controller.dart';
 import '../download/download_directory_controller.dart';
 import '../download/download_progress_manager.dart';
+import '../../data/services/dlsite_service.dart';
 
 final getIt = GetIt.instance;
 
@@ -60,6 +61,9 @@ Future<void> setupServiceLocator() async {
   // API 服务
   getIt.registerLazySingleton<ApiService>(
     () => ApiService(),
+  );
+  getIt.registerLazySingleton<DlsiteService>(
+    () => DlsiteService(),
   );
 
   // 添加 AuthService 注册

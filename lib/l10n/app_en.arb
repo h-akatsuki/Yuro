@@ -180,6 +180,40 @@
   "downloadStatusCompleted": "Completed",
   "downloadStatusFailed": "Failed",
   "openDlsiteInBrowser": "Open DLsite in Browser",
+  "openDlsiteDetails": "Show DLsite work information",
+  "dlsiteDetailsTitle": "DLsite Work Information",
+  "dlsiteOpenOfficial": "View on DLsite",
+  "dlsiteSourceNotice": "Information retrieved from DLsite. Check the official site for current pricing and details.",
+  "dlsiteLoadFailed": "Could not retrieve this work from DLsite",
+  "dlsiteWorkInfo": "Work information",
+  "dlsiteDescription": "Description",
+  "dlsiteRecommendations": "Customers who bought this also bought",
+  "dlsiteRelatedArticles": "Related articles",
+  "dlsiteReviews": "User reviews and comments",
+  "dlsiteReviewsCount": "{count} total",
+  "@dlsiteReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dlsiteNoContent": "No information to display",
+  "dlsitePurchased": "Verified purchase",
+  "dlsiteHelpfulCount": "Helpful to {count}",
+  "@dlsiteHelpfulCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dlsiteContainsSpoilers": "Contains spoilers",
+  "dlsiteShowSpoiler": "Show review",
+  "dlsiteShowMore": "Show all",
+  "dlsiteShowLess": "Show less",
+  "dlsiteBodyImage": "Description image",
+  "dlsiteImageLoadFailed": "Could not load the image",
   "markStatusTitle": "Mark Status",
   "markStatusWantToListen": "Want to Listen",
   "markStatusListening": "Listening",

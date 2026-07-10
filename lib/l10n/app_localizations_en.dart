@@ -353,6 +353,71 @@ class AppLocalizationsEn extends AppLocalizations {
   String get openDlsiteInBrowser => 'Open DLsite in Browser';
 
   @override
+  String get openDlsiteDetails => 'Show DLsite work information';
+
+  @override
+  String get dlsiteDetailsTitle => 'DLsite Work Information';
+
+  @override
+  String get dlsiteOpenOfficial => 'View on DLsite';
+
+  @override
+  String get dlsiteSourceNotice =>
+      'Information retrieved from DLsite. Check the official site for current pricing and details.';
+
+  @override
+  String get dlsiteLoadFailed => 'Could not retrieve this work from DLsite';
+
+  @override
+  String get dlsiteWorkInfo => 'Work information';
+
+  @override
+  String get dlsiteDescription => 'Description';
+
+  @override
+  String get dlsiteRecommendations => 'Customers who bought this also bought';
+
+  @override
+  String get dlsiteRelatedArticles => 'Related articles';
+
+  @override
+  String get dlsiteReviews => 'User reviews and comments';
+
+  @override
+  String dlsiteReviewsCount(int count) {
+    return '$count total';
+  }
+
+  @override
+  String get dlsiteNoContent => 'No information to display';
+
+  @override
+  String get dlsitePurchased => 'Verified purchase';
+
+  @override
+  String dlsiteHelpfulCount(int count) {
+    return 'Helpful to $count';
+  }
+
+  @override
+  String get dlsiteContainsSpoilers => 'Contains spoilers';
+
+  @override
+  String get dlsiteShowSpoiler => 'Show review';
+
+  @override
+  String get dlsiteShowMore => 'Show all';
+
+  @override
+  String get dlsiteShowLess => 'Show less';
+
+  @override
+  String get dlsiteBodyImage => 'Description image';
+
+  @override
+  String get dlsiteImageLoadFailed => 'Could not load the image';
+
+  @override
   String get markStatusTitle => 'Mark Status';
 
   @override

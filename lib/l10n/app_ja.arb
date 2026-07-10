@@ -180,6 +180,40 @@
   "downloadStatusCompleted": "完了",
   "downloadStatusFailed": "失敗",
   "openDlsiteInBrowser": "DLsiteをブラウザで開く",
+  "openDlsiteDetails": "DLsite作品情報を表示",
+  "dlsiteDetailsTitle": "DLsite作品情報",
+  "dlsiteOpenOfficial": "DLsiteで見る",
+  "dlsiteSourceNotice": "DLsiteから取得した情報です。価格などの最新情報は公式サイトで確認してください。",
+  "dlsiteLoadFailed": "DLsiteの作品情報を取得できませんでした",
+  "dlsiteWorkInfo": "作品情報",
+  "dlsiteDescription": "作品内容・概要",
+  "dlsiteRecommendations": "この作品を買った人はこんな作品も買っています",
+  "dlsiteRelatedArticles": "関連まとめ記事",
+  "dlsiteReviews": "ユーザーレビュー・コメント",
+  "dlsiteReviewsCount": "全{count}件",
+  "@dlsiteReviewsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dlsiteNoContent": "表示できる情報はありません",
+  "dlsitePurchased": "購入済み",
+  "dlsiteHelpfulCount": "{count}人が参考になった",
+  "@dlsiteHelpfulCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dlsiteContainsSpoilers": "ネタバレを含みます",
+  "dlsiteShowSpoiler": "レビューを表示",
+  "dlsiteShowMore": "すべて表示",
+  "dlsiteShowLess": "閉じる",
+  "dlsiteBodyImage": "本文画像",
+  "dlsiteImageLoadFailed": "画像を読み込めませんでした",
   "markStatusTitle": "マーク状態",
   "markStatusWantToListen": "聴きたい",
   "markStatusListening": "聴いている",
