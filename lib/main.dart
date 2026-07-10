@@ -1,6 +1,7 @@
 import 'package:asmrapp/core/download/download_directory_controller.dart';
 import 'package:asmrapp/core/download/download_progress_manager.dart';
 import 'package:asmrapp/core/locale/locale_controller.dart';
+import 'package:asmrapp/core/platform/mouse_back_button_listener.dart';
 import 'package:asmrapp/core/theme/app_theme.dart';
 import 'package:asmrapp/core/theme/theme_controller.dart';
 import 'package:asmrapp/l10n/app_localizations.dart';
@@ -14,6 +15,8 @@ import 'package:provider/provider.dart';
 import 'core/di/service_locator.dart';
 import 'screens/main_screen.dart';
 import 'screens/search_screen.dart';
+
+final _rootNavigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -55,6 +58,7 @@ class MyApp extends StatelessWidget {
       child: Consumer2<ThemeController, LocaleController>(
         builder: (context, themeController, localeController, child) {
           return MaterialApp(
+            navigatorKey: _rootNavigatorKey,
             onGenerateTitle: (context) => context.l10n.appName,
             localizationsDelegates: const [
               AppLocalizations.delegate,
@@ -67,6 +71,12 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.light,
             darkTheme: AppTheme.dark,
             themeMode: themeController.themeMode,
+            builder: (context, child) => MouseBackButtonListener(
+              onBackPressed: () {
+                _rootNavigatorKey.currentState?.maybePop();
+              },
+              child: child ?? const SizedBox.shrink(),
+            ),
             home: const MainScreen(),
             routes: {
               // '/player': (context) => const PlayerScreen(),

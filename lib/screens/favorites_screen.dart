@@ -49,7 +49,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
       value: _viewModel,
       child: Scaffold(
         appBar: AppBar(
+          leading: BackButton(onPressed: () => Navigator.maybePop(context)),
           title: Text(context.l10n.favoritesTitle),
+          actions: const [DrawerButton()],
         ),
         drawer: const DrawerMenu(),
         body: Consumer<FavoritesViewModel>(
