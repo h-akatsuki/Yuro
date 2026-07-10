@@ -12,13 +12,22 @@ class PlaybackStateEvent extends PlaybackEvent {
   final PlayerState state;
   final Duration position;
   final Duration? duration;
-  PlaybackStateEvent(this.state, this.position, this.duration);
+  final int revision;
+
+  PlaybackStateEvent(
+    this.state,
+    this.position,
+    this.duration, {
+    required this.revision,
+  });
 }
 
 /// 播放上下文事件
 class PlaybackContextEvent extends PlaybackEvent {
   final PlaybackContext context;
-  PlaybackContextEvent(this.context);
+  final int revision;
+
+  PlaybackContextEvent(this.context, {required this.revision});
 }
 
 /// 音轨变更事件
@@ -26,7 +35,9 @@ class TrackChangeEvent extends PlaybackEvent {
   final AudioTrackInfo track;
   final Child file;
   final Work work;
-  TrackChangeEvent(this.track, this.file, this.work);
+  final int revision;
+
+  TrackChangeEvent(this.track, this.file, this.work, {required this.revision});
 }
 
 /// 播放错误事件
@@ -46,8 +57,16 @@ class PlaybackCompletedEvent extends PlaybackEvent {
 /// 播放进度事件
 class PlaybackProgressEvent extends PlaybackEvent {
   final Duration position;
-  final Duration? bufferedPosition;
-  PlaybackProgressEvent(this.position, this.bufferedPosition);
+  final Duration bufferedPosition;
+  final Duration? duration;
+  final int revision;
+
+  PlaybackProgressEvent(
+    this.position,
+    this.bufferedPosition,
+    this.duration, {
+    required this.revision,
+  });
 }
 
 /// 添加初始状态相关事件
@@ -56,5 +75,19 @@ class RequestInitialStateEvent extends PlaybackEvent {}
 class InitialStateEvent extends PlaybackEvent {
   final AudioTrackInfo? track;
   final PlaybackContext? context;
-  InitialStateEvent(this.track, this.context);
+  final PlayerState state;
+  final Duration position;
+  final Duration bufferedPosition;
+  final Duration? duration;
+  final int revision;
+
+  InitialStateEvent({
+    required this.track,
+    required this.context,
+    required this.state,
+    required this.position,
+    required this.bufferedPosition,
+    required this.duration,
+    required this.revision,
+  });
 }

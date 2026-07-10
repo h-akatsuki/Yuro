@@ -9,6 +9,7 @@ import 'package:asmrapp/core/audio/models/subtitle.dart';
 import 'dart:async';
 import 'package:asmrapp/core/subtitle/subtitle_loader.dart';
 import 'package:asmrapp/core/audio/events/playback_event_hub.dart';
+import 'package:just_audio/just_audio.dart' show ProcessingState;
 
 class PlayerViewModel extends ChangeNotifier {
   final IAudioPlayerService _audioService;
@@ -20,6 +21,7 @@ class PlayerViewModel extends ChangeNotifier {
   Duration? _position;
   Duration? _duration;
   Subtitle? _currentSubtitle;
+  int _revision = -1;
 
   final List<StreamSubscription> _subscriptions = [];
 
@@ -29,9 +31,9 @@ class PlayerViewModel extends ChangeNotifier {
     required IAudioPlayerService audioService,
     required PlaybackEventHub eventHub,
     required ISubtitleService subtitleService,
-  })  : _audioService = audioService,
-        _eventHub = eventHub,
-        _subtitleService = subtitleService {
+  }) : _audioService = audioService,
+       _eventHub = eventHub,
+       _subtitleService = subtitleService {
     _initStreams();
     _requestInitialState();
   }
@@ -39,68 +41,76 @@ class PlayerViewModel extends ChangeNotifier {
   void _initStreams() {
     // 播放状态事件
     _subscriptions.add(
-      _eventHub.playbackState.listen(
-        (event) {
-          _isPlaying = event.state.playing;
-          _position = event.position;
-          _duration = event.duration;
-          notifyListeners();
-        },
-        onError: (error) => debugPrint('$_tag - 播放状态流错误: $error'),
-      ),
+      _eventHub.playbackState.listen((event) {
+        if (!_acceptRevision(event.revision)) return;
+        _isPlaying =
+            event.state.playing &&
+            event.state.processingState != ProcessingState.completed;
+        _position = event.position;
+        _duration = event.duration;
+        notifyListeners();
+      }, onError: (error) => debugPrint('$_tag - 播放状态流错误: $error')),
     );
 
     // 音轨变更事件
     _subscriptions.add(
-      _eventHub.trackChange.listen(
-        (event) {
-          notifyListeners();
-        },
-        onError: (error) => debugPrint('$_tag - 音轨变更流错误: $error'),
-      ),
+      _eventHub.trackChange.listen((event) {
+        if (!_acceptRevision(event.revision)) return;
+        notifyListeners();
+      }, onError: (error) => debugPrint('$_tag - 音轨变更流错误: $error')),
     );
 
     // 播放进度事件
     _subscriptions.add(
-      _eventHub.playbackProgress.listen(
-        (event) {
-          _position = event.position;
-          if (_position != null) {
-            _subtitleService.updatePosition(_position!);
-          }
-          notifyListeners();
-        },
-        onError: (error) => debugPrint('$_tag - 播放进度流错误: $error'),
-      ),
+      _eventHub.playbackProgress.listen((event) {
+        if (!_acceptRevision(event.revision)) return;
+        _position = event.position;
+        _duration = event.duration;
+        if (_position != null) {
+          _subtitleService.updatePosition(_position!);
+        }
+        notifyListeners();
+      }, onError: (error) => debugPrint('$_tag - 播放进度流错误: $error')),
     );
 
     // 上下文变更事件
     _subscriptions.add(
-      _eventHub.contextChange.listen(
-        (event) async {
+      _eventHub.contextChange.listen((event) async {
+        if (!_acceptRevision(event.revision)) return;
+        try {
           await _loadSubtitleIfAvailable(event.context);
-          // 如果有保存的位置，在字幕加载完成后更新位置
-          if (_position != null) {
-            _subtitleService.updatePosition(_position!);
-          }
-        },
-        onError: (error) => debugPrint('$_tag - 上下文流错误: $error'),
-      ),
+        } catch (error) {
+          debugPrint('$_tag - 字幕加载错误: $error');
+        }
+        if (event.revision != _revision) return;
+        // 如果有保存的位置，在字幕加载完成后更新位置
+        if (_position != null) {
+          _subtitleService.updatePosition(_position!);
+        }
+      }, onError: (error) => debugPrint('$_tag - 上下文流错误: $error')),
     );
 
     // 使用新添加的 initialState 流
     _subscriptions.add(
-      _eventHub.initialState.listen(
-        (event) {
-          if (event.track != null) {
-            notifyListeners();
-          }
-          if (event.context != null) {
-            _loadSubtitleIfAvailable(event.context!);
-          }
-        },
-        onError: (error) => debugPrint('$_tag - 初始状态流错误: $error'),
-      ),
+      _eventHub.initialState.listen((event) {
+        if (!_acceptRevision(event.revision)) return;
+        _isPlaying =
+            event.state.playing &&
+            event.state.processingState != ProcessingState.completed;
+        _position = event.position;
+        _duration = event.duration;
+        if (event.track != null) {
+          notifyListeners();
+        }
+        if (event.context != null) {
+          unawaited(
+            _loadSubtitleIfAvailable(event.context!).catchError((error) {
+              debugPrint('$_tag - 初始字幕加载错误: $error');
+            }),
+          );
+        }
+        notifyListeners();
+      }, onError: (error) => debugPrint('$_tag - 初始状态流错误: $error')),
     );
 
     _initSubtitleStreams();
@@ -108,22 +118,16 @@ class PlayerViewModel extends ChangeNotifier {
 
   void _initSubtitleStreams() {
     _subscriptions.add(
-      _subtitleService.subtitleStream.listen(
-        (subtitleList) {
-          debugPrint('$_tag - 字幕列表更新: ${subtitleList != null ? '已加载' : '未加载'}');
-        },
-        onError: (error) => debugPrint('$_tag - 字幕流错误: $error'),
-      ),
+      _subtitleService.subtitleStream.listen((subtitleList) {
+        debugPrint('$_tag - 字幕列表更新: ${subtitleList != null ? '已加载' : '未加载'}');
+      }, onError: (error) => debugPrint('$_tag - 字幕流错误: $error')),
     );
 
     _subscriptions.add(
-      _subtitleService.currentSubtitleStream.listen(
-        (subtitle) {
-          _currentSubtitle = subtitle;
-          notifyListeners();
-        },
-        onError: (error) => debugPrint('$_tag - 当前字幕流错误: $error'),
-      ),
+      _subtitleService.currentSubtitleStream.listen((subtitle) {
+        _currentSubtitle = subtitle;
+        notifyListeners();
+      }, onError: (error) => debugPrint('$_tag - 当前字幕流错误: $error')),
     );
   }
 
@@ -134,9 +138,9 @@ class PlayerViewModel extends ChangeNotifier {
 
   Future<void> playPause() async {
     if (_isPlaying) {
-      _audioService.pause();
+      await _audioService.pause();
     } else {
-      _audioService.resume();
+      await _audioService.resume();
     }
   }
 
@@ -172,10 +176,18 @@ class PlayerViewModel extends ChangeNotifier {
     _eventHub.emit(RequestInitialStateEvent());
   }
 
+  bool _acceptRevision(int revision) {
+    if (revision < _revision) return false;
+    _revision = revision;
+    return true;
+  }
+
   // 修改字幕加载方法，返回 Future 以便等待加载完成
   Future<void> _loadSubtitleIfAvailable(PlaybackContext context) async {
-    final subtitleFile =
-        _subtitleLoader.findSubtitleFile(context.currentFile, context.files);
+    final subtitleFile = _subtitleLoader.findSubtitleFile(
+      context.currentFile,
+      context.files,
+    );
     if (subtitleFile?.mediaDownloadUrl != null) {
       await _subtitleService.loadSubtitle(subtitleFile!.mediaDownloadUrl!);
     } else {
@@ -204,8 +216,9 @@ class PlayerViewModel extends ChangeNotifier {
     final subtitleList = _subtitleService.subtitleList;
 
     if (currentSubtitle != null && subtitleList != null) {
-      final previousSubtitle =
-          currentSubtitle.subtitle.getPrevious(subtitleList);
+      final previousSubtitle = currentSubtitle.subtitle.getPrevious(
+        subtitleList,
+      );
       if (previousSubtitle != null) {
         await seek(previousSubtitle.start);
       }

@@ -37,13 +37,13 @@ Future<void> setupServiceLocator() async {
     () => PlaybackStateRepository(getIt()),
   );
 
-  // 核心服务
-  getIt.registerLazySingleton<IAudioPlayerService>(
-    () => AudioPlayerService(
-      eventHub: getIt(),
-      stateRepository: getIt(),
-    ),
+  // 音声サービスは非同期初期化を完了してから公開する。これにより起動直後の
+  // 操作が未初期化の late フィールドへ到達しない。
+  final audioPlayerService = await AudioPlayerService.create(
+    eventHub: getIt(),
+    stateRepository: getIt(),
   );
+  getIt.registerSingleton<IAudioPlayerService>(audioPlayerService);
 
   // 注册 PlayerViewModel
   getIt.registerLazySingleton<PlayerViewModel>(

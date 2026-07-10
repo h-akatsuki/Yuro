@@ -1,15 +1,21 @@
+import 'dart:async';
+
 import 'package:asmrapp/utils/logger.dart';
 import 'package:just_audio/just_audio.dart';
 import '../models/playback_context.dart';
+import '../models/play_mode.dart';
 import '../state/playback_state_manager.dart';
 import '../utils/playlist_builder.dart';
 import '../utils/audio_error_handler.dart';
-import 'package:asmrapp/data/models/files/child.dart';
-import 'package:asmrapp/data/models/works/work.dart';
 
 class PlaybackController {
   final AudioPlayer _player;
   final PlaybackStateManager _stateManager;
+  int _contextGeneration = 0;
+  bool _isSwitchingContext = false;
+  String? _activeContextKey;
+  Future<bool>? _activeContextFuture;
+
   PlaybackController({
     required AudioPlayer player,
     required PlaybackStateManager stateManager,
@@ -17,11 +23,42 @@ class PlaybackController {
        _stateManager = stateManager;
 
   // 基础播放控制
-  Future<void> play() => _player.play();
+  bool get isSwitchingContext => _isSwitchingContext;
+
+  Future<void> play() async {
+    if (_isSwitchingContext || _stateManager.currentContext == null) return;
+
+    if (_player.processingState == ProcessingState.completed) {
+      await _player.seek(Duration.zero, index: _player.currentIndex);
+    }
+
+    // just_audio の play() は一時停止/完了まで Future が完了しない。
+    // コマンド自体は即座に返し、再生中エラーは errorStream とここで回収する。
+    unawaited(
+      _player.play().catchError((Object error, StackTrace stackTrace) {
+        AppLogger.error('播放命令失败', error, stackTrace);
+      }),
+    );
+  }
+
   Future<void> pause() => _player.pause();
-  Future<void> stop() => _player.stop();
-  Future<void> seek(Duration position, {int? index}) =>
-      _player.seek(position, index: index);
+
+  Future<void> stop() async {
+    cancelPendingContext();
+    await _player.stop();
+  }
+
+  Future<void> seek(Duration position, {int? index}) async {
+    if (_isSwitchingContext || _stateManager.currentContext == null) return;
+
+    final duration = _player.duration;
+    final target = position < Duration.zero
+        ? Duration.zero
+        : duration != null && position > duration
+        ? duration
+        : position;
+    await _player.seek(target, index: index);
+  }
 
   // 播放列表控制
   Future<void> next() async {
@@ -31,6 +68,8 @@ class PlaybackController {
         AppLogger.debug('当前上下文为空，无法切换下一曲');
         return;
       }
+
+      if (_isSwitchingContext) return;
 
       if (_player.hasNext) {
         AppLogger.debug('执行切换到下一曲');
@@ -52,17 +91,11 @@ class PlaybackController {
         return;
       }
 
+      if (_isSwitchingContext) return;
+
       if (_player.hasPrevious) {
-        final previousFile = _stateManager.currentContext!.getPreviousFile();
-        AppLogger.debug('获取到上一个文件: ${previousFile?.title}');
-        if (previousFile != null) {
-          _updateTrackAndContext(
-            previousFile,
-            _stateManager.currentContext!.work,
-          );
-          AppLogger.debug('执行切换到上一曲');
-          await _player.seekToPrevious();
-        }
+        AppLogger.debug('执行切换到上一曲');
+        await _player.seekToPrevious();
       } else {
         AppLogger.debug('没有上一曲可切换');
       }
@@ -73,10 +106,39 @@ class PlaybackController {
   }
 
   // 播放上下文设置
-  Future<void> setPlaybackContext(
+  Future<bool> setPlaybackContext(
+    PlaybackContext context, {
+    Duration? initialPosition,
+  }) {
+    final key = [
+      context.work.id,
+      context.currentFile.mediaDownloadUrl,
+      context.playMode.name,
+      initialPosition?.inMilliseconds ?? 0,
+    ].join('|');
+    if (_isSwitchingContext &&
+        key == _activeContextKey &&
+        _activeContextFuture != null) {
+      return _activeContextFuture!;
+    }
+
+    final future = _setPlaybackContext(
+      context,
+      initialPosition: initialPosition,
+    );
+    _activeContextKey = key;
+    _activeContextFuture = future;
+    return future;
+  }
+
+  Future<bool> _setPlaybackContext(
     PlaybackContext context, {
     Duration? initialPosition,
   }) async {
+    final generation = ++_contextGeneration;
+    _isSwitchingContext = true;
+    _stateManager.beginContextTransition();
+
     try {
       AppLogger.debug(
         '准备设置播放上下文: workId=${context.work.id}, file=${context.currentFile.title}',
@@ -93,43 +155,51 @@ class PlaybackController {
         rethrow;
       }
 
-      // 1. 先停止当前播放
-      AppLogger.debug('停止当前播放');
-      await _player.stop();
-
-      // 2. 等待播放器就绪
-      AppLogger.debug('暂停播放器');
+      // setAudioSources 自身が旧ロードを安全に中断する。stop() を挟むと
+      // idle/旧 position が余分に流れるため、再生意図だけを止める。
       await _player.pause();
+      if (generation != _contextGeneration) return false;
 
-      // 3. 更新上下文
-      AppLogger.debug('更新播放上下文');
-      _stateManager.updateContext(context);
-
-      // 4. 设置新的播放源
+      // ロード成功までは context を公開しない。
       AppLogger.debug('设置播放源: 初始位置=${initialPosition?.inMilliseconds}ms');
-      try {
-        await PlaylistBuilder.setPlaylistSource(
-          player: _player,
-          files: context.playlist,
-          initialIndex: context.currentIndex,
-          initialPosition: initialPosition ?? Duration.zero,
-        );
-      } catch (e, stack) {
-        AppLogger.error('设置播放源失败', e, stack);
-        rethrow;
+      final loadedDuration = await PlaylistBuilder.setPlaylistSource(
+        player: _player,
+        files: context.playlist,
+        initialIndex: context.currentIndex,
+        initialPosition: initialPosition ?? Duration.zero,
+      );
+      if (generation != _contextGeneration) return false;
+
+      await _applyPlayMode(context.playMode);
+      if (generation != _contextGeneration) return false;
+
+      // 保存位置が曲末以上なら、完了状態を復元せず先頭から再開可能にする。
+      if (initialPosition != null &&
+          loadedDuration != null &&
+          initialPosition >= loadedDuration) {
+        await _player.seek(Duration.zero, index: context.currentIndex);
+        if (generation != _contextGeneration) return false;
       }
 
-      // 5. 等待播放器准备完成
-      // 删掉，会导致播放器索引回到0
-      // AppLogger.debug('等待播放器加载');
-      // await _player.load();
-
-      // 6. 更新轨道信息
-      AppLogger.debug('更新轨道信息');
-      _updateTrackAndContext(context.currentFile, context.work);
+      _stateManager.commitContextTransition(
+        context,
+        duration: _player.duration ?? loadedDuration,
+      );
 
       AppLogger.debug('播放上下文设置完成');
+      return true;
+    } on PlayerInterruptedException catch (e, stack) {
+      if (generation != _contextGeneration) {
+        AppLogger.debug('旧的播放源加载已被新的请求取消');
+        return false;
+      }
+      _stateManager.abortContextTransition();
+      AppLogger.error('设置播放源被中断', e, stack);
+      rethrow;
     } catch (e, stack) {
+      if (generation == _contextGeneration) {
+        _stateManager.abortContextTransition();
+      }
       AppLogger.error('设置播放上下文失败', e, stack);
       AudioErrorHandler.handleError(
         AudioErrorType.context,
@@ -138,12 +208,27 @@ class PlaybackController {
         stack,
       );
       rethrow;
+    } finally {
+      if (generation == _contextGeneration) {
+        _isSwitchingContext = false;
+        _activeContextKey = null;
+        _activeContextFuture = null;
+      }
     }
   }
 
-  // 私有辅助方法
-  void _updateTrackAndContext(Child file, Work work) {
-    AppLogger.debug('更新轨道和上下文: file=${file.title}');
-    _stateManager.updateTrackAndContext(file, work);
+  void cancelPendingContext() {
+    _contextGeneration++;
+    _isSwitchingContext = false;
+    _activeContextKey = null;
+    _activeContextFuture = null;
+  }
+
+  Future<void> _applyPlayMode(PlayMode playMode) {
+    return _player.setLoopMode(switch (playMode) {
+      PlayMode.single => LoopMode.one,
+      PlayMode.loop => LoopMode.all,
+      PlayMode.sequence => LoopMode.off,
+    });
   }
 }

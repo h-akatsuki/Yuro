@@ -11,14 +11,14 @@ class PlaylistBuilder {
     );
   }
 
-  static Future<void> setPlaylistSource({
+  static Future<Duration?> setPlaylistSource({
     required AudioPlayer player,
     required List<Child> files,
     required int initialIndex,
     required Duration initialPosition,
   }) async {
     final sources = await buildAudioSources(files);
-    await player.setAudioSources(
+    return player.setAudioSources(
       sources,
       initialIndex: initialIndex,
       initialPosition: initialPosition,

@@ -19,32 +19,35 @@ class AudioPlayerService implements IAudioPlayerService {
   late final PlaybackController _playbackController;
   final PlaybackEventHub _eventHub;
   final IPlaybackStateRepository _stateRepository;
+  int _contextRequest = 0;
+  bool _shouldPlay = false;
+  bool _disposed = false;
 
-  AudioPlayerService._internal({
+  AudioPlayerService._({
     required PlaybackEventHub eventHub,
     required IPlaybackStateRepository stateRepository,
   }) : _eventHub = eventHub,
-       _stateRepository = stateRepository {
-    _init();
-  }
+       _stateRepository = stateRepository;
 
-  static AudioPlayerService? _instance;
-
-  factory AudioPlayerService({
+  static Future<AudioPlayerService> create({
     required PlaybackEventHub eventHub,
     required IPlaybackStateRepository stateRepository,
-  }) {
-    _instance ??= AudioPlayerService._internal(
+  }) async {
+    final service = AudioPlayerService._(
       eventHub: eventHub,
       stateRepository: stateRepository,
     );
-    return _instance!;
+    await service._init();
+    return service;
   }
 
   Future<void> _init() async {
     try {
-      _player = AudioPlayer();
-      _notificationService = AudioNotificationService(_player, _eventHub);
+      _player = AudioPlayer(
+        userAgent: 'Yuro audio player',
+        // 壊れた URL が 1 件あってもプレイリスト全体を停止させない。
+        maxSkipsOnError: 3,
+      );
       _stateManager = PlaybackStateManager(
         player: _player,
         stateRepository: _stateRepository,
@@ -56,11 +59,24 @@ class AudioPlayerService implements IAudioPlayerService {
         stateManager: _stateManager,
       );
 
-      final session = await AudioSession.instance;
-      await session.configure(const AudioSessionConfiguration.music());
+      _stateManager.initStateListeners();
+
+      _notificationService = AudioNotificationService(
+        player: _player,
+        eventHub: _eventHub,
+        onPlay: resume,
+        onPause: pause,
+        onStop: stop,
+        onSeek: seek,
+        onPrevious: previous,
+        onNext: next,
+      );
       await _notificationService.init();
 
-      _stateManager.initStateListeners();
+      // すべての音声プラグイン初期化後に、アプリの設定を最後に適用する。
+      final session = await AudioSession.instance;
+      await session.configure(const AudioSessionConfiguration.music());
+
       await restorePlaybackState();
     } catch (e, stack) {
       AudioErrorHandler.handleError(AudioErrorType.init, '音频播放器初始化', e, stack);
@@ -70,13 +86,21 @@ class AudioPlayerService implements IAudioPlayerService {
 
   // 基础播放控制
   @override
-  Future<void> pause() => _playbackController.pause();
+  Future<void> pause() async {
+    _shouldPlay = false;
+    await _playbackController.pause();
+  }
 
   @override
-  Future<void> resume() => _playbackController.play();
+  Future<void> resume() async {
+    _shouldPlay = true;
+    await _playbackController.play();
+  }
 
   @override
   Future<void> stop() async {
+    _contextRequest++;
+    _shouldPlay = false;
     await _playbackController.stop();
     _stateManager.clearState();
   }
@@ -93,9 +117,11 @@ class AudioPlayerService implements IAudioPlayerService {
   // 上下文管理
   @override
   Future<void> playWithContext(PlaybackContext context) async {
-    await _playbackController.setPlaybackContext(context);
-    // 添加自动播放
-    await resume();
+    final request = ++_contextRequest;
+    _shouldPlay = true;
+    final applied = await _playbackController.setPlaybackContext(context);
+    if (!applied || request != _contextRequest || !_shouldPlay) return;
+    await _playbackController.play();
   }
 
   // 状态访问
@@ -154,7 +180,14 @@ class AudioPlayerService implements IAudioPlayerService {
 
   @override
   Future<void> dispose() async {
-    _player.dispose();
-    _notificationService.dispose();
+    if (_disposed) return;
+    _disposed = true;
+    _shouldPlay = false;
+    _contextRequest++;
+    await _stateManager.saveState();
+    await _playbackController.stop();
+    await _stateManager.dispose();
+    await _notificationService.dispose();
+    await _player.dispose();
   }
 }
