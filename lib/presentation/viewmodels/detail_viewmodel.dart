@@ -130,12 +130,32 @@ class DetailViewModel extends ChangeNotifier {
   }
 
   Files? get files => _files;
+  List<Child> get imageFiles {
+    final children = _files?.children;
+    if (children == null || children.isEmpty) return const <Child>[];
+    return List<Child>.unmodifiable(_collectImageFiles(children));
+  }
   bool get isLoading => _isLoading;
   String? get error => _error;
   List<Work> get recommendedWorks => _recommendedWorks;
   bool get hasRecommendations => _hasRecommendations;
   bool get loadingRecommendations => _loadingRecommendations;
   String? get recommendationsError => _recommendationsError;
+
+  List<Child> _collectImageFiles(List<Child> nodes) {
+    final result = <Child>[];
+    for (final node in nodes) {
+      final children = node.children;
+      if (node.type?.toLowerCase() == 'folder') {
+        if (children != null && children.isNotEmpty) {
+          result.addAll(_collectImageFiles(children));
+        }
+      } else if (FilePreviewUtils.isImage(node)) {
+        result.add(node);
+      }
+    }
+    return result;
+  }
 
   // 收藏夹相关 getters
   bool get loadingPlaylists => _loadingPlaylists;

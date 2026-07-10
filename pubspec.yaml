@@ -63,6 +63,7 @@ dependencies:
   wakelock_plus: ^1.6.1
   url_launcher: ^6.3.2
   background_downloader: ^9.5.2
+  charset: ^2.0.1
 
 dev_dependencies:
   flutter_test:

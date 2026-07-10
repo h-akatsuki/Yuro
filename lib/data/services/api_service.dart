@@ -1,5 +1,4 @@
-import 'dart:convert';
-
+import 'package:asmrapp/common/utils/text_encoding_decoder.dart';
 import 'package:asmrapp/core/cache/recommendation_cache_manager.dart';
 import 'package:asmrapp/data/models/mark_status.dart';
 import 'package:asmrapp/data/models/playlists_with_exist_statu/playlists_with_exist_statu.dart';
@@ -81,7 +80,10 @@ class ApiService {
       if (data == null) return '';
       if (data is String) return data;
       if (data is List<int>) {
-        return utf8.decode(data, allowMalformed: true);
+        return TextEncodingDecoder.decode(
+          data,
+          contentType: response.headers.value(Headers.contentTypeHeader),
+        );
       }
 
       return data.toString();

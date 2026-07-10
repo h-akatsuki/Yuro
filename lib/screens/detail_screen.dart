@@ -56,12 +56,18 @@ class DetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              WorkCover(
-                imageUrl: work.mainCoverUrl ?? '',
-                workId: work.id ?? 0,
-                sourceId: work.sourceId ?? '',
-                releaseDate: work.release,
-                heroTag: 'work-cover-${work.id}',
+              Consumer<DetailViewModel>(
+                builder: (context, viewModel, _) => WorkCover(
+                  imageUrl: work.mainCoverUrl ?? '',
+                  additionalImageUrls: viewModel.imageFiles
+                      .map((file) => file.mediaDownloadUrl ?? '')
+                      .where((url) => url.isNotEmpty)
+                      .toList(growable: false),
+                  workId: work.id ?? 0,
+                  sourceId: work.sourceId ?? '',
+                  releaseDate: work.release,
+                  heroTag: 'work-cover-${work.id}',
+                ),
               ),
               WorkInfo(work: work),
               Consumer<DetailViewModel>(
@@ -291,34 +297,9 @@ class DetailScreen extends StatelessWidget {
       return null;
     }
 
-    final rootChildren = viewModel.files?.children;
-    if (rootChildren == null || rootChildren.isEmpty) {
-      return [file];
-    }
-
-    final imageFiles = _collectImageFilesFromTree(rootChildren);
+    final imageFiles = viewModel.imageFiles;
     if (imageFiles.isEmpty) {
       return [file];
-    }
-
-    return imageFiles;
-  }
-
-  List<Child> _collectImageFilesFromTree(List<Child> nodes) {
-    final imageFiles = <Child>[];
-
-    for (final node in nodes) {
-      if (node.type == 'folder') {
-        final children = node.children;
-        if (children != null && children.isNotEmpty) {
-          imageFiles.addAll(_collectImageFilesFromTree(children));
-        }
-        continue;
-      }
-
-      if (FilePreviewUtils.isImage(node)) {
-        imageFiles.add(node);
-      }
     }
 
     return imageFiles;
