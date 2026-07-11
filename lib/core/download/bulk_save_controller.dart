@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:asmrapp/common/utils/work_localizations.dart';
 import 'package:asmrapp/core/download/bulk_save_path_utils.dart';
+import 'package:asmrapp/core/download/bulk_save_request_executor.dart';
 import 'package:asmrapp/core/download/download_directory_controller.dart';
 import 'package:asmrapp/data/models/files/child.dart';
 import 'package:asmrapp/data/models/my_lists/my_playlists/playlist.dart';
@@ -39,6 +40,7 @@ class BulkSaveController extends ChangeNotifier {
 
   final ApiService _apiService;
   final DownloadDirectoryController _directoryController;
+  final BulkSaveRequestExecutor _requestExecutor;
 
   BulkSaveRunState _state = BulkSaveRunState.idle;
   CancelToken? _cancelToken;
@@ -62,8 +64,10 @@ class BulkSaveController extends ChangeNotifier {
   BulkSaveController({
     required ApiService apiService,
     required DownloadDirectoryController directoryController,
+    BulkSaveRequestExecutor? requestExecutor,
   }) : _apiService = apiService,
-       _directoryController = directoryController;
+       _directoryController = directoryController,
+       _requestExecutor = requestExecutor ?? BulkSaveRequestExecutor();
 
   BulkSaveRunState get state => _state;
   bool get isRunning => _state == BulkSaveRunState.running;
@@ -316,17 +320,23 @@ class BulkSaveController extends ChangeNotifier {
   }
 
   Future<List<Work>> _loadAllLikes() async {
-    final first = await _apiService.getFavorites(
-      page: 1,
-      pageSize: _pageSize,
-      cancelToken: _cancelToken,
+    final first = await _runApiRequest(
+      'お気に入り 1ページ目',
+      () => _apiService.getFavorites(
+        page: 1,
+        pageSize: _pageSize,
+        cancelToken: _cancelToken,
+      ),
     );
     return _loadRemainingPages(
       first: first,
-      loadPage: (page) => _apiService.getFavorites(
-        page: page,
-        pageSize: _pageSize,
-        cancelToken: _cancelToken,
+      loadPage: (page) => _runApiRequest(
+        'お気に入り $pageページ目',
+        () => _apiService.getFavorites(
+          page: page,
+          pageSize: _pageSize,
+          cancelToken: _cancelToken,
+        ),
       ),
     );
   }
@@ -366,9 +376,9 @@ class BulkSaveController extends ChangeNotifier {
   }
 
   Future<List<Playlist>> _loadAllPlaylists() async {
-    final first = await _apiService.getMyPlaylists(
-      page: 1,
-      cancelToken: _cancelToken,
+    final first = await _runApiRequest(
+      'プレイリスト 1ページ目',
+      () => _apiService.getMyPlaylists(page: 1, cancelToken: _cancelToken),
     );
     final playlists = <Playlist>[...?first.playlists];
     final pageSize = first.pagination?.pageSize ?? playlists.length;
@@ -377,9 +387,10 @@ class BulkSaveController extends ChangeNotifier {
       final totalPages = (totalCount / pageSize).ceil();
       for (var page = 2; page <= totalPages; page++) {
         _throwIfCancelled();
-        final response = await _apiService.getMyPlaylists(
-          page: page,
-          cancelToken: _cancelToken,
+        final response = await _runApiRequest(
+          'プレイリスト $pageページ目',
+          () =>
+              _apiService.getMyPlaylists(page: page, cancelToken: _cancelToken),
         );
         playlists.addAll(response.playlists ?? const <Playlist>[]);
       }
@@ -396,19 +407,25 @@ class BulkSaveController extends ChangeNotifier {
   }
 
   Future<List<Work>> _loadAllPlaylistWorks(String playlistId) async {
-    final first = await _apiService.getPlaylistWorks(
-      playlistId: playlistId,
-      page: 1,
-      pageSize: _pageSize,
-      cancelToken: _cancelToken,
+    final first = await _runApiRequest(
+      'プレイリスト作品 $playlistId 1ページ目',
+      () => _apiService.getPlaylistWorks(
+        playlistId: playlistId,
+        page: 1,
+        pageSize: _pageSize,
+        cancelToken: _cancelToken,
+      ),
     );
     return _loadRemainingPages(
       first: first,
-      loadPage: (page) => _apiService.getPlaylistWorks(
-        playlistId: playlistId,
-        page: page,
-        pageSize: _pageSize,
-        cancelToken: _cancelToken,
+      loadPage: (page) => _runApiRequest(
+        'プレイリスト作品 $playlistId $pageページ目',
+        () => _apiService.getPlaylistWorks(
+          playlistId: playlistId,
+          page: page,
+          pageSize: _pageSize,
+          cancelToken: _cancelToken,
+        ),
       ),
     );
   }
@@ -449,9 +466,12 @@ class BulkSaveController extends ChangeNotifier {
     required Directory destinationRoot,
     required List<Directory> candidateDirectories,
   }) async {
-    final files = await _apiService.getWorkFiles(
-      work.id.toString(),
-      cancelToken: _cancelToken,
+    final files = await _runApiRequest(
+      '作品ファイル $code',
+      () => _apiService.getWorkFiles(
+        work.id.toString(),
+        cancelToken: _cancelToken,
+      ),
     );
     _throwIfCancelled();
 
@@ -556,18 +576,22 @@ class BulkSaveController extends ChangeNotifier {
 
       final downloadingFile = File('${stagedFile.path}.yuro-downloading');
       if (await downloadingFile.exists()) await downloadingFile.delete();
-      await _apiService.downloadFile(
-        spec.url,
-        downloadingFile.path,
-        cancelToken: _cancelToken,
-        onReceiveProgress: (received, total) {
-          final denominator = total > 0 ? total : spec.size;
-          _currentFileProgress = denominator > 0
-              ? (received / denominator).clamp(0, 1)
-              : null;
-          _notifyProgressThrottled();
-        },
-      );
+      await _runApiRequest('ファイル ${spec.displayName}', () {
+        _currentFileProgress = 0;
+        notifyListeners();
+        return _apiService.downloadFile(
+          spec.url,
+          downloadingFile.path,
+          cancelToken: _cancelToken,
+          onReceiveProgress: (received, total) {
+            final denominator = total > 0 ? total : spec.size;
+            _currentFileProgress = denominator > 0
+                ? (received / denominator).clamp(0, 1)
+                : null;
+            _notifyProgressThrottled();
+          },
+        );
+      });
       _throwIfCancelled();
       if (!await _fileIsValid(downloadingFile, spec)) {
         if (await downloadingFile.exists()) await downloadingFile.delete();
@@ -863,6 +887,13 @@ class BulkSaveController extends ChangeNotifier {
 
   String _baseName(String path) =>
       path.split(RegExp(r'[/\\]')).where((part) => part.isNotEmpty).last;
+
+  Future<T> _runApiRequest<T>(String operation, Future<T> Function() request) =>
+      _requestExecutor.run(
+        operation: operation,
+        request: request,
+        cancelToken: _cancelToken,
+      );
 
   void _throwIfCancelled() {
     if (_cancelToken?.isCancelled ?? false) {

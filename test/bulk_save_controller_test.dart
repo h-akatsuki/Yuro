@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:asmrapp/core/download/bulk_save_controller.dart';
+import 'package:asmrapp/core/download/bulk_save_request_executor.dart';
 import 'package:asmrapp/core/download/download_directory_controller.dart';
 import 'package:asmrapp/data/models/files/child.dart';
 import 'package:asmrapp/data/models/files/files.dart';
@@ -46,6 +47,9 @@ void main() {
       final controller = BulkSaveController(
         apiService: api,
         directoryController: directoryController,
+        requestExecutor: BulkSaveRequestExecutor(
+          minimumInterval: Duration.zero,
+        ),
       );
 
       await controller.saveLikes(locale: const Locale('ja'));
@@ -78,6 +82,9 @@ void main() {
       final controller = BulkSaveController(
         apiService: api,
         directoryController: directoryController,
+        requestExecutor: BulkSaveRequestExecutor(
+          minimumInterval: Duration.zero,
+        ),
       );
       await controller.saveLikes(locale: const Locale('ja'));
 
@@ -107,6 +114,7 @@ void main() {
     final controller = BulkSaveController(
       apiService: api,
       directoryController: directoryController,
+      requestExecutor: BulkSaveRequestExecutor(minimumInterval: Duration.zero),
     );
     var sawPlaylistProgress = false;
     var sawFileProgress = false;
@@ -163,6 +171,7 @@ void main() {
     final firstController = BulkSaveController(
       apiService: failingApi,
       directoryController: directoryController,
+      requestExecutor: BulkSaveRequestExecutor(minimumInterval: Duration.zero),
     );
     await firstController.saveLikes(locale: const Locale('ja'));
 
@@ -183,6 +192,7 @@ void main() {
     final resumedController = BulkSaveController(
       apiService: resumedApi,
       directoryController: directoryController,
+      requestExecutor: BulkSaveRequestExecutor(minimumInterval: Duration.zero),
     );
     await resumedController.saveLikes(locale: const Locale('ja'));
 

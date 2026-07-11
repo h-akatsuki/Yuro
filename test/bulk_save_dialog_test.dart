@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:asmrapp/core/download/bulk_save_controller.dart';
+import 'package:asmrapp/core/download/bulk_save_request_executor.dart';
 import 'package:asmrapp/core/download/download_directory_controller.dart';
 import 'package:asmrapp/data/models/my_lists/my_playlists/playlist.dart';
 import 'package:asmrapp/data/services/api_service.dart';
@@ -92,7 +93,12 @@ Widget _testApp({
 
 class _RunningBulkSaveController extends BulkSaveController {
   _RunningBulkSaveController({required super.directoryController})
-    : super(apiService: ApiService());
+    : super(
+        apiService: ApiService(),
+        requestExecutor: BulkSaveRequestExecutor(
+          minimumInterval: Duration.zero,
+        ),
+      );
 
   @override
   BulkSaveRunState get state => BulkSaveRunState.running;

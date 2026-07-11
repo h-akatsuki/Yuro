@@ -18,6 +18,16 @@ class WorksResponse {
   WorksResponse({required this.works, required this.pagination});
 }
 
+class ApiRequestException implements Exception {
+  final String message;
+  final DioException cause;
+
+  const ApiRequestException(this.message, this.cause);
+
+  @override
+  String toString() => Exception(message).toString();
+}
+
 class ApiService {
   final Dio _dio;
   final _recommendationCache = RecommendationCacheManager();
@@ -54,7 +64,7 @@ class ApiService {
     } on DioException catch (e) {
       if (CancelToken.isCancel(e)) rethrow;
       AppLogger.error('网络请求失败', e, e.stackTrace);
-      throw Exception('网络请求失败: ${e.message}');
+      throw ApiRequestException('网络请求失败: ${e.message}', e);
     } catch (e, stackTrace) {
       AppLogger.error('解析数据失败', e, stackTrace);
       throw Exception('解析数据失败: $e');
@@ -216,7 +226,7 @@ class ApiService {
     } on DioException catch (e) {
       if (CancelToken.isCancel(e)) rethrow;
       AppLogger.error('网络请求失败', e, e.stackTrace);
-      throw Exception('网络请求失败: ${e.message}');
+      throw ApiRequestException('网络请求失败: ${e.message}', e);
     } catch (e, stackTrace) {
       AppLogger.error('解析数据失败', e, stackTrace);
       throw Exception('解析数据失败: $e');
@@ -543,7 +553,7 @@ class ApiService {
     } on DioException catch (e) {
       if (CancelToken.isCancel(e)) rethrow;
       AppLogger.error('网络请求失败', e, e.stackTrace);
-      throw Exception('网络请求失败: ${e.message}');
+      throw ApiRequestException('网络请求失败: ${e.message}', e);
     } catch (e, stackTrace) {
       AppLogger.error('解析数据失败', e, stackTrace);
       throw Exception('解析数据失败: $e');
@@ -582,7 +592,7 @@ class ApiService {
     } on DioException catch (e) {
       if (CancelToken.isCancel(e)) rethrow;
       AppLogger.error('网络请求失败', e, e.stackTrace);
-      throw Exception('网络请求失败: ${e.message}');
+      throw ApiRequestException('网络请求失败: ${e.message}', e);
     } catch (e, stackTrace) {
       AppLogger.error('解析数据失败', e, stackTrace);
       throw Exception('解析数据失败: $e');
