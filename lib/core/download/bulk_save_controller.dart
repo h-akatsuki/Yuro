@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:collection';
 import 'dart:convert';
 import 'dart:io';
 
@@ -59,6 +60,7 @@ class BulkSaveController extends ChangeNotifier {
   bool _workCountKnown = false;
   bool _fileCountKnown = false;
   double? _currentFileProgress;
+  final List<String> _logLines = <String>[];
   DateTime _lastProgressNotification = DateTime.fromMillisecondsSinceEpoch(0);
 
   BulkSaveController({
@@ -83,6 +85,8 @@ class BulkSaveController extends ChangeNotifier {
   int get totalFiles => _totalFiles;
   int get processedFiles => _processedFiles;
   double? get currentFileProgress => _currentFileProgress;
+  List<String> get logLines => UnmodifiableListView<String>(_logLines);
+  String get logText => _logLines.join('\n');
   double? get playlistProgress => _countProgress(
     processed: _processedPlaylists,
     total: _totalPlaylists,
@@ -176,7 +180,9 @@ class BulkSaveController extends ChangeNotifier {
     _workCountKnown = false;
     _fileCountKnown = false;
     _currentFileProgress = null;
+    _logLines.clear();
     _cancelToken = CancelToken();
+    _logInfo('一括保存を開始します');
     notifyListeners();
 
     var savedWorks = 0;
@@ -188,6 +194,7 @@ class BulkSaveController extends ChangeNotifier {
     try {
       final rootDirectory = await _directoryController
           .resolveBulkSaveRootDirectory();
+      _logInfo('保存先: ${rootDirectory.path}');
       final collections = await loadCollections();
       _throwIfCancelled();
       _totalPlaylists = collections.length;
@@ -199,7 +206,7 @@ class BulkSaveController extends ChangeNotifier {
         legacyDownloadRoot = await _directoryController
             .resolveDownloadRootDirectory();
       } catch (error) {
-        AppLogger.info('既存ダウンロード先の再利用をスキップ: $error');
+        _logInfo('既存ダウンロード先の再利用をスキップ: $error');
       }
 
       for (final collection in collections) {
@@ -215,6 +222,11 @@ class BulkSaveController extends ChangeNotifier {
         _currentFileName = null;
         _currentFileProgress = null;
         notifyListeners();
+        _logInfo(
+          collection.displayName == null
+              ? 'コレクションの保存を開始します'
+              : 'コレクションを開始: ${collection.displayName}',
+        );
 
         final destinationRoot = Directory(
           '${rootDirectory.path}${Platform.pathSeparator}'
@@ -245,6 +257,7 @@ class BulkSaveController extends ChangeNotifier {
           _currentFileName = null;
           _currentFileProgress = null;
           notifyListeners();
+          _logInfo('作品を開始: $code');
 
           try {
             final outcome = await _saveWork(
@@ -255,26 +268,36 @@ class BulkSaveController extends ChangeNotifier {
               candidateDirectories:
                   candidateIndex[normalizedCode] ?? const <Directory>[],
             );
-            if (outcome.skipped) {
-              skippedWorks++;
-            } else {
-              savedWorks++;
-            }
             reusedFiles += outcome.reusedFiles;
             downloadedFiles += outcome.downloadedFiles;
-            final candidates = candidateIndex.putIfAbsent(
-              normalizedCode,
-              () => <Directory>[],
-            );
-            if (!candidates.any(
-              (directory) => directory.path == outcome.directory.path,
-            )) {
-              candidates.add(outcome.directory);
+            if (outcome.failedFiles > 0) {
+              failedWorks++;
+              _logWarning(
+                '作品の保存は未完了: $code '
+                '(${outcome.failedFiles}ファイル失敗)',
+              );
+            } else if (outcome.skipped) {
+              skippedWorks++;
+              _logInfo('作品は更新不要: $code');
+            } else {
+              savedWorks++;
+              _logInfo('作品の保存が完了: $code');
+            }
+            if (outcome.failedFiles == 0) {
+              final candidates = candidateIndex.putIfAbsent(
+                normalizedCode,
+                () => <Directory>[],
+              );
+              if (!candidates.any(
+                (directory) => directory.path == outcome.directory.path,
+              )) {
+                candidates.add(outcome.directory);
+              }
             }
           } catch (error, stackTrace) {
             if (_isCancellation(error)) rethrow;
             failedWorks++;
-            AppLogger.error('一括保存に失敗: $code', error, stackTrace);
+            _logError('一括保存に失敗: $code', error, stackTrace);
           }
 
           _processedWorks++;
@@ -295,6 +318,10 @@ class BulkSaveController extends ChangeNotifier {
         downloadedFiles: downloadedFiles,
       );
       _state = BulkSaveRunState.completed;
+      _logInfo(
+        '一括保存が完了: 保存 $savedWorks作品、'
+        '更新不要 $skippedWorks作品、失敗 $failedWorks作品',
+      );
     } catch (error, stackTrace) {
       _result = BulkSaveResult(
         savedWorks: savedWorks,
@@ -305,10 +332,11 @@ class BulkSaveController extends ChangeNotifier {
       );
       if (_isCancellation(error)) {
         _state = BulkSaveRunState.cancelled;
+        _logWarning('一括保存を中断しました');
       } else {
         _state = BulkSaveRunState.failed;
         _error = error.toString();
-        AppLogger.error('一括保存の開始に失敗', error, stackTrace);
+        _logError('一括保存の開始に失敗', error, stackTrace);
       }
     } finally {
       _cancelToken = null;
@@ -351,7 +379,7 @@ class BulkSaveController extends ChangeNotifier {
       _throwIfCancelled();
       final playlistId = playlist.id?.trim();
       if (playlistId == null || playlistId.isEmpty) {
-        AppLogger.info('IDのないプレイリストを一括保存から除外しました');
+        _logWarning('IDのないプレイリストを一括保存から除外しました');
         continue;
       }
       final directoryName = _uniqueDirectoryName(
@@ -535,73 +563,103 @@ class BulkSaveController extends ChangeNotifier {
 
     var reusedFiles = 0;
     var downloadedFiles = 0;
+    var failedFiles = 0;
     for (final spec in specs) {
       _throwIfCancelled();
       _currentFileName = spec.displayName;
       _currentFileProgress = 0;
       notifyListeners();
+      _logInfo('ファイルを開始: $code / ${spec.relativePath}');
 
-      final stagedFile = File(_filePath(stageDirectory, spec));
-      if (await _fileIsValid(stagedFile, spec)) {
-        reusedFiles++;
-        _completeCurrentFile();
-        continue;
-      }
-      if (await stagedFile.exists()) await stagedFile.delete();
-      await stagedFile.parent.create(recursive: true);
-
-      _CandidateDirectory? reusableCandidate;
-      for (final candidate in candidates) {
-        if (candidate.directory.path == stageDirectory.path) continue;
-        if (await candidate.canReuse(spec)) {
-          reusableCandidate = candidate;
-          break;
+      var succeeded = false;
+      try {
+        final stagedFile = File(_filePath(stageDirectory, spec));
+        if (await _fileIsValid(stagedFile, spec)) {
+          reusedFiles++;
+          succeeded = true;
+          _logInfo('部分保存から再利用: $code / ${spec.relativePath}');
+          continue;
         }
-      }
+        if (await stagedFile.exists()) await stagedFile.delete();
+        await stagedFile.parent.create(recursive: true);
 
-      if (reusableCandidate != null) {
-        final source = File(_filePath(reusableCandidate.directory, spec));
-        final copyingFile = File('${stagedFile.path}.yuro-copying');
-        if (await copyingFile.exists()) await copyingFile.delete();
-        await source.copy(copyingFile.path);
-        if (!await _fileIsValid(copyingFile, spec)) {
-          await copyingFile.delete();
-          throw FileSystemException('コピーしたファイルを検証できません', source.path);
+        _CandidateDirectory? reusableCandidate;
+        for (final candidate in candidates) {
+          if (candidate.directory.path == stageDirectory.path) continue;
+          if (await candidate.canReuse(spec)) {
+            reusableCandidate = candidate;
+            break;
+          }
         }
-        await copyingFile.rename(stagedFile.path);
-        reusedFiles++;
-        _completeCurrentFile();
-        continue;
-      }
 
-      final downloadingFile = File('${stagedFile.path}.yuro-downloading');
-      if (await downloadingFile.exists()) await downloadingFile.delete();
-      await _runApiRequest('ファイル ${spec.displayName}', () {
-        _currentFileProgress = 0;
-        notifyListeners();
-        return _apiService.downloadFile(
-          spec.url,
-          downloadingFile.path,
-          cancelToken: _cancelToken,
-          onReceiveProgress: (received, total) {
-            final denominator = total > 0 ? total : spec.size;
-            _currentFileProgress = denominator > 0
-                ? (received / denominator).clamp(0, 1)
-                : null;
-            _notifyProgressThrottled();
-          },
-        );
-      });
-      _throwIfCancelled();
-      if (!await _fileIsValid(downloadingFile, spec)) {
+        if (reusableCandidate != null) {
+          final source = File(_filePath(reusableCandidate.directory, spec));
+          final copyingFile = File('${stagedFile.path}.yuro-copying');
+          if (await copyingFile.exists()) await copyingFile.delete();
+          await source.copy(copyingFile.path);
+          if (!await _fileIsValid(copyingFile, spec)) {
+            await copyingFile.delete();
+            throw FileSystemException('コピーしたファイルを検証できません', source.path);
+          }
+          await copyingFile.rename(stagedFile.path);
+          reusedFiles++;
+          succeeded = true;
+          _logInfo('既存ファイルを再利用: $code / ${spec.relativePath}');
+          continue;
+        }
+
+        final downloadingFile = File('${stagedFile.path}.yuro-downloading');
         if (await downloadingFile.exists()) await downloadingFile.delete();
-        throw FileSystemException('ダウンロードしたファイルのサイズが一致しません', spec.relativePath);
+        await _runApiRequest('ファイル ${spec.displayName}', () {
+          _currentFileProgress = 0;
+          notifyListeners();
+          return _apiService.downloadFile(
+            spec.url,
+            downloadingFile.path,
+            cancelToken: _cancelToken,
+            onReceiveProgress: (received, total) {
+              final denominator = total > 0 ? total : spec.size;
+              _currentFileProgress = denominator > 0
+                  ? (received / denominator).clamp(0, 1)
+                  : null;
+              _notifyProgressThrottled();
+            },
+          );
+        });
+        _throwIfCancelled();
+        if (!await _fileIsValid(downloadingFile, spec)) {
+          if (await downloadingFile.exists()) await downloadingFile.delete();
+          throw FileSystemException(
+            'ダウンロードしたファイルのサイズが一致しません',
+            spec.relativePath,
+          );
+        }
+        await downloadingFile.rename(stagedFile.path);
+        downloadedFiles++;
+        succeeded = true;
+        _logInfo('ファイルの保存が完了: $code / ${spec.relativePath}');
+      } catch (error, stackTrace) {
+        if (_isCancellation(error)) rethrow;
+        failedFiles++;
+        _logError(
+          'ファイルの保存に失敗: $code / ${spec.relativePath}',
+          error,
+          stackTrace,
+        );
+      } finally {
+        _finishCurrentFile(succeeded: succeeded);
       }
-      await downloadingFile.rename(stagedFile.path);
-      downloadedFiles++;
-      _completeCurrentFile();
     }
 
+    if (failedFiles > 0) {
+      return _WorkSaveOutcome(
+        skipped: false,
+        directory: stageDirectory,
+        reusedFiles: reusedFiles,
+        downloadedFiles: downloadedFiles,
+        failedFiles: failedFiles,
+      );
+    }
     if (!await _allFilesValid(stageDirectory, specs)) {
       throw FileSystemException('作品内のファイル検証に失敗しました', code);
     }
@@ -893,6 +951,7 @@ class BulkSaveController extends ChangeNotifier {
         operation: operation,
         request: request,
         cancelToken: _cancelToken,
+        onRetry: _logWarning,
       );
 
   void _throwIfCancelled() {
@@ -918,9 +977,32 @@ class BulkSaveController extends ChangeNotifier {
     return (processed / total).clamp(0, 1);
   }
 
-  void _completeCurrentFile() {
+  void _finishCurrentFile({required bool succeeded}) {
     _processedFiles++;
-    _currentFileProgress = 1;
+    _currentFileProgress = succeeded ? 1 : null;
+    notifyListeners();
+  }
+
+  void _logInfo(String message) {
+    AppLogger.info(message);
+    _appendLog('INFO', message);
+  }
+
+  void _logWarning(String message) {
+    AppLogger.warning(message);
+    _appendLog('WARN', message);
+  }
+
+  void _logError(String message, Object error, [StackTrace? stackTrace]) {
+    AppLogger.error(message, error, stackTrace);
+    final detail = StringBuffer(message)..write('\n$error');
+    if (stackTrace != null) detail.write('\n$stackTrace');
+    _appendLog('ERROR', detail.toString());
+  }
+
+  void _appendLog(String level, String message) {
+    final timestamp = DateTime.now().toIso8601String();
+    _logLines.add('[$timestamp] [$level] $message');
     notifyListeners();
   }
 
@@ -940,12 +1022,14 @@ class _WorkSaveOutcome {
   final Directory directory;
   final int reusedFiles;
   final int downloadedFiles;
+  final int failedFiles;
 
   const _WorkSaveOutcome({
     required this.skipped,
     required this.directory,
     this.reusedFiles = 0,
     this.downloadedFiles = 0,
+    this.failedFiles = 0,
   });
 }
 

@@ -223,6 +223,18 @@
   "bulkSaveStart": "开始保存",
   "bulkSaveRunning": "正在批量保存",
   "bulkSaveCancel": "停止保存",
+  "bulkSaveLog": "日志",
+  "bulkSaveLogTitle": "批量保存日志",
+  "bulkSaveLogEmpty": "暂无日志",
+  "bulkSaveLogCopy": "复制",
+  "bulkSaveLogCopied": "已复制日志",
+  "bulkSaveLogSave": "保存",
+  "bulkSaveLogSaved": "日志已保存：{path}",
+  "@bulkSaveLogSaved": {
+    "placeholders": {
+      "path": {"type": "String"}
+    }
+  },
   "bulkSaveDirectoryRequired": "请先选择批量保存位置",
   "bulkSavePlaylistProgress": "{processed} / {total} 个播放列表",
   "@bulkSavePlaylistProgress": {

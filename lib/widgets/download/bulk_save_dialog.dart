@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:asmrapp/core/download/bulk_save_controller.dart';
 import 'package:asmrapp/core/download/download_directory_controller.dart';
@@ -7,6 +8,7 @@ import 'package:asmrapp/l10n/l10n.dart';
 import 'package:asmrapp/common/utils/playlist_localizations.dart';
 import 'package:file_selector/file_selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 Future<void> showBulkSaveDialog(
@@ -120,6 +122,13 @@ class _BulkSaveDialogState extends State<BulkSaveDialog> {
         ),
       ),
       actions: [
+        if (saveController.logLines.isNotEmpty)
+          TextButton.icon(
+            key: const ValueKey('bulk-save-log'),
+            onPressed: () => _showLogDialog(saveController),
+            icon: const Icon(Icons.receipt_long_outlined),
+            label: Text(l10n.bulkSaveLog),
+          ),
         if (saveController.isRunning)
           TextButton.icon(
             onPressed: saveController.cancel,
@@ -232,6 +241,16 @@ class _BulkSaveDialogState extends State<BulkSaveDialog> {
     ].join('\n');
   }
 
+  Future<void> _showLogDialog(BulkSaveController controller) {
+    return showDialog<void>(
+      context: context,
+      builder: (_) => ChangeNotifierProvider.value(
+        value: controller,
+        child: const _BulkSaveLogDialog(),
+      ),
+    );
+  }
+
   Future<void> _selectDirectory(DownloadDirectoryController controller) async {
     setState(() => _selectingDirectory = true);
     try {
@@ -275,6 +294,175 @@ class _BulkSaveDialogState extends State<BulkSaveDialog> {
         locale: locale,
       ),
     );
+  }
+}
+
+class _BulkSaveLogDialog extends StatefulWidget {
+  const _BulkSaveLogDialog();
+
+  @override
+  State<_BulkSaveLogDialog> createState() => _BulkSaveLogDialogState();
+}
+
+class _BulkSaveLogDialogState extends State<_BulkSaveLogDialog> {
+  final ScrollController _scrollController = ScrollController();
+  bool _scrollScheduled = false;
+  bool _saving = false;
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = context.watch<BulkSaveController>();
+    final l10n = context.l10n;
+    final size = MediaQuery.sizeOf(context);
+    final width = (size.width - 80).clamp(280.0, 800.0);
+    final height = (size.height * 0.62).clamp(240.0, 600.0);
+    _scheduleScrollToEnd();
+
+    return AlertDialog(
+      title: Row(
+        children: [
+          const Icon(Icons.receipt_long_outlined),
+          const SizedBox(width: 12),
+          Expanded(child: Text(l10n.bulkSaveLogTitle)),
+          if (controller.isRunning) ...[
+            const SizedBox(width: 8),
+            const SizedBox.square(
+              dimension: 16,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ],
+        ],
+      ),
+      content: SizedBox(
+        width: width,
+        height: height,
+        child: DecoratedBox(
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.surfaceContainerLowest,
+            border: Border.all(
+              color: Theme.of(context).colorScheme.outlineVariant,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: controller.logLines.isEmpty
+              ? Center(child: Text(l10n.bulkSaveLogEmpty))
+              : SelectionArea(
+                  child: ListView.builder(
+                    controller: _scrollController,
+                    padding: const EdgeInsets.all(12),
+                    itemCount: controller.logLines.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.only(bottom: 6),
+                      child: Text(
+                        controller.logLines[index],
+                        style: const TextStyle(
+                          fontFamily: 'monospace',
+                          fontSize: 12,
+                          height: 1.35,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+        ),
+      ),
+      actions: [
+        TextButton.icon(
+          key: const ValueKey('bulk-save-log-copy'),
+          onPressed: controller.logLines.isEmpty
+              ? null
+              : () => _copyLog(controller),
+          icon: const Icon(Icons.copy_outlined),
+          label: Text(l10n.bulkSaveLogCopy),
+        ),
+        TextButton.icon(
+          key: const ValueKey('bulk-save-log-save'),
+          onPressed: controller.logLines.isEmpty || _saving
+              ? null
+              : () => _saveLog(controller),
+          icon: _saving
+              ? const SizedBox.square(
+                  dimension: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.save_outlined),
+          label: Text(l10n.bulkSaveLogSave),
+        ),
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(MaterialLocalizations.of(context).closeButtonLabel),
+        ),
+      ],
+    );
+  }
+
+  void _scheduleScrollToEnd() {
+    if (_scrollScheduled) return;
+    _scrollScheduled = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollScheduled = false;
+      if (!mounted || !_scrollController.hasClients) return;
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
+  }
+
+  Future<void> _copyLog(BulkSaveController controller) async {
+    await Clipboard.setData(ClipboardData(text: controller.logText));
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(context.l10n.bulkSaveLogCopied)));
+  }
+
+  Future<void> _saveLog(BulkSaveController controller) async {
+    setState(() => _saving = true);
+    try {
+      final now = DateTime.now();
+      final timestamp = <int>[
+        now.year,
+        now.month,
+        now.day,
+        now.hour,
+        now.minute,
+        now.second,
+      ].map((value) => value.toString().padLeft(2, '0')).join();
+      final fileName = 'yuro-bulk-save-$timestamp.log';
+      final location = await getSaveLocation(
+        suggestedName: fileName,
+        acceptedTypeGroups: const <XTypeGroup>[
+          XTypeGroup(
+            label: 'Log',
+            extensions: <String>['log', 'txt'],
+            mimeTypes: <String>['text/plain'],
+            uniformTypeIdentifiers: <String>['public.plain-text'],
+          ),
+        ],
+      );
+      if (location == null) return;
+      final file = XFile.fromData(
+        Uint8List.fromList(utf8.encode(controller.logText)),
+        mimeType: 'text/plain',
+        name: fileName,
+      );
+      await file.saveTo(location.path);
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.bulkSaveLogSaved(location.path))),
+      );
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(context.l10n.operationFailed(error.toString()))),
+      );
+    } finally {
+      if (mounted) setState(() => _saving = false);
+    }
   }
 }
 

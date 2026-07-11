@@ -223,6 +223,18 @@
   "bulkSaveStart": "保存を開始",
   "bulkSaveRunning": "一括保存中",
   "bulkSaveCancel": "保存を中断",
+  "bulkSaveLog": "ログ",
+  "bulkSaveLogTitle": "一括保存ログ",
+  "bulkSaveLogEmpty": "ログはまだありません",
+  "bulkSaveLogCopy": "コピー",
+  "bulkSaveLogCopied": "ログをコピーしました",
+  "bulkSaveLogSave": "保存",
+  "bulkSaveLogSaved": "ログを保存しました: {path}",
+  "@bulkSaveLogSaved": {
+    "placeholders": {
+      "path": {"type": "String"}
+    }
+  },
   "bulkSaveDirectoryRequired": "先に一括保存先を選択してください",
   "bulkSavePlaylistProgress": "{processed} / {total} プレイリスト",
   "@bulkSavePlaylistProgress": {

@@ -814,6 +814,48 @@ abstract class AppLocalizations {
   /// **'停止保存'**
   String get bulkSaveCancel;
 
+  /// No description provided for @bulkSaveLog.
+  ///
+  /// In zh, this message translates to:
+  /// **'日志'**
+  String get bulkSaveLog;
+
+  /// No description provided for @bulkSaveLogTitle.
+  ///
+  /// In zh, this message translates to:
+  /// **'批量保存日志'**
+  String get bulkSaveLogTitle;
+
+  /// No description provided for @bulkSaveLogEmpty.
+  ///
+  /// In zh, this message translates to:
+  /// **'暂无日志'**
+  String get bulkSaveLogEmpty;
+
+  /// No description provided for @bulkSaveLogCopy.
+  ///
+  /// In zh, this message translates to:
+  /// **'复制'**
+  String get bulkSaveLogCopy;
+
+  /// No description provided for @bulkSaveLogCopied.
+  ///
+  /// In zh, this message translates to:
+  /// **'已复制日志'**
+  String get bulkSaveLogCopied;
+
+  /// No description provided for @bulkSaveLogSave.
+  ///
+  /// In zh, this message translates to:
+  /// **'保存'**
+  String get bulkSaveLogSave;
+
+  /// No description provided for @bulkSaveLogSaved.
+  ///
+  /// In zh, this message translates to:
+  /// **'日志已保存：{path}'**
+  String bulkSaveLogSaved(String path);
+
   /// No description provided for @bulkSaveDirectoryRequired.
   ///
   /// In zh, this message translates to:

@@ -70,6 +70,31 @@ void main() {
 
     expect(find.byType(LinearProgressIndicator), findsNWidgets(3));
   });
+
+  testWidgets('log button opens the live log with copy and save actions', (
+    tester,
+  ) async {
+    final controller = _RunningBulkSaveController(
+      directoryController: directoryController,
+    );
+
+    await tester.pumpWidget(
+      _testApp(
+        controller: controller,
+        directoryController: directoryController,
+        dialog: const BulkSaveDialog(),
+      ),
+    );
+
+    expect(find.byKey(const ValueKey('bulk-save-log')), findsOneWidget);
+    await tester.tap(find.byKey(const ValueKey('bulk-save-log')));
+    await tester.pump(const Duration(milliseconds: 300));
+
+    expect(find.text('一括保存ログ'), findsOneWidget);
+    expect(find.textContaining('テストログ'), findsOneWidget);
+    expect(find.byKey(const ValueKey('bulk-save-log-copy')), findsOneWidget);
+    expect(find.byKey(const ValueKey('bulk-save-log-save')), findsOneWidget);
+  });
 }
 
 Widget _testApp({
@@ -135,4 +160,12 @@ class _RunningBulkSaveController extends BulkSaveController {
 
   @override
   double get currentFileProgress => 0.5;
+
+  @override
+  List<String> get logLines => const <String>[
+    '[2026-07-11T12:00:00.000] [INFO] テストログ',
+  ];
+
+  @override
+  String get logText => logLines.join('\n');
 }

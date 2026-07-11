@@ -201,16 +201,54 @@ void main() {
     expect(resumedController.result?.downloadedFiles, 1);
     expect(await completeMarker.exists(), isTrue);
   });
+
+  test(
+    'a failed file does not prevent later files from being attempted',
+    () async {
+      final api = _FakeApiService(
+        failDownloadNumber: 2,
+        includeThirdFile: true,
+      );
+      final controller = BulkSaveController(
+        apiService: api,
+        directoryController: directoryController,
+        requestExecutor: BulkSaveRequestExecutor(
+          minimumInterval: Duration.zero,
+        ),
+      );
+
+      await controller.saveLikes(locale: const Locale('ja'));
+
+      final partialDirectory = Directory(
+        '${temporaryRoot.path}${Platform.pathSeparator}likes'
+        '${Platform.pathSeparator}.RJ123-Test title.yuro-partial',
+      );
+      expect(api.downloadCount, 3);
+      expect(api.events, contains('download:https://example.com/three.mp3'));
+      expect(controller.processedFiles, 3);
+      expect(controller.result?.failedWorks, 1);
+      expect(controller.result?.downloadedFiles, 2);
+      expect(
+        await File(
+          '${partialDirectory.path}${Platform.pathSeparator}three.mp3',
+        ).exists(),
+        isTrue,
+      );
+      expect(controller.logText, contains('ファイルの保存に失敗: RJ123 / two.mp3'));
+      expect(controller.logText, contains('ファイルの保存が完了: RJ123 / three.mp3'));
+    },
+  );
 }
 
 class _FakeApiService extends ApiService {
   final int? failDownloadNumber;
+  final bool includeThirdFile;
   int downloadCount = 0;
   final List<int> playlistPages = <int>[];
   final List<String> loadedPlaylistIds = <String>[];
   final List<String> events = <String>[];
 
-  _FakeApiService({this.failDownloadNumber});
+  _FakeApiService({this.failDownloadNumber, this.includeThirdFile = false});
 
   Work get _work => Work(id: 123, sourceId: 'RJ123', title: 'Test title');
 
@@ -282,6 +320,14 @@ class _FakeApiService extends ApiService {
           mediaDownloadUrl: 'https://example.com/two.mp3',
           size: 6,
         ),
+        if (includeThirdFile)
+          Child(
+            type: 'audio',
+            title: 'three.mp3',
+            hash: 'hash-three',
+            mediaDownloadUrl: 'https://example.com/three.mp3',
+            size: 8,
+          ),
       ],
     );
   }
@@ -298,7 +344,11 @@ class _FakeApiService extends ApiService {
     if (downloadCount == failDownloadNumber) {
       throw Exception('simulated download failure');
     }
-    final size = url.endsWith('one.mp3') ? 4 : 6;
+    final size = url.endsWith('one.mp3')
+        ? 4
+        : url.endsWith('two.mp3')
+        ? 6
+        : 8;
     await File(savePath).writeAsBytes(List<int>.filled(size, downloadCount));
     onReceiveProgress?.call(size, size);
   }

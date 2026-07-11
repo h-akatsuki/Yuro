@@ -396,6 +396,29 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bulkSaveCancel => '停止保存';
 
   @override
+  String get bulkSaveLog => '日志';
+
+  @override
+  String get bulkSaveLogTitle => '批量保存日志';
+
+  @override
+  String get bulkSaveLogEmpty => '暂无日志';
+
+  @override
+  String get bulkSaveLogCopy => '复制';
+
+  @override
+  String get bulkSaveLogCopied => '已复制日志';
+
+  @override
+  String get bulkSaveLogSave => '保存';
+
+  @override
+  String bulkSaveLogSaved(String path) {
+    return '日志已保存：$path';
+  }
+
+  @override
   String get bulkSaveDirectoryRequired => '请先选择批量保存位置';
 
   @override

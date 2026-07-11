@@ -223,6 +223,18 @@
   "bulkSaveStart": "Start saving",
   "bulkSaveRunning": "Bulk save in progress",
   "bulkSaveCancel": "Stop saving",
+  "bulkSaveLog": "Log",
+  "bulkSaveLogTitle": "Bulk save log",
+  "bulkSaveLogEmpty": "No log entries yet",
+  "bulkSaveLogCopy": "Copy",
+  "bulkSaveLogCopied": "Log copied",
+  "bulkSaveLogSave": "Save",
+  "bulkSaveLogSaved": "Log saved: {path}",
+  "@bulkSaveLogSaved": {
+    "placeholders": {
+      "path": {"type": "String"}
+    }
+  },
   "bulkSaveDirectoryRequired": "Choose a bulk save location first",
   "bulkSavePlaylistProgress": "{processed} / {total} playlists",
   "@bulkSavePlaylistProgress": {

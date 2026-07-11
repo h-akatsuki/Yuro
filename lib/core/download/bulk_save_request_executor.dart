@@ -28,6 +28,7 @@ class BulkSaveRequestExecutor {
     required String operation,
     required Future<T> Function() request,
     CancelToken? cancelToken,
+    void Function(String message)? onRetry,
   }) async {
     var retryNumber = 0;
     while (true) {
@@ -43,10 +44,14 @@ class BulkSaveRequestExecutor {
         final retryDelay = _retryDelay(error, retryNumber);
         if (retryDelay == null) rethrow;
 
-        AppLogger.warning(
-          '一括保存APIを再試行します: $operation '
-          '($retryNumber回目、${retryDelay.inMilliseconds}ms後)',
-        );
+        final message =
+            '一括保存APIを再試行します: $operation '
+            '($retryNumber回目、${retryDelay.inMilliseconds}ms後)';
+        if (onRetry == null) {
+          AppLogger.warning(message);
+        } else {
+          onRetry(message);
+        }
         await _wait(retryDelay, cancelToken);
       }
     }

@@ -397,6 +397,29 @@ class AppLocalizationsJa extends AppLocalizations {
   String get bulkSaveCancel => '保存を中断';
 
   @override
+  String get bulkSaveLog => 'ログ';
+
+  @override
+  String get bulkSaveLogTitle => '一括保存ログ';
+
+  @override
+  String get bulkSaveLogEmpty => 'ログはまだありません';
+
+  @override
+  String get bulkSaveLogCopy => 'コピー';
+
+  @override
+  String get bulkSaveLogCopied => 'ログをコピーしました';
+
+  @override
+  String get bulkSaveLogSave => '保存';
+
+  @override
+  String bulkSaveLogSaved(String path) {
+    return 'ログを保存しました: $path';
+  }
+
+  @override
   String get bulkSaveDirectoryRequired => '先に一括保存先を選択してください';
 
   @override

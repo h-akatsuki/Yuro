@@ -398,6 +398,29 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bulkSaveCancel => 'Stop saving';
 
   @override
+  String get bulkSaveLog => 'Log';
+
+  @override
+  String get bulkSaveLogTitle => 'Bulk save log';
+
+  @override
+  String get bulkSaveLogEmpty => 'No log entries yet';
+
+  @override
+  String get bulkSaveLogCopy => 'Copy';
+
+  @override
+  String get bulkSaveLogCopied => 'Log copied';
+
+  @override
+  String get bulkSaveLogSave => 'Save';
+
+  @override
+  String bulkSaveLogSaved(String path) {
+    return 'Log saved: $path';
+  }
+
+  @override
   String get bulkSaveDirectoryRequired => 'Choose a bulk save location first';
 
   @override
