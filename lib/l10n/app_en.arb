@@ -217,7 +217,6 @@
       "name": {"type": "String"}
     }
   },
-  "bulkSaveDescription": "Compares works by code and saves only missing works and files.",
   "bulkSaveDirectoryLabel": "Bulk save location",
   "bulkSaveDirectoryUnset": "No folder selected",
   "bulkSaveChooseDirectory": "Choose folder",
@@ -225,6 +224,13 @@
   "bulkSaveRunning": "Bulk save in progress",
   "bulkSaveCancel": "Stop saving",
   "bulkSaveDirectoryRequired": "Choose a bulk save location first",
+  "bulkSavePlaylistProgress": "{processed} / {total} playlists",
+  "@bulkSavePlaylistProgress": {
+    "placeholders": {
+      "processed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
   "bulkSaveProgress": "{processed} / {total} works",
   "@bulkSaveProgress": {
     "placeholders": {
@@ -232,6 +238,14 @@
       "total": {"type": "int"}
     }
   },
+  "bulkSaveFileProgress": "{processed} / {total} files",
+  "@bulkSaveFileProgress": {
+    "placeholders": {
+      "processed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "bulkSaveFileDownloadProgress": "File progress",
   "bulkSaveCurrentWork": "Processing: {code}",
   "@bulkSaveCurrentWork": {
     "placeholders": {

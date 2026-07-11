@@ -379,9 +379,6 @@ class AppLocalizationsJa extends AppLocalizations {
   }
 
   @override
-  String get bulkSaveDescription => '作品コードで差分を判定し、不足している作品・ファイルだけを保存します。';
-
-  @override
   String get bulkSaveDirectoryLabel => '一括保存先';
 
   @override
@@ -403,9 +400,22 @@ class AppLocalizationsJa extends AppLocalizations {
   String get bulkSaveDirectoryRequired => '先に一括保存先を選択してください';
 
   @override
+  String bulkSavePlaylistProgress(int processed, int total) {
+    return '$processed / $total プレイリスト';
+  }
+
+  @override
   String bulkSaveProgress(int processed, int total) {
     return '$processed / $total 作品';
   }
+
+  @override
+  String bulkSaveFileProgress(int processed, int total) {
+    return '$processed / $total ファイル';
+  }
+
+  @override
+  String get bulkSaveFileDownloadProgress => 'ファイルの進行状況';
 
   @override
   String bulkSaveCurrentWork(String code) {

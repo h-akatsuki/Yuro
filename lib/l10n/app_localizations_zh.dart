@@ -378,9 +378,6 @@ class AppLocalizationsZh extends AppLocalizations {
   }
 
   @override
-  String get bulkSaveDescription => '按作品代码比较，只保存缺少的作品和文件。';
-
-  @override
   String get bulkSaveDirectoryLabel => '批量保存位置';
 
   @override
@@ -402,9 +399,22 @@ class AppLocalizationsZh extends AppLocalizations {
   String get bulkSaveDirectoryRequired => '请先选择批量保存位置';
 
   @override
+  String bulkSavePlaylistProgress(int processed, int total) {
+    return '$processed / $total 个播放列表';
+  }
+
+  @override
   String bulkSaveProgress(int processed, int total) {
     return '$processed / $total 个作品';
   }
+
+  @override
+  String bulkSaveFileProgress(int processed, int total) {
+    return '$processed / $total 个文件';
+  }
+
+  @override
+  String get bulkSaveFileDownloadProgress => '文件进度';
 
   @override
   String bulkSaveCurrentWork(String code) {

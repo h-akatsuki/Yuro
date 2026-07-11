@@ -778,12 +778,6 @@ abstract class AppLocalizations {
   /// **'批量保存{name}'**
   String bulkSavePlaylistTitle(String name);
 
-  /// No description provided for @bulkSaveDescription.
-  ///
-  /// In zh, this message translates to:
-  /// **'按作品代码比较，只保存缺少的作品和文件。'**
-  String get bulkSaveDescription;
-
   /// No description provided for @bulkSaveDirectoryLabel.
   ///
   /// In zh, this message translates to:
@@ -826,11 +820,29 @@ abstract class AppLocalizations {
   /// **'请先选择批量保存位置'**
   String get bulkSaveDirectoryRequired;
 
+  /// No description provided for @bulkSavePlaylistProgress.
+  ///
+  /// In zh, this message translates to:
+  /// **'{processed} / {total} 个播放列表'**
+  String bulkSavePlaylistProgress(int processed, int total);
+
   /// No description provided for @bulkSaveProgress.
   ///
   /// In zh, this message translates to:
   /// **'{processed} / {total} 个作品'**
   String bulkSaveProgress(int processed, int total);
+
+  /// No description provided for @bulkSaveFileProgress.
+  ///
+  /// In zh, this message translates to:
+  /// **'{processed} / {total} 个文件'**
+  String bulkSaveFileProgress(int processed, int total);
+
+  /// No description provided for @bulkSaveFileDownloadProgress.
+  ///
+  /// In zh, this message translates to:
+  /// **'文件进度'**
+  String get bulkSaveFileDownloadProgress;
 
   /// No description provided for @bulkSaveCurrentWork.
   ///

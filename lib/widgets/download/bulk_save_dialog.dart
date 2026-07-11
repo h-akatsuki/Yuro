@@ -77,8 +77,6 @@ class _BulkSaveDialogState extends State<BulkSaveDialog> {
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(l10n.bulkSaveDescription),
-              const SizedBox(height: 18),
               Text(
                 l10n.bulkSaveDirectoryLabel,
                 style: Theme.of(context).textTheme.labelLarge,
@@ -155,42 +153,49 @@ class _BulkSaveDialogState extends State<BulkSaveDialog> {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    l10n.bulkSaveRunning,
-                    style: Theme.of(context).textTheme.titleSmall,
-                  ),
-                ),
-                Text(
-                  l10n.bulkSaveProgress(
-                    controller.processedWorks,
-                    controller.totalWorks,
-                  ),
-                ),
-              ],
+            Text(
+              l10n.bulkSaveRunning,
+              style: Theme.of(context).textTheme.titleSmall,
             ),
-            const SizedBox(height: 8),
-            LinearProgressIndicator(value: controller.overallProgress),
-            if (controller.currentWorkCode != null) ...[
-              const SizedBox(height: 8),
-              Text(l10n.bulkSaveCurrentWork(controller.currentWorkCode!)),
-            ],
-            if (controller.currentFileName != null) ...[
-              const SizedBox(height: 4),
-              Text(
-                controller.currentFileName!,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: Theme.of(context).textTheme.bodySmall,
+            const SizedBox(height: 12),
+            if (widget.allPlaylists) ...[
+              _ProgressStage(
+                title: l10n.bulkSavePlaylistProgress(
+                  controller.processedPlaylists,
+                  controller.totalPlaylists,
+                ),
+                value: controller.playlistProgress,
+                detail: controller.currentPlaylistName,
               ),
-              const SizedBox(height: 4),
-              LinearProgressIndicator(
-                value: controller.currentFileProgress,
-                minHeight: 3,
-              ),
+              const SizedBox(height: 14),
             ],
+            _ProgressStage(
+              title: l10n.bulkSaveProgress(
+                controller.processedWorks,
+                controller.totalWorks,
+              ),
+              value: controller.workProgress,
+              detail: controller.currentWorkCode == null
+                  ? null
+                  : l10n.bulkSaveCurrentWork(controller.currentWorkCode!),
+            ),
+            const SizedBox(height: 14),
+            _ProgressStage(
+              title: l10n.bulkSaveFileProgress(
+                controller.processedFiles,
+                controller.totalFiles,
+              ),
+              value: controller.fileProgress,
+              detail: controller.currentFileName,
+            ),
+            const SizedBox(height: 14),
+            _ProgressStage(
+              title: l10n.bulkSaveFileDownloadProgress,
+              value: controller.currentFileProgress,
+              trailing: controller.currentFileProgress == null
+                  ? null
+                  : '${(controller.currentFileProgress! * 100).round()}%',
+            ),
           ],
         );
       case BulkSaveRunState.completed:
@@ -269,6 +274,46 @@ class _BulkSaveDialogState extends State<BulkSaveDialog> {
         playlistName: widget.playlistName ?? '',
         locale: locale,
       ),
+    );
+  }
+}
+
+class _ProgressStage extends StatelessWidget {
+  final String title;
+  final double? value;
+  final String? detail;
+  final String? trailing;
+
+  const _ProgressStage({
+    required this.title,
+    required this.value,
+    this.detail,
+    this.trailing,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(child: Text(title)),
+            if (trailing != null) Text(trailing!),
+          ],
+        ),
+        const SizedBox(height: 6),
+        LinearProgressIndicator(value: value),
+        if (detail != null && detail!.isNotEmpty) ...[
+          const SizedBox(height: 4),
+          Text(
+            detail!,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
+        ],
+      ],
     );
   }
 }

@@ -108,6 +108,18 @@ void main() {
       apiService: api,
       directoryController: directoryController,
     );
+    var sawPlaylistProgress = false;
+    var sawFileProgress = false;
+    controller.addListener(() {
+      if (controller.totalPlaylists == 2 &&
+          controller.processedPlaylists == 0 &&
+          controller.currentPlaylistName == 'First list') {
+        sawPlaylistProgress = true;
+      }
+      if (controller.totalFiles == 2 && controller.processedFiles == 1) {
+        sawFileProgress = true;
+      }
+    });
 
     await controller.saveAllPlaylists(
       locale: const Locale('ja'),
@@ -116,7 +128,20 @@ void main() {
 
     expect(api.playlistPages, <int>[1, 2]);
     expect(api.loadedPlaylistIds, <String>['playlist-1', 'playlist-2']);
+    expect(
+      api.events.indexOf('works:playlist-2'),
+      greaterThan(api.events.indexOf('files:123')),
+      reason: '次のプレイリストの作品一覧は、現在のプレイリスト保存後に取得する',
+    );
     expect(controller.state, BulkSaveRunState.completed);
+    expect(controller.processedPlaylists, 2);
+    expect(controller.totalPlaylists, 2);
+    expect(controller.processedWorks, 1);
+    expect(controller.totalWorks, 1);
+    expect(controller.processedFiles, 2);
+    expect(controller.totalFiles, 2);
+    expect(sawPlaylistProgress, isTrue);
+    expect(sawFileProgress, isTrue);
     expect(controller.result?.savedWorks, 2);
     expect(controller.result?.reusedFiles, 2);
     expect(controller.result?.downloadedFiles, 2);
@@ -173,6 +198,7 @@ class _FakeApiService extends ApiService {
   int downloadCount = 0;
   final List<int> playlistPages = <int>[];
   final List<String> loadedPlaylistIds = <String>[];
+  final List<String> events = <String>[];
 
   _FakeApiService({this.failDownloadNumber});
 
@@ -184,6 +210,7 @@ class _FakeApiService extends ApiService {
     CancelToken? cancelToken,
   }) async {
     playlistPages.add(page);
+    events.add('playlists:$page');
     return MyPlaylists(
       playlists: <Playlist>[
         Playlist(
@@ -219,6 +246,7 @@ class _FakeApiService extends ApiService {
     CancelToken? cancelToken,
   }) async {
     loadedPlaylistIds.add(playlistId);
+    events.add('works:$playlistId');
     return WorksResponse(
       works: <Work>[_work],
       pagination: Pagination(currentPage: 1, pageSize: 100, totalCount: 1),
@@ -227,6 +255,7 @@ class _FakeApiService extends ApiService {
 
   @override
   Future<Files> getWorkFiles(String workId, {CancelToken? cancelToken}) async {
+    events.add('files:$workId');
     return Files(
       children: <Child>[
         Child(
@@ -255,6 +284,7 @@ class _FakeApiService extends ApiService {
     ProgressCallback? onReceiveProgress,
   }) async {
     downloadCount++;
+    events.add('download:$url');
     if (downloadCount == failDownloadNumber) {
       throw Exception('simulated download failure');
     }

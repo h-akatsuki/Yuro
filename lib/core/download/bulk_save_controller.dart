@@ -44,10 +44,18 @@ class BulkSaveController extends ChangeNotifier {
   CancelToken? _cancelToken;
   BulkSaveResult? _result;
   String? _error;
+  String? _currentPlaylistName;
   String? _currentWorkCode;
   String? _currentFileName;
+  int _totalPlaylists = 0;
+  int _processedPlaylists = 0;
   int _totalWorks = 0;
   int _processedWorks = 0;
+  int _totalFiles = 0;
+  int _processedFiles = 0;
+  bool _playlistCountKnown = false;
+  bool _workCountKnown = false;
+  bool _fileCountKnown = false;
   double? _currentFileProgress;
   DateTime _lastProgressNotification = DateTime.fromMillisecondsSinceEpoch(0);
 
@@ -61,13 +69,31 @@ class BulkSaveController extends ChangeNotifier {
   bool get isRunning => _state == BulkSaveRunState.running;
   BulkSaveResult? get result => _result;
   String? get error => _error;
+  String? get currentPlaylistName => _currentPlaylistName;
   String? get currentWorkCode => _currentWorkCode;
   String? get currentFileName => _currentFileName;
+  int get totalPlaylists => _totalPlaylists;
+  int get processedPlaylists => _processedPlaylists;
   int get totalWorks => _totalWorks;
   int get processedWorks => _processedWorks;
+  int get totalFiles => _totalFiles;
+  int get processedFiles => _processedFiles;
   double? get currentFileProgress => _currentFileProgress;
-  double? get overallProgress =>
-      _totalWorks <= 0 ? null : (_processedWorks / _totalWorks).clamp(0, 1);
+  double? get playlistProgress => _countProgress(
+    processed: _processedPlaylists,
+    total: _totalPlaylists,
+    countKnown: _playlistCountKnown,
+  );
+  double? get workProgress => _countProgress(
+    processed: _processedWorks,
+    total: _totalWorks,
+    countKnown: _workCountKnown,
+  );
+  double? get fileProgress => _countProgress(
+    processed: _processedFiles,
+    total: _totalFiles,
+    countKnown: _fileCountKnown,
+  );
 
   Future<void> saveLikes({required Locale locale}) async {
     await _start(
@@ -75,7 +101,7 @@ class BulkSaveController extends ChangeNotifier {
       loadCollections: () async => <_CollectionSavePlan>[
         _CollectionSavePlan(
           collectionDirectory: 'likes',
-          works: await _loadAllLikes(),
+          loadWorks: _loadAllLikes,
         ),
       ],
     );
@@ -98,11 +124,12 @@ class BulkSaveController extends ChangeNotifier {
       locale: locale,
       loadCollections: () async => <_CollectionSavePlan>[
         _CollectionSavePlan(
+          displayName: playlistName,
           collectionDirectory: <String>[
             'playlists',
             safePlaylistName,
           ].join(Platform.pathSeparator),
-          works: await _loadAllPlaylistWorks(playlistId),
+          loadWorks: () => _loadAllPlaylistWorks(playlistId),
         ),
       ],
     );
@@ -132,10 +159,18 @@ class BulkSaveController extends ChangeNotifier {
     _state = BulkSaveRunState.running;
     _result = null;
     _error = null;
+    _currentPlaylistName = null;
     _currentWorkCode = null;
     _currentFileName = null;
+    _totalPlaylists = 0;
+    _processedPlaylists = 0;
     _totalWorks = 0;
     _processedWorks = 0;
+    _totalFiles = 0;
+    _processedFiles = 0;
+    _playlistCountKnown = false;
+    _workCountKnown = false;
+    _fileCountKnown = false;
     _currentFileProgress = null;
     _cancelToken = CancelToken();
     notifyListeners();
@@ -151,23 +186,9 @@ class BulkSaveController extends ChangeNotifier {
           .resolveBulkSaveRootDirectory();
       final collections = await loadCollections();
       _throwIfCancelled();
-      final tasks = <_CollectionWorkSaveTask>[
-        for (final collection in collections)
-          for (final work in _deduplicateWorks(collection.works))
-            _CollectionWorkSaveTask(collection: collection, work: work),
-      ];
-      _totalWorks = tasks.length;
+      _totalPlaylists = collections.length;
+      _playlistCountKnown = true;
       notifyListeners();
-
-      final destinationRoots = <_CollectionSavePlan, Directory>{};
-      for (final collection in collections) {
-        final destinationRoot = Directory(
-          '${rootDirectory.path}${Platform.pathSeparator}'
-          '${collection.collectionDirectory}',
-        );
-        await destinationRoot.create(recursive: true);
-        destinationRoots[collection] = destinationRoot;
-      }
 
       Directory? legacyDownloadRoot;
       try {
@@ -177,56 +198,88 @@ class BulkSaveController extends ChangeNotifier {
         AppLogger.info('既存ダウンロード先の再利用をスキップ: $error');
       }
 
-      final candidateIndex = await _buildCandidateIndex(
-        rootDirectory,
-        legacyDownloadRoot,
-        tasks.map((task) => BulkSavePathUtils.workCode(task.work)).toSet(),
-      );
-
-      for (final task in tasks) {
+      for (final collection in collections) {
         _throwIfCancelled();
-        final work = task.work;
-        final code = BulkSavePathUtils.workCode(work);
-        final normalizedCode = BulkSavePathUtils.normalizeCode(code);
-        _currentWorkCode = code;
+        _currentPlaylistName = collection.displayName;
+        _totalWorks = 0;
+        _processedWorks = 0;
+        _workCountKnown = false;
+        _totalFiles = 0;
+        _processedFiles = 0;
+        _fileCountKnown = false;
+        _currentWorkCode = null;
         _currentFileName = null;
         _currentFileProgress = null;
         notifyListeners();
 
-        try {
-          final outcome = await _saveWork(
-            work: work,
-            title: work.localizedTitle(locale),
-            code: code,
-            destinationRoot: destinationRoots[task.collection]!,
-            candidateDirectories:
-                candidateIndex[normalizedCode] ?? const <Directory>[],
-          );
-          if (outcome.skipped) {
-            skippedWorks++;
-          } else {
-            savedWorks++;
+        final destinationRoot = Directory(
+          '${rootDirectory.path}${Platform.pathSeparator}'
+          '${collection.collectionDirectory}',
+        );
+        await destinationRoot.create(recursive: true);
+
+        final works = _deduplicateWorks(await collection.loadWorks());
+        _throwIfCancelled();
+        _totalWorks = works.length;
+        _workCountKnown = true;
+        notifyListeners();
+
+        final candidateIndex = await _buildCandidateIndex(
+          rootDirectory,
+          legacyDownloadRoot,
+          works.map(BulkSavePathUtils.workCode).toSet(),
+        );
+
+        for (final work in works) {
+          _throwIfCancelled();
+          final code = BulkSavePathUtils.workCode(work);
+          final normalizedCode = BulkSavePathUtils.normalizeCode(code);
+          _currentWorkCode = code;
+          _totalFiles = 0;
+          _processedFiles = 0;
+          _fileCountKnown = false;
+          _currentFileName = null;
+          _currentFileProgress = null;
+          notifyListeners();
+
+          try {
+            final outcome = await _saveWork(
+              work: work,
+              title: work.localizedTitle(locale),
+              code: code,
+              destinationRoot: destinationRoot,
+              candidateDirectories:
+                  candidateIndex[normalizedCode] ?? const <Directory>[],
+            );
+            if (outcome.skipped) {
+              skippedWorks++;
+            } else {
+              savedWorks++;
+            }
+            reusedFiles += outcome.reusedFiles;
+            downloadedFiles += outcome.downloadedFiles;
+            final candidates = candidateIndex.putIfAbsent(
+              normalizedCode,
+              () => <Directory>[],
+            );
+            if (!candidates.any(
+              (directory) => directory.path == outcome.directory.path,
+            )) {
+              candidates.add(outcome.directory);
+            }
+          } catch (error, stackTrace) {
+            if (_isCancellation(error)) rethrow;
+            failedWorks++;
+            AppLogger.error('一括保存に失敗: $code', error, stackTrace);
           }
-          reusedFiles += outcome.reusedFiles;
-          downloadedFiles += outcome.downloadedFiles;
-          final candidates = candidateIndex.putIfAbsent(
-            normalizedCode,
-            () => <Directory>[],
-          );
-          if (!candidates.any(
-            (directory) => directory.path == outcome.directory.path,
-          )) {
-            candidates.add(outcome.directory);
-          }
-        } catch (error, stackTrace) {
-          if (_isCancellation(error)) rethrow;
-          failedWorks++;
-          AppLogger.error('一括保存に失敗: $code', error, stackTrace);
+
+          _processedWorks++;
+          _currentFileName = null;
+          _currentFileProgress = null;
+          notifyListeners();
         }
 
-        _processedWorks++;
-        _currentFileName = null;
-        _currentFileProgress = null;
+        _processedPlaylists++;
         notifyListeners();
       }
 
@@ -255,6 +308,7 @@ class BulkSaveController extends ChangeNotifier {
       }
     } finally {
       _cancelToken = null;
+      _currentPlaylistName = null;
       _currentFileName = null;
       _currentFileProgress = null;
       notifyListeners();
@@ -299,11 +353,12 @@ class BulkSaveController extends ChangeNotifier {
       );
       collections.add(
         _CollectionSavePlan(
+          displayName: playlistNameFor(playlist),
           collectionDirectory: <String>[
             'playlists',
             directoryName,
           ].join(Platform.pathSeparator),
-          works: await _loadAllPlaylistWorks(playlistId),
+          loadWorks: () => _loadAllPlaylistWorks(playlistId),
         ),
       );
     }
@@ -401,6 +456,10 @@ class BulkSaveController extends ChangeNotifier {
     _throwIfCancelled();
 
     final specs = _collectFileSpecs(files.children ?? const <Child>[]);
+    _totalFiles = specs.length;
+    _processedFiles = 0;
+    _fileCountKnown = true;
+    notifyListeners();
     final signature = _signatureFor(specs);
     final targetDirectory = await _resolveTargetDirectory(
       destinationRoot,
@@ -417,6 +476,9 @@ class BulkSaveController extends ChangeNotifier {
     if (completeManifest?.code == BulkSavePathUtils.normalizeCode(code) &&
         completeManifest?.signature == signature &&
         await _allFilesValid(targetDirectory, specs)) {
+      _processedFiles = _totalFiles;
+      _currentFileProgress = 1;
+      notifyListeners();
       return _WorkSaveOutcome(skipped: true, directory: targetDirectory);
     }
 
@@ -456,12 +518,13 @@ class BulkSaveController extends ChangeNotifier {
     for (final spec in specs) {
       _throwIfCancelled();
       _currentFileName = spec.displayName;
-      _currentFileProgress = null;
+      _currentFileProgress = 0;
       notifyListeners();
 
       final stagedFile = File(_filePath(stageDirectory, spec));
       if (await _fileIsValid(stagedFile, spec)) {
         reusedFiles++;
+        _completeCurrentFile();
         continue;
       }
       if (await stagedFile.exists()) await stagedFile.delete();
@@ -487,6 +550,7 @@ class BulkSaveController extends ChangeNotifier {
         }
         await copyingFile.rename(stagedFile.path);
         reusedFiles++;
+        _completeCurrentFile();
         continue;
       }
 
@@ -511,6 +575,7 @@ class BulkSaveController extends ChangeNotifier {
       }
       await downloadingFile.rename(stagedFile.path);
       downloadedFiles++;
+      _completeCurrentFile();
     }
 
     if (!await _allFilesValid(stageDirectory, specs)) {
@@ -812,6 +877,22 @@ class BulkSaveController extends ChangeNotifier {
   bool _isCancellation(Object error) =>
       error is DioException && error.type == DioExceptionType.cancel;
 
+  double? _countProgress({
+    required int processed,
+    required int total,
+    required bool countKnown,
+  }) {
+    if (!countKnown) return null;
+    if (total <= 0) return 1;
+    return (processed / total).clamp(0, 1);
+  }
+
+  void _completeCurrentFile() {
+    _processedFiles++;
+    _currentFileProgress = 1;
+    notifyListeners();
+  }
+
   void _notifyProgressThrottled() {
     final now = DateTime.now();
     if (now.difference(_lastProgressNotification) <
@@ -838,20 +919,15 @@ class _WorkSaveOutcome {
 }
 
 class _CollectionSavePlan {
+  final String? displayName;
   final String collectionDirectory;
-  final List<Work> works;
+  final Future<List<Work>> Function() loadWorks;
 
   const _CollectionSavePlan({
+    this.displayName,
     required this.collectionDirectory,
-    required this.works,
+    required this.loadWorks,
   });
-}
-
-class _CollectionWorkSaveTask {
-  final _CollectionSavePlan collection;
-  final Work work;
-
-  const _CollectionWorkSaveTask({required this.collection, required this.work});
 }
 
 class _BulkFileSpec {

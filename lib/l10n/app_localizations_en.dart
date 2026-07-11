@@ -380,10 +380,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get bulkSaveDescription =>
-      'Compares works by code and saves only missing works and files.';
-
-  @override
   String get bulkSaveDirectoryLabel => 'Bulk save location';
 
   @override
@@ -405,9 +401,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String get bulkSaveDirectoryRequired => 'Choose a bulk save location first';
 
   @override
+  String bulkSavePlaylistProgress(int processed, int total) {
+    return '$processed / $total playlists';
+  }
+
+  @override
   String bulkSaveProgress(int processed, int total) {
     return '$processed / $total works';
   }
+
+  @override
+  String bulkSaveFileProgress(int processed, int total) {
+    return '$processed / $total files';
+  }
+
+  @override
+  String get bulkSaveFileDownloadProgress => 'File progress';
 
   @override
   String bulkSaveCurrentWork(String code) {

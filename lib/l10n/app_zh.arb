@@ -217,7 +217,6 @@
       "name": {"type": "String"}
     }
   },
-  "bulkSaveDescription": "按作品代码比较，只保存缺少的作品和文件。",
   "bulkSaveDirectoryLabel": "批量保存位置",
   "bulkSaveDirectoryUnset": "尚未选择文件夹",
   "bulkSaveChooseDirectory": "选择文件夹",
@@ -225,6 +224,13 @@
   "bulkSaveRunning": "正在批量保存",
   "bulkSaveCancel": "停止保存",
   "bulkSaveDirectoryRequired": "请先选择批量保存位置",
+  "bulkSavePlaylistProgress": "{processed} / {total} 个播放列表",
+  "@bulkSavePlaylistProgress": {
+    "placeholders": {
+      "processed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
   "bulkSaveProgress": "{processed} / {total} 个作品",
   "@bulkSaveProgress": {
     "placeholders": {
@@ -232,6 +238,14 @@
       "total": {"type": "int"}
     }
   },
+  "bulkSaveFileProgress": "{processed} / {total} 个文件",
+  "@bulkSaveFileProgress": {
+    "placeholders": {
+      "processed": {"type": "int"},
+      "total": {"type": "int"}
+    }
+  },
+  "bulkSaveFileDownloadProgress": "文件进度",
   "bulkSaveCurrentWork": "正在处理：{code}",
   "@bulkSaveCurrentWork": {
     "placeholders": {
